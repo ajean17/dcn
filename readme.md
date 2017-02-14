@@ -1,7 +1,7 @@
 
 ## Built with
 
-- [Laravel Framework](http://www.w3schools.com/jquery/jquery_ref_ajax.asp) - jQuery simplifies HTML document traversing, event handling, animating, and Ajax interactions for rapid web development.
+- [Laravel Framework](https://laravel.com/) - Laravel simplifies PHP and offers a seamless way to connect pages and querying data to and from the database. Loaded with an extensive library and shortcuts to reduce having cluttered code.
 - [Bootstrap](http://getbootstrap.com/) - Extensive list of components and  Bundled Javascript plugins.
 
 ## Todo
