@@ -11,7 +11,7 @@
 
 ## Team
 
-[![Palmer Simmons](https://avatars1.githubusercontent.com/u/12688534?v=3&s=144)](https://github.com/blackkhes)  | [![Alvin Jean](https://d1vvuunsmk74y1.cloudfront.net/images/logo-9a3fb73c.png)](https://github.com/ajean17)
+[![Palmer Simmons](http://imgur.com/mbeYLQ9)](https://github.com/blackkhes)  | [![Alvin Jean](http://imgur.com/IfjKznv)](https://github.com/ajean17)
 ---|---
 [Palmer Simmons](https://github.com/blackkhes) |[Alvin Jean](https://github.com/ajean17)
 
