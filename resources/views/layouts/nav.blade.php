@@ -17,10 +17,16 @@
       <li class="nav-item">
         <a class="nav-link" href="#">About</a>
       </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/logout">Logout</a>
+      </li>
     </ul>
+    @if(Auth::check())
     <form class="form-inline mt-2 mt-md-0">
-      <input class="form-control mr-sm-2" type="text" placeholder="Search">
-      <button class="btn btn-outline-default my-2 my-sm-0" type="submit">Search</button>
+      <a class="nav-link" href="#">{{ Auth::user()->name }}</a>
+      <!--input class="form-control mr-sm-2" type="text" placeholder="Search">
+      <button class="btn btn-outline-default my-2 my-sm-0" type="submit">Search</button-->
     </form>
+    @endif
   </div>
 </nav>
