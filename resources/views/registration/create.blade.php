@@ -1,28 +1,39 @@
 @extends('layouts.master')
 
 @section('title')
-  Registration|BookSpace
+  Registration|Dream Catcher Network
 @endsection
 
 @section('content')
-  <h3>Register</h3>
+  <!--div class="col-sm-8"-->
+  <h1>Sign Up</h1>
 
   <form method="POST" action="/register">
     {{csrf_field()}}
 
+    <div class="form-group">
     <label for="name">User Name:</label>
-    <input type="text" name="name" required><br/>
+    <input type="text" class="form-control" id="name" name="name" required>
+    </div>
 
+    <div class="form-group">
     <label for="email">Email:</label>
-    <input type="email" name="email" required><br/>
+    <input type="email" class="form-control" id="email" name="email" required>
+    </div>
 
+    <div class="form-group">
     <label for="password">Password:</label>
-    <input type="password" name="password" required><br/>
+    <input type="password" class="form-control" id="password" name="password" required>
+    </div>
 
+    <div class="form-group">
     <label for="password_confirmation">Confirm Password:</label>
-    <input type="password" name="password_confirmation" required><br/>
+    <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" required>
+    </div>
 
-    <button type="submit">Create User</button><br/>
+    <div class="form-group">
+      <button type="submit" class="btn btn-default">Create Account</button>
+    </div>
   </form>
 
   @include('layouts.errors')
