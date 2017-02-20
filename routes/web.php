@@ -24,18 +24,21 @@ Route::get('/login','SessionsController@create');
 Route::post('/login','SessionsController@store');
 Route::get('/logout','SessionsController@destroy');
 
-//Route::get('/home', 'HomeController@index');//set this to the user's dashboard
-
-Route::get('/profile/{profile}','ProfileController@show');
-
-Route::get('/settings','ProfileController@settings'); //account settings
-
 Route::get('/stargazer',function()
 {
   return view('/search.index');
 }); //search page
 
+Route::get('/dashboard',function()
+{
+  return view('/dashboard.home');
+});//user's dashboard
+
 Route::get('/messages',function()
 {
-  return view('/messenger.index');
+  return view('/dashboard.messenger');
 }); //messenger
+
+Route::get('/profile/{profile}','ProfileController@show');
+
+Route::get('/settings','ProfileController@settings'); //account settings
