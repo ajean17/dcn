@@ -13,13 +13,13 @@
         <a class="nav-link" href="{{ url('/dashboard') }}">Dashboard</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="/profile/{{Auth::user()->profile->id}}">Profile</a>
+        <a class="nav-link" href="/profile/{{Auth::user()->name}}">Profile</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="{{ url('/stargazer') }}">Search</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="{{ url('/messages') }}">Messenger</a>
+        <a class="nav-link" href="{{ url('/messages') }}">Inbox</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="{{ url('/settings') }}">Account Settings</a>

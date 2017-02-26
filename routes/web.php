@@ -34,11 +34,15 @@ Route::get('/dashboard',function()
   return view('/dashboard.home');
 });//user's dashboard
 
-Route::get('/messages',function()
+Route::get('/messages','MessageController@show'); //messenger
+Route::get('/update',function()
 {
-  return view('/dashboard.messenger');
-}); //messenger
-
-Route::get('/profile/{profile}','ProfileController@show');
+  return view('/dashboard.update-messages');
+});
+Route::get('/getM',function()
+{
+  return view('/dashboard.get-messages');
+});
+Route::get('/profile/{User}','ProfileController@show');
 
 Route::get('/settings','ProfileController@settings'); //account settings

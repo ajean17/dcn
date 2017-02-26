@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('title')
-  Home|BookSpace
+  Home | Dream Catcher Network
 @endsection
 
 @section('content')

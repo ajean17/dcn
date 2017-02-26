@@ -27,8 +27,18 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-    public function profile()//All books by a user
+    public function getroutekeyname()//returns the name of the user as it matches in the route
+    {
+      return 'name';
+    }
+
+    public function profile()//Pulls the user's profile
     {
       return $this->hasOne(Profile::class);
+    }
+
+    public function messages()//Pulls the messages sent by a User
+    {
+      return $this->hasMany(Message::class);
     }
 }
