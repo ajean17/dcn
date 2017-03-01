@@ -3,35 +3,94 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\User;
 
 class SessionsController extends Controller
 {
-  public function create()
-  {
-    return view('sessions.login');
-  }
 
-  public function store()
-  {
+    public function __construct()
+    {
+      //store() and create() can't be accessed if not a guest
+      $this->middleware('guest')->except('destroy');//;
+    }
 
-  //Attempt to auth the user, and if not return them back
-  if(! auth()->attempt(request(['email', 'password']))) //ISN"T MATCHING IDK WHY!
-  {
-    return back()->withErrors([
-      'message' => 'Email/Password do not match our records. Try Again.'
-    ]);
-  }
+    public function index()
+    {
+        //
+    }
 
-  //Redirect to the home page
-  return redirect()->home();
-  }
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        return view('sessions.create');
+    }
 
-  public function destroy()
-  {
-    auth()->logout();
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+      //attempts to authenticate user and auto signs in
+      if(!auth()->attempt(request(['name','password'])))
+      {
+        return back()->withErrors([
+          'message' => 'Wrong username or password, please try again.']);
 
-    return redirect()->home();
-  }
+      }
 
+      return redirect('/');
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy()
+    {
+        auth()->logout();
+
+        return redirect('/');
+    }
 }

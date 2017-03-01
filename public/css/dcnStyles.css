@@ -1,0 +1,57 @@
+h1
+{
+  text-align: center;
+}
+.accSettings
+{
+  text-align: center;
+  background-color: #bbbbbb;
+  margin-left: 17%;
+}
+.dashboard div
+{
+  color:green;
+}
+.dashOption
+{
+  background-color: pink;
+  padding:3px;
+  border-radius: 15px;
+  border: 8px solid #eeeeee;
+}
+.profileHead
+{
+  background-color: #aaaaaa;
+}
+.profilePic
+{
+  background-color: #bbbbbb;
+}
+.banner
+{
+  background-color: #cccccc;
+}
+.bannerTabs
+{
+  text-align: center;;
+  bottom:0px;
+}
+.profileBody
+{
+  background-color: #dddddd;
+  /*height:80%;*/
+}
+
+.quickNav
+{
+  background-color: #eeeeee;
+  /*position: fixed;*/
+}
+.projectContent
+{
+  background-color:#33343e;
+}
+.profileFoot
+{
+  background-color: #123456;
+}
