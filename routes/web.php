@@ -46,3 +46,4 @@ Route::get('/getM',function()
 Route::get('/profile/{User}','ProfileController@show');
 
 Route::get('/settings','ProfileController@settings'); //account settings
+
