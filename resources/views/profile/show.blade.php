@@ -4,6 +4,7 @@
   $isFriend = false;
   $friend_button = '<button disabled>Request As Friend</button>';
   $block_button = '<button disabled>Block User</button>';
+  $ownerBlockViewer = false;
 ?>
 @section('title')
   {{$profileOwner->name}} | DCN
@@ -26,22 +27,20 @@
       ->orWhere('user1','=',$profileOwner->name)
       ->where('user2','=',Auth::user()->name)
       ->where('accepted','=','1')->get();
-      if(isset($friend_check))
+      //$friend_check = Friend::where('user1','=','Alvin')->where('user2','=','Palmer')->where('accepted','=','1')->orWhere('user1','=','Palmer')->where('user2','=','Alvin')->where('accepted','=','1')->get();
+      if($friend_check!="[]")//If the friend check is not empty
       {
         $isFriend = true;
-      }
-      else
-        $isFriend = false;
-      //$friend_check = Friend::where('user1','=','Alvin')->where('user2','=','Palmer')->where('accepted','=','1')->orWhere('user1','=','Palmer')->where('user2','=','Alvin')->where('accepted','=','1')->get();
-      //Logic for Friend Button
-      if($isFriend == true)
-      {
         $friend_button = '<button onclick="friendToggle(\'unfriend\',\''.$profileOwner.'\',\'friendBtn\')">Unfriend</button>';
       }
-      /*else if($user_ok == true && $u != $log_username && $ownerBlockViewer == false)
+      else
       {
-        $friend_button = '<button onclick="friendToggle(\'friend\',\''.$profileOwner.'\',\'friendBtn\')">Request As Friend</button>';
-      }*/
+        $isFriend = false;
+        if($ownerBlockViewer == false)
+        {
+          $friend_button = '<button onclick="friendToggle(\'friend\',\''.$profileOwner.'\',\'friendBtn\')">Request As Friend</button>';
+        }
+      }
     }
 
     if($isFriend == true)
