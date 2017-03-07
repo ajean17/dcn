@@ -11,6 +11,7 @@
 
     <title>@yield('title')</title>
     @include('layouts.style');
+    @yield('javascript');
   </head>
 
   <body>
@@ -25,6 +26,6 @@
       @yield('content')
       @include('layouts.footer')
     </div>
-    
+
   </body>
 </html>

@@ -20,15 +20,21 @@ class ProfileController extends Controller
     return view('profile.index',compact('profiles'));
   }
 
-  public function show(User $User)
+  public function show(User $profileOwner)
   {
-    $profile = $User->profile;
+    //$loggedIn = Auth::check()->name; currently logged in
+    //$friend_check = $loggedIn.isOwner($profileOwner);
+    //$friend_check = $loggedIn.isFriend($profileOwner);
+    //$block_check2 = $loggedIn.isBlocked($profileOwner);
+    //$loggedIn = auth()->user();
+    //$iOwner = $loggedIn::isOwner($profileOwner);
 
-    return view('profile.show',compact('profile'));
+   return view('profile.show',compact('profileOwner'));//'friend_check','block_check','block_check2'));
   }
 
   public function settings()
   {
     return view('profile.settings');
   }
+
 }

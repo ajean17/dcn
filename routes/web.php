@@ -43,7 +43,17 @@ Route::get('/getM',function()
 {
   return view('/dashboard.get-messages');
 });
-Route::get('/profile/{User}','ProfileController@show');
+Route::get('/profile/{profileOwner}','ProfileController@show');
 
 Route::get('/settings','ProfileController@settings'); //account settings
 
+
+
+Route::get('/friendSystem',function()
+{
+  return view('/phpParser.friendSystem');
+});
+Route::get('/blockSystem',function()
+{
+  return view('/phpParser.blockSystem');
+});

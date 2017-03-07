@@ -45,7 +45,8 @@ class RegistrationController extends Controller
       $user = User::create([
         'name' => request('name'),
         'email' => request('email'),
-        'password' => bcrypt(request('password'))//passwords must be encrypted for the attempt method to work!
+        'password' => bcrypt(request('password')),//passwords must be encrypted for the attempt method to work!
+        'notescheck' => time()
       ]);
 
       //log in user upon creation
