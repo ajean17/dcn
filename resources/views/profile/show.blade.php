@@ -1,6 +1,7 @@
 @extends('layouts.master')
 <?php
   use App\Friend;
+  use App\Block;
   $isFriend = false;
   $friend_button = '<button disabled>Request As Friend</button>';
   $block_button = '<button disabled>Block User</button>';
@@ -28,6 +29,17 @@
       ->where('user2','=',Auth::user()->name)
       ->where('accepted','=','1')->get();
       //$friend_check = Friend::where('user1','=','Alvin')->where('user2','=','Palmer')->where('accepted','=','1')->orWhere('user1','=','Palmer')->where('user2','=','Alvin')->where('accepted','=','1')->get();
+
+      $block_check = Block::where('blocker','=',Auth::user()->name)
+      ->where('blockee','=',$profileOwner->name)
+      ->orWhere('blocker','=',$profileOwner->name)
+      ->where('blockee','=',Auth::user()->name)->get();
+      //$block_check = App\Block::where('blocker','=','Alvin')->where('blockee','=','Palmer')->orWhere('blocker','=','Palmer')->where('blockee','=','Alvin')->get();
+
+
+      /*
+        Friend button logic for profile
+      */
       if($friend_check!="[]")//If the friend check is not empty
       {
         $isFriend = true;
@@ -41,12 +53,29 @@
           $friend_button = '<button onclick="friendToggle(\'friend\',\''.$profileOwner.'\',\'friendBtn\')">Request As Friend</button>';
         }
       }
-    }
 
+      /*
+        Block button logic for profile
+      */
+      if($block_check != "[]")
+      {
+        $ownerBlockViewer = true;
+        $friend_button = '<button disabled>Request As Friend</button>';
+        $block_button = '<button onclick="blockToggle(\'unblock\',\''.$profileOwner.'\',\'blockBtn\')">Unblock User</button>';
+      }
+      else
+      {
+        $ownerBlockViewer = false;
+        $block_button = '<button onclick="blockToggle(\'block\',\''.$profileOwner.'\',\'blockBtn\')">Block User</button>';
+      }
+    }
+    /*
     if($isFriend == true)
     {
       $friend_button = '<button onclick="friendToggle(\'unfriend\',\''.$profileOwner.'\',\'friendBtn\')">Unfriend</button>';
+      $block_button = '<button onclick="blockToggle(\'block\',\''.$profileOwner.'\',\'blockBtn\')">Block User</button>';
     }
+    */
   ?>
   <hr>
   <div class="row profileHead">
@@ -55,6 +84,7 @@
       <img class="featurette-image img-fluid mx-auto" data-src="holder.js/500x500/auto" alt="Generic placeholder image">
       @if($isOwner==false)
         <span id="friendBtn"><?php echo $friend_button; ?></span>
+        <span id="friendBtn"><?php echo $block_button; ?></span>
       @endif
     </div>
     <div class="col-sm-9 banner">

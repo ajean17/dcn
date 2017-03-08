@@ -1,4 +1,5 @@
 <?php
+use App\Friend;
 include_once("../php_includes/check_login_status.php");
 if($user_ok != true || $log_username == "") {
 	exit();

@@ -1,9 +1,12 @@
 <?php
+/* {Not required, logged in user checked }
 include_once("../php_includes/check_login_status.php");
 if($user_ok != true || $log_username == "") {
 	exit();
 }
-?><?php
+*/
+?>
+<?php
 if (isset($_POST['type']) && isset($_POST['user'])){
 	$user = preg_replace('#[^a-z0-9]#i', '', $_POST['user']);
 	$sql = "SELECT COUNT(id) FROM users WHERE username='$user' AND activated='1' LIMIT 1";
