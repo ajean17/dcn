@@ -6,12 +6,14 @@
   $friend_button = '<button disabled>Request As Friend</button>';
   $block_button = '<button disabled>Block User</button>';
   $ownerBlockViewer = false;
+  $loggedUser = Auth::user()->name;
 ?>
 @section('title')
   {{$profileOwner->name}} | DCN
 @endsection
 
 @section('content')
+<br/>
   <?php
     if($profileOwner->id == Auth::user()->id)
     {
@@ -40,7 +42,7 @@
       /*
         Friend button logic for profile
       */
-      if($friend_check!="[]")//If the friend check is not empty
+      if($friend_check != "[]")//If the friend check is not empty
       {
         $isFriend = true;
         $friend_button = '<button onclick="friendToggle(\'unfriend\',\''.$profileOwner.'\',\'friendBtn\')">Unfriend</button>';
@@ -120,49 +122,67 @@
 @endsection
 
 @section('javascript')
-<script type="text/javascript">
-function friendToggle(type,user,elem){
-  var conf = confirm("Press OK to confirm the '"+type+"' action for user <?php echo $profileOwner; ?>.");
-  if(conf != true){
-    return false;
-  }
-  _(elem).innerHTML = 'please wait ...';
-  var ajax = ajaxObj("GET", "/friendSystem?type="+type+"&user="+user);
-  ajax.onreadystatechange = function() {
-    if(ajaxReturn(ajax) == true) {
-      if(ajax.responseText == "friend_request_sent"){
-        _(elem).innerHTML = 'OK Friend Request Sent';
-      } else if(ajax.responseText == "unfriend_ok"){
-        _(elem).innerHTML = '<button onclick="friendToggle(\'friend\',\'<?php echo $profileOwner; ?>\',\'friendBtn\')">Request As Friend</button>';
-      } else {
-        alert(ajax.responseText);
-        _(elem).innerHTML = 'Try again later';
+  <script type="text/javascript">
+    function friendToggle(type, user, element)
+    {
+      var conf = confirm("Press OK to confirm the '"+type+"' action for user <?php echo $profileOwner->name; ?>.");
+      if(conf != true)
+      {
+        return false;
       }
-    }
-  }
-  ajax.send();
-}
-function blockToggle(type,blockee,elem){
-  var conf = confirm("Press OK to confirm the '"+type+"' action on user <?php echo $profileOwner; ?>.");
-  if(conf != true){
-    return false;
-  }
-  var elem = document.getElementById(elem);
-  elem.innerHTML = 'please wait ...';
-  var ajax = ajaxObj("GET", "/blockSystem?type="+type+"&user="+user);
-  ajax.onreadystatechange = function() {
-    if(ajaxReturn(ajax) == true) {
-      if(ajax.responseText == "blocked_ok"){
-        elem.innerHTML = '<button onclick="blockToggle(\'unblock\',\'<?php echo $profileOwner; ?>\',\'blockBtn\')">Unblock User</button>';
-      } else if(ajax.responseText == "unblocked_ok"){
-        elem.innerHTML = '<button onclick="blockToggle(\'block\',\'<?php echo $profileOwner; ?>\',\'blockBtn\')">Block User</button>';
-      } else {
-        alert(ajax.responseText);
-        elem.innerHTML = 'Try again later';
+      document.getElementById(element).innerHTML = "please wait ...";
+      var ajax = ajaxObj("GET", "/friendSystem?type="+type+"&user="+user);
+      ajax.onreadystatechange = function()
+      {
+        if(ajaxReturn(ajax) == true)
+        {
+          if(ajax.responseText == "friend_request_sent")
+          {
+            document.getElementById(element).innerHTML = 'OK Friend Request Sent';
+          }
+          else if(ajax.responseText == "unfriend_ok")
+          {
+            document.getElementById(element).innerHTML = '<button onclick="friendToggle(\'friend\',\'<?php echo $profileOwner->name; ?>\',\'friendBtn\')">Request As Friend</button>';
+          }
+          else
+          {
+            alert(ajax.responseText);
+            document.getElementById(element).innerHTML = 'Try again later';
+          }
+        }
       }
+      ajax.send();
     }
-  }
-  ajax.send();
-}
-</script>
+    function blockToggle(type, blockee, elem)
+    {
+      var conf = confirm("Press OK to confirm the '"+type+"' action on user <?php echo $profileOwner->name; ?>.");
+      if(conf != true)
+      {
+        return false;
+      }
+      var elem = document.getElementById(elem);
+      elem.innerHTML = 'please wait ...';
+      var ajax = ajaxObj("GET", "/blockSystem?type="+type+"&user="+user);
+      ajax.onreadystatechange = function()
+      {
+        if(ajaxReturn(ajax) == true)
+        {
+          if(ajax.responseText == "blocked_ok")
+          {
+            elem.innerHTML = '<button onclick="blockToggle(\'unblock\',\'<?php echo $profileOwner->name; ?>\',\'blockBtn\')">Unblock User</button>';
+          }
+          else if(ajax.responseText == "unblocked_ok")
+          {
+            elem.innerHTML = '<button onclick="blockToggle(\'block\',\'<?php echo $profileOwner->name; ?>\',\'blockBtn\')">Block User</button>';
+          }
+          else
+          {
+            alert(ajax.responseText);
+            elem.innerHTML = 'Try again later';
+          }
+        }
+      }
+      ajax.send();
+    }
+  </script>
 @endsection

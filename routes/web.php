@@ -51,9 +51,9 @@ Route::get('/settings','ProfileController@settings'); //account settings
 
 Route::get('/friendSystem',function()
 {
-  return view('/phpParser.friendSystem');
+  return view('/phpParsers.friendSystem');
 });
 Route::get('/blockSystem',function()
 {
-  return view('/phpParser.blockSystem');
+  return view('/phpParsers.blockSystem');
 });

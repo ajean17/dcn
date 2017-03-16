@@ -5,6 +5,7 @@
 @endsection
 
 @section('content')
+<br/>
   <!--h3>Welcome to the Dream Catcher Network</h3-->
   @include('layouts.roundedcircle')
         <!-- START THE FEATURETTES -->

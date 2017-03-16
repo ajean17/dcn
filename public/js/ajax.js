@@ -1,11 +1,12 @@
-function ajaxObj( meth, url ) {
-	var x = new XMLHttpRequest();
-	x.open( meth, url, true );
-	x.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-	return x;
+function ajaxObj(meth, url)
+{
+	var ajax = new XMLHttpRequest();
+	ajax.open( meth, url, true );
+	ajax.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	return ajax;
 }
-function ajaxReturn(x){
-	if(x.readyState == 4 && x.status == 200){
+function ajaxReturn(ajax){
+	if(ajax.readyState == 4 && ajax.status == 200){
 	    return true;
 	}
 }
