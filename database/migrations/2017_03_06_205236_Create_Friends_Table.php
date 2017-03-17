@@ -18,7 +18,7 @@ class CreateFriendsTable extends Migration
       $table->increments('id');
       $table->string('user1');
       $table->string('user2');
-      $table->dateTime('datemade');
+      $table->timestamps();
       $table->enum('accepted', array('0', '1'))->default('0');
       });
     }

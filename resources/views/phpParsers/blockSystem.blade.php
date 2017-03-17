@@ -1,38 +1,46 @@
 <?php
 use App\User;
 use App\Block;
-  if(isset($_GET['type']) && isset($_GET['blockee']))
+
+  if(isset($_GET['type']) && isset($_GET['user']))
   {
-    $blockee = preg_replace('#[^a-z0-9]#i', '', $_GET['blockee']);
+    $blockee = preg_replace('#[^a-z0-9]#i', '', $_GET['user']);
+    $log_username = Auth::user()->name;
 
-    $block_check = Block::where('blocker','=',Auth::user()->name) //check if block exists between users
-    ->where('blockee','=',$profileOwner->name)
-    ->orWhere('blocker','=',$profileOwner->name)
-    ->where('blockee','=',Auth::user()->name)->get();
+    $exist_count = User::where('name','=', $blockee)->get();
 
-    if($block_check == "[]") //if: block does exist [blockcheck not empty]
+    if($exist_count == "[]")
     {
       echo "$blockee does not exist";
       exit();
     }
-    //check if user1 already has user2 blocked
-    $block_check2 = Block::where('blocker','=',Auth::user()->name)->where('blockee','=',$profileOwner->name)>get();
+
     if($_GET['type'] == "block")
     {
-      if($block_check2 != "[]") //if user is already blocked
+      $block_check = Block::where('blocker','=',$log_username) //check if block exists between users
+      ->where('blockee','=', $blockee)
+      ->orWhere('blocker','=', $blockee)
+      ->where('blockee','=',$log_username)->get();
+
+      if($block_check != "[]") //if user is already blocked
       {
         echo "You have already blocked this user.";
 	        exit();
       }
       else
       {
-        Block::insert(['blocker' => Auth::user()->name, 'blockee' => $profileOwner->name]);
+        $block = Block::create([
+        'blocker' => $log_username,
+        'blockee' => $blockee,
+        'dateblocked' => time()
+      ]);
         echo "blocked_ok";
 	       exit();
       }
       else if ($_GET['type'] == "unblock")
       {
-        if($block_check2 == "[]")
+        $block_check = Block::where('blocker','=', $log_username)->where('blockee','=', $blockee)->get();
+        if($block_check == "[]")
         {
           echo "User is not blocked, unable to unblock them.";
   	       exit();
@@ -40,8 +48,7 @@ use App\Block;
         else
         {
           //same query as block_check2, individual variable
-          $block_check3 = Block::where('blocker','=',Auth::user()->name)->where('blockee','=',$profileOwner->name)>get();
-          $block_check3->delete();
+          $block_check3 = Block::where('blocker','=', $log_username)->where('blockee','=', $blockee)->delete();
           echo "unblocked_ok";
   	       exit();
         }

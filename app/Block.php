@@ -12,6 +12,7 @@ class Block extends Model
       plural of the model in the database table list.
     [EX: blocks(for Block) instead of blocked.]
   */
+
   protected $table = 'blocked';
 
   public function user()//to find a user's profile

@@ -8,4 +8,5 @@ class Model extends Eloquent
    //protected $fillable = ['title', 'body']; Allow these, black list everything else
   // $guarded block only this, allow everything else.
   protected $guarded = [];
+
 }

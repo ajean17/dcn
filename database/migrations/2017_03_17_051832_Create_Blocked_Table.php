@@ -13,13 +13,15 @@ class CreateBlockedTable extends Migration
      */
     public function up()
     {
-      Schema::create('blocked', function (Blueprint $table)
-      {
-      $table->increments('id');
-      $table->string('blocker');
-      $table->string('blockee');
-      $table->dateTime('dateblocked');
-      });
+
+    Schema::create('blocked', function (Blueprint $table)
+    {
+    $table->increments('id');
+    $table->string('blocker');
+    $table->string('blockee');
+    $table->dateTime('dateblocked');
+    });
+
     }
 
     /**

@@ -6,7 +6,7 @@
   $friend_button = '<button disabled>Request As Friend</button>';
   $block_button = '<button disabled>Block User</button>';
   $ownerBlockViewer = false;
-  $loggedUser = Auth::user()->name;
+
 ?>
 @section('title')
   {{$profileOwner->name}} | DCN
@@ -15,6 +15,8 @@
 @section('content')
 <br/>
   <?php
+    $loggedUser = Auth::user()->name;
+
     if($profileOwner->id == Auth::user()->id)
     {
       $isOwner = true;
@@ -24,53 +26,47 @@
     {
       echo "<h1>$profileOwner->name's Profile</h1>";
       $isOwner = false;
-      $friend_check = Friend::where('user1','=',Auth::user()->name)
+      $friend_check = Friend::where('user1','=',$loggedUser)
       ->where('user2','=',$profileOwner->name)
       ->where('accepted','=','1')
       ->orWhere('user1','=',$profileOwner->name)
-      ->where('user2','=',Auth::user()->name)
+      ->where('user2','=',$loggedUser)
       ->where('accepted','=','1')->get();
       //$friend_check = Friend::where('user1','=','Alvin')->where('user2','=','Palmer')->where('accepted','=','1')->orWhere('user1','=','Palmer')->where('user2','=','Alvin')->where('accepted','=','1')->get();
 
-      $block_check = Block::where('blocker','=',Auth::user()->name)
+      $block_check = Block::where('blocker','=',$loggedUser)
       ->where('blockee','=',$profileOwner->name)
       ->orWhere('blocker','=',$profileOwner->name)
-      ->where('blockee','=',Auth::user()->name)->get();
+      ->where('blockee','=',$loggedUser)->get();
       //$block_check = App\Block::where('blocker','=','Alvin')->where('blockee','=','Palmer')->orWhere('blocker','=','Palmer')->where('blockee','=','Alvin')->get();
 
 
       /*
         Friend button logic for profile
       */
-      if($friend_check != "[]")//If the friend check is not empty
-      {
-        $isFriend = true;
-        $friend_button = '<button onclick="friendToggle(\'unfriend\',\''.$profileOwner.'\',\'friendBtn\')">Unfriend</button>';
-      }
-      else
-      {
-        $isFriend = false;
-        if($ownerBlockViewer == false)
-        {
-          $friend_button = '<button onclick="friendToggle(\'friend\',\''.$profileOwner.'\',\'friendBtn\')">Request As Friend</button>';
-        }
-      }
+      if($friend_check!="[]")//If the friend check is not empty
+          {
+            $isFriend = true;
+            $friend_button = '<button onclick="friendToggle(\'unfriend\',\''.$profileOwner->name.'\',\'friendBtn\')">Unfriend</button>';
+          }
+          else
+          {
+            $isFriend = false;
+            if($ownerBlockViewer == false)
+            {
+              $friend_button = '<button onclick="friendToggle(\'friend\',\''.$profileOwner->name.'\',\'friendBtn\')">Request As Friend</button>';
+              $block_button = '<button onclick="blockToggle(\'block\',\''.$profileOwner->name.'\',\'blockBtn\')">Block User</button>';
+            }
+          }
 
-      /*
-        Block button logic for profile
-      */
-      if($block_check != "[]")
-      {
-        $ownerBlockViewer = true;
-        $friend_button = '<button disabled>Request As Friend</button>';
-        $block_button = '<button onclick="blockToggle(\'unblock\',\''.$profileOwner.'\',\'blockBtn\')">Unblock User</button>';
-      }
-      else
-      {
-        $ownerBlockViewer = false;
-        $block_button = '<button onclick="blockToggle(\'block\',\''.$profileOwner.'\',\'blockBtn\')">Block User</button>';
-      }
-    }
+        if($block_check != "[]")
+        {
+          $ownerBlockViewer = true;
+          $block_button = '<button onclick="blockToggle(\'unblock\',\''.$profileOwner->name.'\',\'blockBtn\')">Unblock User</button>';
+          $friend_button = '<button disabled>Request As Friend</button>';
+        }
+
+        }
     /*
     if($isFriend == true)
     {
@@ -153,15 +149,15 @@
       }
       ajax.send();
     }
-    function blockToggle(type, blockee, elem)
+    function blockToggle(type, user, elem)
     {
       var conf = confirm("Press OK to confirm the '"+type+"' action on user <?php echo $profileOwner->name; ?>.");
       if(conf != true)
       {
         return false;
       }
-      var elem = document.getElementById(elem);
-      elem.innerHTML = 'please wait ...';
+
+      document.getElementById(element).innerHTML = 'please wait ...';
       var ajax = ajaxObj("GET", "/blockSystem?type="+type+"&user="+user);
       ajax.onreadystatechange = function()
       {
@@ -169,16 +165,16 @@
         {
           if(ajax.responseText == "blocked_ok")
           {
-            elem.innerHTML = '<button onclick="blockToggle(\'unblock\',\'<?php echo $profileOwner->name; ?>\',\'blockBtn\')">Unblock User</button>';
+            document.getElementById(element).innerHTML = '<button onclick="blockToggle(\'unblock\',\'<?php echo $profileOwner->name; ?>\',\'blockBtn\')">Unblock User</button>';
           }
           else if(ajax.responseText == "unblocked_ok")
           {
-            elem.innerHTML = '<button onclick="blockToggle(\'block\',\'<?php echo $profileOwner->name; ?>\',\'blockBtn\')">Block User</button>';
+            document.getElementById(element).innerHTML = '<button onclick="blockToggle(\'block\',\'<?php echo $profileOwner->name; ?>\',\'blockBtn\')">Block User</button>';
           }
           else
           {
             alert(ajax.responseText);
-            elem.innerHTML = 'Try again later';
+            document.getElementById(element).innerHTML = 'Try again later';
           }
         }
       }
