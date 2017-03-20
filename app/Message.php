@@ -6,7 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Message extends Model
 {
-  protected $fillable = ['username','message'];
+  protected $fillable = [
+      'user1', 'user2', 'message',
+  ];
 
   public function user()//to find a user's profile
   {

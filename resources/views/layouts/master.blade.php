@@ -23,6 +23,7 @@
     @endif
     <div class="container marketing">
       </br>
+      </br>
       @yield('content')
       @include('layouts.footer')
     </div>

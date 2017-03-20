@@ -1,16 +1,5 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
-
 Route::get('/', function ()
 {
     return view('/homeIndex');
@@ -18,21 +7,69 @@ Route::get('/', function ()
 
 //Auth::routes();//everything related to login/regisration/passreset/logout
 Route::get('/register','RegistrationController@create');
-Route::post('/register','RegistrationController@store');
+Route::get('/activation','RegistrationController@activation');
+//Route::post('/register','RegistrationController@store');
 
 Route::get('/login','SessionsController@create');
 Route::post('/login','SessionsController@store');
 Route::get('/logout','SessionsController@destroy');
+Route::get('/forgotPassword','SessionsController@reset');
+Route::get('/reclaim','SessionsController@reclaim');
 
-Route::get('/stargazer',function()
+//DASHBOARD ROUTES
+Route::get('/dashboard', 'DashboardController@index');
+Route::get('/account/{User}', 'DashboardController@account');
+Route::get('/notifications/{User}', 'DashboardController@notifications');
+Route::get('/inbox/{inboxOwner}','DashboardController@inbox');
+
+//PROFILE ROUTES
+Route::get('/profile/{profileOwner}', 'ProfileController@show');
+Route::get('/stargazer', 'ProfileController@search');
+
+//PHP PARSE ROUTES
+Route::get('/friendSystem','ParseController@friend');
+Route::get('/blockSystem','ParseController@block');
+Route::get('/searchSystem','ParseController@search');
+Route::get('/messageSystem','ParseController@message');
+Route::get('/passwordSystem','ParseController@password');
+Route::post('/photoSystem/{User}','ParseController@photoHandle');
+
+//IMAGE PULLING
+Route::get('images/{filename}', function ($filename)
+{
+    $path = resource_path().'/images'.'/'.$filename;
+
+    if(!File::exists($path)) abort(404);
+
+    $file = File::get($path);
+    $type = File::mimeType($path);
+
+    $response = Response::make($file, 200);
+    $response->header("Content-Type", $type);
+
+    return $response;
+});
+
+Route::get('uploads/user/{user}/{type}/{filename}', function ($user,$type,$filename)
+{
+    $path = resource_path().'/uploads'.'/user'.'/'.$user.'/'.$type.'/'.$filename;
+
+    if(!File::exists($path)) abort(404);
+
+    $file = File::get($path);
+    $type = File::mimeType($path);
+
+    $response = Response::make($file, 200);
+    $response->header("Content-Type", $type);
+
+    return $response;
+});
+
+/*Route::get('/stargazer',function()
 {
   return view('/search.index');
 }); //search page
 
-Route::get('/dashboard',function()
-{
-  return view('/dashboard.home');
-});//user's dashboard
 
 Route::get('/messages','MessageController@show'); //messenger
 Route::get('/update',function()
@@ -46,14 +83,10 @@ Route::get('/getM',function()
 Route::get('/profile/{profileOwner}','ProfileController@show');
 
 Route::get('/settings','ProfileController@settings'); //account settings
+*/
 
-
-
-Route::get('/friendSystem',function()
+//Error Display Routes
+Route::get('message', function ()
 {
-  return view('/phpParsers.friendSystem');
-});
-Route::get('/blockSystem',function()
-{
-  return view('/phpParsers.blockSystem');
+    return view('message');
 });

@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('title')
-  Login|Dream Catcher Network
+  Login | DCN
 @endsection
 
 @section('content')
@@ -22,6 +22,7 @@
       <div class="form-group">
         <button type="submit" class="btn btn-default">Login</button>
       </div>
+      <a href="/forgotPassword">Forgot your username or password?</a>
       @include ('layouts.errors')
     </form>
 @endsection

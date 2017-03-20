@@ -5,8 +5,10 @@ function ajaxObj(meth, url)
 	ajax.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	return ajax;
 }
-function ajaxReturn(ajax){
-	if(ajax.readyState == 4 && ajax.status == 200){
+function ajaxReturn(ajax)
+{
+	if(ajax.readyState == 4 && ajax.status == 200)
+	{
 	    return true;
 	}
 }

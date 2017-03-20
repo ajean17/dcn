@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('title')
-  Star Gazer
+  Star Gazer | DCN
 @endsection
 
 @section('content')

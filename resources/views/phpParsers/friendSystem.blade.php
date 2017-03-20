@@ -60,8 +60,7 @@ if (isset($_GET['type']) && isset($_GET['user']))
 			{
 				$newFriendship = Friend::create([
 					'user1' => $log_username,
-					'user2' => $user,
-					'datemade' => time()
+					'user2' => $user
 				]);
 	      echo "friend_request_sent";
 	      exit();

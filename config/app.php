@@ -2,6 +2,10 @@
 
 return [
 
+    'fileDestinationPath' => 'uploads/user',
+    'allowedFileTypes' => 'jpg,jpeg,gif,png,bmp',
+    'maxFileSize' => 2000, //every thousand is a megabyte 1000 = 1mb
+
     /*
     |--------------------------------------------------------------------------
     | Application Name

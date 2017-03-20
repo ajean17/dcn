@@ -1,0 +1,45 @@
+#profile_pic_box
+{
+  float:left;
+  border:#999 2px solid;
+  width:250px;
+  height:250px;
+  //margin:20px 30px 0px 0px;
+  overflow-y:hidden;
+
+  img
+  {
+    width: 246px;
+    height: 246px;
+  }
+
+  a
+  {
+    display: block;
+  	position:absolute;
+  	//z-index:4000;
+  	background:#D8F08E;
+  	border:#81A332 1px solid;
+  	border-radius:3px;
+  	padding:5px;
+  	font-size:12px;
+  	text-decoration:none;
+  	color:#60750B;
+    &:hover
+    {
+      display: block;
+    }
+  }
+
+  form
+  {
+    display:none;
+  	position:absolute;
+  	z-index:3000;
+  	padding:10px;
+  	opacity:.8;
+  	background:#F0FEC2;
+  	width:180px;
+  	height:180px;
+  }
+}

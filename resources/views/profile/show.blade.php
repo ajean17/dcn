@@ -45,28 +45,28 @@
         Friend button logic for profile
       */
       if($friend_check!="[]")//If the friend check is not empty
-          {
-            $isFriend = true;
-            $friend_button = '<button onclick="friendToggle(\'unfriend\',\''.$profileOwner->name.'\',\'friendBtn\')">Unfriend</button>';
-          }
-          else
-          {
-            $isFriend = false;
-            if($ownerBlockViewer == false)
-            {
-              $friend_button = '<button onclick="friendToggle(\'friend\',\''.$profileOwner->name.'\',\'friendBtn\')">Request As Friend</button>';
-              $block_button = '<button onclick="blockToggle(\'block\',\''.$profileOwner->name.'\',\'blockBtn\')">Block User</button>';
-            }
-          }
-
-        if($block_check != "[]")
+      {
+        $isFriend = true;
+        $friend_button = '<button onclick="friendToggle(\'unfriend\',\''.$profileOwner->name.'\',\'friendBtn\')">Unfriend</button>';
+      }
+      else
+      {
+        $isFriend = false;
+        if($ownerBlockViewer == false)
         {
-          $ownerBlockViewer = true;
-          $block_button = '<button onclick="blockToggle(\'unblock\',\''.$profileOwner->name.'\',\'blockBtn\')">Unblock User</button>';
-          $friend_button = '<button disabled>Request As Friend</button>';
+          $friend_button = '<button onclick="friendToggle(\'friend\',\''.$profileOwner->name.'\',\'friendBtn\')">Request As Friend</button>';
+          $block_button = '<button onclick="blockToggle(\'block\',\''.$profileOwner->name.'\',\'blockBtn\')">Block User</button>';
         }
+      }
 
-        }
+      if($block_check != "[]")
+      {
+        $ownerBlockViewer = true;
+        $block_button = '<button onclick="blockToggle(\'unblock\',\''.$profileOwner->name.'\',\'blockBtn\')">Unblock User</button>';
+        $friend_button = '<button disabled>Request As Friend</button>';
+      }
+
+    }
     /*
     if($isFriend == true)
     {
@@ -77,14 +77,32 @@
   ?>
   <hr>
   <div class="row profileHead">
-    <div class="col-sm-3 profilePic">
-      <h1>Profile Picture</h1>
-      <img class="featurette-image img-fluid mx-auto" data-src="holder.js/500x500/auto" alt="Generic placeholder image">
-      @if($isOwner==false)
-        <span id="friendBtn"><?php echo $friend_button; ?></span>
-        <span id="friendBtn"><?php echo $block_button; ?></span>
+    <div class=" profilePic" id="profile_pic_box">
+      @if($isOwner==true)
+        <a href="#" onclick="return false;" onmousedown="toggleElement('avatar_form')">Edit Avatar</a>
+        <form id="avatar_form" enctype="multipart/form-data" method="post" action="/photoSystem/<?php echo Auth::user()->name?>">
+          {{csrf_field()}}
+          <h4>Change your avatar</h4>
+          <input type="file" name="avatar" required>
+          <p><input type="submit" value="Upload"></p>
+        </form>
       @endif
+      <?php
+        if($profileOwner->avatar == NULL)
+        {
+          echo '<img src="/images/Default.jpg" width="245px" height="245px" alt="Profile Picture"><br/>';
+        }
+        else
+        {
+          echo '<img src="/uploads/user/'.$profileOwner->name.'/images'.'/'.$profileOwner->avatar.'" width="250px" height="250px" alt="Profile Picture"><br/>';
+        }
+      ?>
     </div>
+    @if($isOwner==false)
+      <span id="friendBtn"><?php echo $friend_button; ?></span>
+      <span id="blockBtn"><?php echo $block_button; ?></span>
+    @endif
+    @include ('layouts.errors')
     <div class="col-sm-9 banner">
       <h1>Banner</h1>
       <div class="bannerTabs">
@@ -121,11 +139,11 @@
   <script type="text/javascript">
     function friendToggle(type, user, element)
     {
-      var conf = confirm("Press OK to confirm the '"+type+"' action for user <?php echo $profileOwner->name; ?>.");
+      /*var conf = confirm("Press OK to confirm the '"+type+"' action for user <?php echo $profileOwner->name; ?>.");
       if(conf != true)
       {
         return false;
-      }
+      }*/
       document.getElementById(element).innerHTML = "please wait ...";
       var ajax = ajaxObj("GET", "/friendSystem?type="+type+"&user="+user);
       ajax.onreadystatechange = function()
@@ -149,6 +167,7 @@
       }
       ajax.send();
     }
+
     function blockToggle(type, user, elem)
     {
       var conf = confirm("Press OK to confirm the '"+type+"' action on user <?php echo $profileOwner->name; ?>.");

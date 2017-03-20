@@ -8,31 +8,21 @@ use App\Mail\WelcomeTwo;
 
 class RegistrationController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
      public function __construct()
      {
          $this->middleware('guest');
      }
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function create()
     {
         return view('registration.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+    public function activation()
+    {
+        return view('registration.activate');
+    }
+
     public function store()
     {
       //validates the registration form input
