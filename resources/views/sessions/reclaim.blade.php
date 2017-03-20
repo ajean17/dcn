@@ -16,7 +16,7 @@
 @section('content')
   <form method="GET" onsubmit="return false;" id="newPasswordForm">
     {{ csrf_field() }}
-    <h4>Enter your email address to reclaim your account</h4>
+    <h4>Enter your new password</h4>
 
     <!--div class="form-group">
       <label for="password"> Temporary Password:</label>

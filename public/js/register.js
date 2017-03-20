@@ -90,6 +90,7 @@ function signup()
     ajax.send();
 	}
 }
+
 function openTerms() //Opens the terms of conditions element for view in order to sign up
 {
 	document.getElementById("terms").style.display = "block";

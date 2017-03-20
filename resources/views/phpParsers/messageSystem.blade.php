@@ -1,6 +1,6 @@
 <?php
 
-  use App\Conversation;
+  use App\Message;
   use App\Dialogue;
 
   if(isset($_GET['username']) && isset($_GET['talkTo']) && isset($_GET['message']))
@@ -15,7 +15,7 @@
       die();
     }
 
-    $c = Conversation::create([
+    $c = Message::create([
       'user1' => $username,
       'user2'=> $talkTo,
       'message' => $message
@@ -51,7 +51,7 @@
     {
       $username = stripslashes(htmlspecialchars($_GET['username']));
       $talkTo = stripcslashes(htmlspecialchars($_GET['talkTo']));
-      $messages = Conversation::where('user1','=',$username)->where('user2','=',$talkTo)
+      $messages = Message::where('user1','=',$username)->where('user2','=',$talkTo)
       ->where('message','!=','')
       ->orWhere('user1','=',$talkTo)->where('user2','=',$username)
       ->where('message','!=','')->orderBy('created_at','asc')->get();

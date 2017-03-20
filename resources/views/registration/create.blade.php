@@ -3,7 +3,6 @@
 @section('title')
   Registration | DCN
 @endsection
-
 <?php
   use App\User;
   use App\Mail\Welcome;
@@ -105,37 +104,36 @@
   	exit();
   }
 ?>
-
 @section('content')
-
+  <!--div class="col-sm-8"-->
   <h1>Sign Up</h1>
 
   <form method="GET" id="signupform" onsubmit="return false;"><!--action="/register"-->
     {{csrf_field()}}
 
     <div class="form-group">
-      <label for="name">User Name:</label>
-      <input type="text" class="form-control" id="username" name="name"
-      onblur="checkusername()" onkeyup="restrict('username')" maxlength="16">
-      <span id="unamestatus"></span>
+    <label for="name">User Name:</label>
+    <input type="text" class="form-control" id="username" name="name"
+    onblur="checkusername()" onkeyup="restrict('username')" maxlength="16">
+    <span id="unamestatus"></span>
     </div>
 
     <div class="form-group">
-      <label for="email">Email:</label>
-      <input type="email" class="form-control" id="email" name="email"
-      onfocus="emptyElement('status')" onkeyup="restrict('email')" maxlength="88">
+    <label for="email">Email:</label>
+    <input type="email" class="form-control" id="email" name="email"
+    onfocus="emptyElement('status')" onkeyup="restrict('email')" maxlength="88">
     </div>
 
     <div class="form-group">
-      <label for="password">Password:</label>
-      <input type="password" class="form-control" id="password" name="password"
-      onfocus="emptyElement('status')" maxlength="100">
+    <label for="password">Password:</label>
+    <input type="password" class="form-control" id="password" name="password"
+    onfocus="emptyElement('status')" maxlength="100">
     </div>
 
     <div class="form-group">
-      <label for="password_confirmation">Confirm Password:</label>
-      <input type="password" class="form-control" id="password_confirmation" name="password_confirmation"
-      onfocus="emptyElement('status')" maxlength="100">
+    <label for="password_confirmation">Confirm Password:</label>
+    <input type="password" class="form-control" id="password_confirmation" name="password_confirmation"
+    onfocus="emptyElement('status')" maxlength="100">
     </div>
 
     <div class="form-group">
@@ -157,5 +155,7 @@
       <p>2. Don't be a troll.</p>
       <p>3. Get money.</p>
   </div>
+
   @include('layouts.errors')
+
 @endsection
