@@ -32,26 +32,26 @@ use App\Block;
         $block = Block::create([
         'blocker' => $log_username,
         'blockee' => $blockee,
-        'dateblocked' => time()
+        'dateblocked' => Carbon\Carbon::now()
       ]);
         echo "blocked_ok";
 	       exit();
       }
-      else if ($_GET['type'] == "unblock")
+    }
+    else if ($_GET['type'] == "unblock")
+    {
+      $block_check = Block::where('blocker','=', $log_username)->where('blockee','=', $blockee)->get();
+      if($block_check == "[]")
       {
-        $block_check = Block::where('blocker','=', $log_username)->where('blockee','=', $blockee)->get();
-        if($block_check == "[]")
-        {
-          echo "User is not blocked, unable to unblock them.";
-  	       exit();
-        }
-        else
-        {
-          //same query as block_check2, individual variable
-          $block_check3 = Block::where('blocker','=', $log_username)->where('blockee','=', $blockee)->delete();
-          echo "unblocked_ok";
-  	       exit();
-        }
+        echo "User is not blocked, unable to unblock them.";
+         exit();
+      }
+      else
+      {
+        //same query as block_check2, individual variable
+        $block_check3 = Block::where('blocker','=', $log_username)->where('blockee','=', $blockee)->delete();
+        echo "unblocked_ok";
+         exit();
       }
     }
   }

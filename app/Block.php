@@ -7,6 +7,9 @@ use App\User;
 
 class Block extends Model
 {
+
+  public $timestamps = false;
+  protected $fillable = ['blocker', 'blockee', 'dateblocked'];
   /*
   If table variable isnt specified, eloquent will attempt to find the
       plural of the model in the database table list.

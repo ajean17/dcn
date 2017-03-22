@@ -168,7 +168,7 @@
       ajax.send();
     }
 
-    function blockToggle(type, user, elem)
+    function blockToggle(type, user, element)
     {
       var conf = confirm("Press OK to confirm the '"+type+"' action on user <?php echo $profileOwner->name; ?>.");
       if(conf != true)
