@@ -17,7 +17,7 @@ class CreateProjectsTable extends Migration
             $table->increments('id');
             $table->integer('profileId');
             $table->string('name');
-            $table->enum('category', array('fill with info'))->default('naive');
+            //$table->enum('category', array('fill with info'))->default('naive');
             $table->timestamps();
         });
     }

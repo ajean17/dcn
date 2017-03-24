@@ -10,8 +10,8 @@
     <link rel="icon" href="../../favicon.ico">
 
     <title>@yield('title')</title>
-    @include('layouts.style');
-    @yield('javascript');
+    @include('layouts.style')
+    @yield('javascript')
   </head>
 
   <body>
@@ -27,6 +27,5 @@
       @yield('content')
       @include('layouts.footer')
     </div>
-
   </body>
 </html>

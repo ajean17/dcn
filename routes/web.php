@@ -32,6 +32,7 @@ Route::get('/blockSystem','ParseController@block');
 Route::get('/searchSystem','ParseController@search');
 Route::get('/messageSystem','ParseController@message');
 Route::get('/passwordSystem','ParseController@password');
+Route::get('/categories','ParseController@categories');
 Route::post('/photoSystem/{User}','ParseController@photoHandle');
 
 //IMAGE PULLING

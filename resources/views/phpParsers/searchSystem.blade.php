@@ -35,6 +35,10 @@
     {
         echo "Sorry, That user does not exist yet.";
     }
+  }
+
+  if(isset($_GET['whoSearch']) && isset($_GET['searchCriteria']))
+  {
 
   }
 ?>

@@ -37,6 +37,11 @@ class ParseController extends Controller
     return view('phpParsers.passwordSystem');
   }
 
+  public function categories()
+  {
+    return view('phpParsers.categories');
+  }
+
   public function photoHandle(User $User, Request $request)
   {
     //Pull the request object named avatar, and assign its original filename to a variable
