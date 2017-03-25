@@ -5,9 +5,54 @@
 @endsection
 <?php
   use App\Category;
+  use App\User;
 
-  $categories = Category::whereNull('parent')->orderBy('name','asc')->get();
+  //$categories = Category::whereNull('parent')->orderBy('name','asc')->get();
+  $parent = "WHERE parent IS NULL";
+  $categories = DB::select(DB::raw('SELECT * FROM categories '.$parent.' ORDER BY name ASC'));
 
+  if(isset($_GET["search"]) && isset($_GET["video"]) && isset($_GET["mentor"]) && isset($_GET["investments"]) && isset($_GET["roi"]))
+  {
+    $search = $_GET("search");
+    $video = $_GET("video");
+    $investments = $_GET("investements");
+    $mentor = $_GET("mentor");
+    $roi = $_GET("roi");
+
+    if($video == "true")
+      $video = "WHERE video IS NOT NULL";
+    else
+      $video = "";
+
+    if($investments == "true")
+    {
+      $investments = "WHERE investments IS NOT NULL";
+      if($video == "true")
+        $investments = "AND WHERE investments IS NOT NULL";
+    }
+    else
+      $investments = "";
+
+    if($mentor == "true")
+    {
+      $mentor = "WHERE mentor IS NOT NULL";
+      if($video == "true" || $investments == "true")
+        $mentor = "AND WHERE mentor IS NOT NULL";
+    }
+    else
+      $mentor = "";
+
+    if($roi == "true")
+    {
+      $roi = "WHERE roi IS NOT NULL";
+      if($video == "true" || $investments == "true" || $mentor == "true")
+        $roi = "AND WHERE roi IS NOT NULL";
+    }
+    else
+      $roi = "";
+
+    //DB::select(DB::raw('SELECT * FROM profiles '.$video.$investments.$mentor.$roi);
+  }
 ?>
 @section('content')
   <h1>Search Page</h1>
@@ -15,7 +60,7 @@
     <div id="searchCriteria" class="col-sm-3">
       <h4>Search Bar</h4>
       <hr/>
-      <input type="text" id="searchBar" name="searchBar">
+      <input type="text" id="searchBar" name="searchBar" onkeydown="if (event.keyCode == 13) searchNow()">
       <button id="startSearch" onclick="searchNow()">Search</button>
       <div id="criteriaList">
         <hr/>
@@ -26,52 +71,23 @@
         <input type="checkbox" id="ROI" name="ROI"> Has ROI forcast reports <br/>
         <hr/>
         <h4>Industries</h4>
-        <ul>
           @foreach($categories as $category)
-            <li>{{$category->name}}</li>
+            <p class="accordion" onclick="toggleList()">{{$category->name}}</p>
             <?php
               $subCategory = Category::where('parent','=',$category->name)->orderBy('name','asc')->get();
               if($subCategory != "[]")
               {
-                echo "<ul>";
+                echo "<ul class=\"panel\">";
+                //echo "<div class=\"panel\">";
                 foreach($subCategory as $sub)
                 {
                   echo "<li>".$sub->name."</li>";
                 }
+                //echo "</div>";
                 echo "</ul>";
               }
             ?>
           @endforeach
-          <!--li>Finance</li>
-          <li>Marketing</li>
-          <li>Agriculture</li>
-          <li>Automotive/Mass Transit</li>
-          <li>Engineering</li>
-          <li>Electronics/Information Technology</li>
-          <li>Food & Beverage</li>
-          <li>Law</li>
-          <li>Print Media</li>
-          <li>Business</li>
-          <li>Construction</li>
-          <li>Politics</li>
-          <li>Gaming</li>
-          <li>Education</li>
-          <li>Pharmacy</li>
-          <li>Entertainment</li>
-          <li>Environmental</li>
-          <li>Philanthropy</li>
-          <li>Social Issues</li>
-          <li>Resources</li>
-          <li>Fashion</li>
-          <li>Religion</li>
-          <li>Civil Services</li>
-          <li>Medical</li>
-          <li>Hospitality</li>
-          <li>Travel</li>
-          <li>Unions</li>
-          <li>Retail</li>
-          <li>Real Estate</li-->
-        </ul>
       </div>
     </div>
     <div class="col-sm-9">
@@ -94,6 +110,55 @@
 
 @section('javascript')
 <script>
+
+  function searchNow()
+  {
+    var video = document.getElementById("video").checked;
+    var mentor = document.getElementById("mentor").checked;
+    var investments = document.getElementById("investments").checked;
+    var roi = document.getElementById("ROI").checked;
+    var search = document.getElementById("searchBar").value;
+
+    if(search != "")
+    {
+      var ajax = ajaxObj("GET", "/stargazer?search=" + search + "&video=" + video + "&mentor=" + mentor + "&investments=" + investments + "&roi=" + roi);
+      ajax.onreadystatechange = function()
+      {
+        ajax.responseText;
+      }
+      ajax.send();
+    }
+  }
+
+
+  function toggleList()
+  {
+    var acc = document.getElementsByClassName("accordion");
+    var i;
+    for (i = 0; i < acc.length; i++)
+    {
+        acc[i].onclick = function()
+        {
+            /* Toggle between adding and removing the "active" class,
+            to highlight the button that controls the panel*/
+            this.classList.toggle("active");
+
+            /* Toggle between hiding and showing the active panel*/
+            var panel = this.nextElementSibling;
+            if (panel.style.maxHeight)
+            {
+              panel.style.maxHeight = null;
+              console.log("maxlength is " + panel.style.maxHeight);
+            }
+            else
+            {
+              panel.style.maxHeight = panel.scrollHeight + "px";
+              console.log("maxlength is " + panel.scrollHeight);
+            }
+        }
+    }
+  }
+
 //ajax rq
 /*
 given category c1, find the most similar category

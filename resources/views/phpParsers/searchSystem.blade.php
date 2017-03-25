@@ -39,6 +39,6 @@
 
   if(isset($_GET['whoSearch']) && isset($_GET['searchCriteria']))
   {
-
+    
   }
 ?>

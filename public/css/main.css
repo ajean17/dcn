@@ -232,4 +232,37 @@ h1 {
   border-radius: 15px;
   border: 8px solid #eeeeee; }
 
+#searchCriteria {
+  background-color: #eee; }
+  #searchCriteria ul {
+    list-style-position: inside;
+    list-style-type: none;
+    margin-left: 0; }
+  #searchCriteria h4 {
+    text-align: center; }
+
+.accordion {
+  background-color: #eee;
+  color: #444;
+  cursor: pointer;
+  width: 100%;
+  border: none;
+  outline: none;
+  transition: 0.4s;
+  text-align: center; }
+
+/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+.accordion.active, .accordion:hover {
+  background-color: #ddd; }
+
+/* Style the accordion panel. Note: hidden by default */
+.panel {
+  padding: 0 18px;
+  background-color: rgba(200, 200, 200, 0.3);
+  list-style: none;
+  text-align: center;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.2s ease-out; }
+
 /*# sourceMappingURL=main.css.map */
