@@ -29,12 +29,12 @@ div.user_info {
 #profile_pic_box {
   float: left;
   border: #999 2px solid;
-  width: 250px;
-  height: 250px;
+  width: 156px;
+  height: 156px;
   overflow-y: hidden; }
   #profile_pic_box img {
-    width: 246px;
-    height: 246px; }
+    width: 150px;
+    height: 150px; }
   #profile_pic_box a {
     display: block;
     position: absolute;
@@ -72,17 +72,53 @@ div.user_info {
 
 .profileBody {
   background-color: #dddddd;
+  position: relative;
   /*height:80%;*/ }
 
 .quickNav {
   background-color: #eeeeee;
-  /*position: fixed;*/ }
+  position: absolute fixed; }
+
+.stickyFix {
+  position: fixed;
+  top: 40px; }
 
 .projectContent {
-  background-color: #33343e; }
+  background-color: #33343e;
+  height: 500px;
+  overflow-y: scroll; }
 
 .profileFoot {
   background-color: #123456; }
+
+#editContent {
+  color: blue;
+  opacity: 0.92;
+  position: absolute;
+  top: 200px;
+  left: auto;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: none; }
+
+.editform {
+  border-radius: 2px;
+  padding: 20px 30px;
+  box-shadow: 0 0 15px;
+  font-size: 14px;
+  font-weight: bold;
+  width: 350px;
+  margin: 20px 250px 0 35px;
+  float: left; }
+
+#edit {
+  width: 350px;
+  margin: 0px;
+  background-color: white;
+  font-family: 'Fauna One', serif;
+  position: relative;
+  border: 5px solid #5a9eb5; }
 
 .convoList {
   background-color: rgba(0, 200, 200, 0.2); }

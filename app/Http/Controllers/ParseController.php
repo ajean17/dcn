@@ -37,6 +37,11 @@ class ParseController extends Controller
     return view('phpParsers.passwordSystem');
   }
 
+  public function project()
+  {
+    return view('phpParsers.projectSystem');
+  }
+
   public function categories()
   {
     return view('phpParsers.categories');

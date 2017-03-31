@@ -32,4 +32,9 @@ class DashboardController extends Controller
   {
     return view('dashboard.inbox',compact('inboxOwner'));
   }
+
+  public function manage(User $User)
+  {
+    return view('dashboard.management',compact('User'));
+  }
 }

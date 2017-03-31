@@ -13,10 +13,17 @@ class CreateProfileTable extends Migration
      */
     public function up()
     {
-      Schema::create('profiles', function (Blueprint $table) {
+      Schema::create('profiles', function (Blueprint $table)
+      {
           $table->increments('id');
           $table->string('username');
-          $table->enum('type', array('inventor', 'investor', 'naive'))->default('naive');
+          $table->enum('hasVideo',array('0','1'))->default('0');
+          $table->enum('hasMentor',array('0','1'))->default('0');
+          $table->enum('hasInvestments',array('0','1'))->default('0');
+          $table->enum('hasROI',array('0','1'))->default('0');
+          $table->integer('projectOne')->nullable()->unique();
+          $table->integer('projectTwo')->nullable()->unique();
+          //$table->enum('type', array('inventor', 'investor', 'naive'))->default('naive');
           $table->timestamps();
       });
     }

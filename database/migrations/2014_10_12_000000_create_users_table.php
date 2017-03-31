@@ -22,6 +22,7 @@ class CreateUsersTable extends Migration
             $table->string('avatar')->nullable();
             //$table->enum('userlevel', array('1', '2', '3', '4'))->default('1');
             $table->enum('activated', array('0', '1'))->default('0');
+            //$table->enum('firstTime',array('0','1'))->default('0');
             //$table->string('ip');
             $table->dateTime('lastlogin')->nullable();
             $table->dateTime('notescheck')->nullable();

@@ -18,7 +18,7 @@
     </div>
     <div class="col-sm-4 dashOption">
       <h1>
-        <a href="#">Profile</a>
+        <a href="/management/{{Auth::user()->name}}">Manage your Profile</a>
       </h1>
     </div>
   </div>

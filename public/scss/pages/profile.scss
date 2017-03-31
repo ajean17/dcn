@@ -2,15 +2,15 @@
 {
   float:left;
   border:#999 2px solid;
-  width:250px;
-  height:250px;
+  width:156px;
+  height:156px;
   //margin:20px 30px 0px 0px;
   overflow-y:hidden;
 
   img
   {
-    width: 246px;
-    height: 246px;
+    width: 150px;
+    height: 150px;
   }
 
   a
@@ -64,17 +64,29 @@
 .profileBody
 {
   background-color: #dddddd;
+  position: relative;
   /*height:80%;*/
 }
 
 .quickNav
 {
   background-color: #eeeeee;
-  /*position: fixed;*/
+  position: absolute fixed;
+  //height:20%;
 }
+
+.stickyFix
+{
+  position:fixed;
+  top:40px;
+  //z-index:99999;
+}
+
 .projectContent
 {
   background-color:#33343e;
+  height: 500px;
+  overflow-y: scroll;
 }
 .profileFoot
 {
