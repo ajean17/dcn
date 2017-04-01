@@ -2,100 +2,100 @@
   use App\Project;
   use App\Profile;
   use App\User;
+  //use \Storage;
 
-  $name = $_POST['title'];
+  $name = $request->input('title');
   $one = "one";
-  $oneType = "";
+  $oneType = "blank1";
   $two = "two";
-  $twoType = "";
+  $twoType = "blank2";
   $three = "three";
-  $threeType = "";
+  $threeType = "blank3";
   $four = "four";
-  $fourType = "";
+  $fourType = "blank4";
   $five = "five";
-  $fiveType = "";
-  if(isset( $_POST['OneType']))
+  $fiveType = "blank5";
+
+  if($request->has('OneType'))
   {
-    $oneType = $_POST['OneType'];
+    $oneType = $request->input('OneType');
     switch($oneType)
     {
       case "text":
-        $one = $_POST['OneT'];
+        $one = $request->input('OneT');
       break;
       case "embed":
-        $one = $_POST['OneE'];
+        $one = $request->input('OneE');
       break;
       case "upload":
-        $one = $_FILES['OneU']['name'];
+        $one = $request->file('OneU');
       break;
     }
   }
-  if(isset($_POST['TwoType']))
+  if($request->has('TwoType'))
   {
-    $twoType = $_POST['TwoType'];
+    $twoType = $request->input('TwoType');
     switch($twoType)
     {
       case "text":
-        $two = $_POST['TwoT'];
+        $two = $request->input('TwoT');
       break;
       case "embed":
-        $two = $_POST['TwoE'];
+        $two = $request->input('TwoE');
       break;
       case "upload":
-        $two = $_FILES['TwoU']['name'];
+        $two = $request->file('TwoU');
       break;
     }
   }
-  if(isset($_POST['ThreeType']))
+  if($request->has('ThreeType'))
   {
-    $threeType = $_POST['ThreeType'];
+    $threeType = $request->input('ThreeType');
     switch($threeType)
     {
       case "text":
-        $three = $_POST['ThreeT'];
+        $three = $request->input('ThreeT');
       break;
       case "embed":
-        $three = $_POST['ThreeE'];
+        $three =$request->input('ThreeE');
       break;
       case "upload":
-        $three = $_FILES['ThreeU']['name'];
+        $three = $request->file('ThreeU');
       break;
     }
   }
-  if(isset($_POST['FourType']))
+  if($request->has('FourType'))
   {
-    $fourType = $_POST['FourType'];
+    $fourType = $request->input('FourType');
     switch($fourType)
     {
       case "text":
-        $four = $_POST['FourT'];
+        $four = $request->input('FourT');
       break;
       case "embed":
-        $four = $_POST['FourE'];
+        $four = $request->input('FourE');
       break;
       case "upload":
-        $four = $_FILES['FourU']['name'];
+        $four = $request->file('FourU');
       break;
     }
   }
-  if(isset($_POST['FiveType']))
+  if($request->has('FiveType'))
   {
-    $fiveType = $_POST['FiveType'];
+    $fiveType = $request->input('FiveType');
     switch($fiveType)
     {
       case "text":
-        $five = $_POST['FiveT'];
+        $five = $request->input('FiveT');
       break;
       case "embed":
-        $five = $_POST['FiveE'];
+        $five = $request->input('FiveE');
       break;
       case "upload":
-        $five = $_FILES['FiveU']['name'];
+        $five = $request->file('FiveU');
       break;
     }
   }
-
-
 
   //$elements = Array($one => $oneType, $two => $twoType, $three => $threeType, $four =>$fourType, $five => $fiveType);
   $types = Array($oneType => $one,
@@ -103,21 +103,18 @@
                  $threeType => $three,
                  $fourType => $four,
                  $fiveType => $five);
+  echo "Name is: ".$name."<hr/>";
 
-  echo "The name is:".$name."<br/>";
-  echo "The one is:".htmlentities($one)."<br/>";
-  echo "The two is:".$two."<br/>";
-  echo "The three is:".$three."<br/>";
-  echo "The four is:".$four."<br/>";
-  echo "The five is:".$five."<br/>";
-
-  /*foreach ($types as $type => $element)
+  foreach ($types as $type => $element)
   {
-    echo "The element is: ".$element.";<br/> The Type is: ".$type."<br/>";
-  }*/
+    if($type == "embed")
+      echo "The element is: ".htmlentities($element)."<br/> The Type is: ".$type."<hr/>";
+    else if($type == "upload")
+      echo "The element is: ".$element->getClientOriginalName()."<br/> The Type is: ".$type."<hr/>";
+    else
+      echo "The element is: ".$element."<br/> The Type is: ".$type."<hr/>";
+  }
 
-
-  /*
   $user = $_POST['userName'];
   $profile = Profile::where('username','=',$user)->first();
 
@@ -146,25 +143,52 @@
       'fiveType' => $fiveType
     ]);
 
-    Profile::where('username','=',$user)->update(Array('projectOneID' => $newProject->id));
+    $profile->update(Array('projectOneID' => $newProject->id));
   }
   else if($profile->projectOneID != NULL)
   {
     $project = Project::where('id','=',$profile->projectOneID)->first();
 
-    if($name != "")
+    if($name != "" || $name != NULL)
       $project->update(Array('name' => $name));
-    if($one != "")
-      $project->update(Array('elementOne' => $one, 'oneType' => $oneType));
-    if($two != "")
-      $project->update(Array('elementTwo' => $two, 'twoType' => $twoType));
-    if($three != "")
-      $project->update(Array('elementThree' => $three, 'threeType' => $threeType));
-    if($four != "")
-      $project->update(Array('elementFour' => $four, 'fourType' => $fourType));
-    if($five != "")
-      $project->update(Array('elementFive' => $five, 'fiveType' => $fiveType));
 
+    if($one != "one" && $oneType != "blank1")
+    {
+      if($oneType == "upload")
+        $project->update(Array('elementOne' => $one->getClientOriginalName(),'oneType' => $oneType));
+      else
+        $project->update(Array('elementOne' => $one, 'oneType' => $oneType));
+    }
+    if($two != "two")
+    {
+      if($twoType == "upload")
+        $project->update(Array('elementTwo' => $two->getClientOriginalName(),'twoType' => $twoType));
+      else
+        $project->update(Array('elementTwo' => $two, 'twoType' => $twoType));
+    }
+
+    if($three != "three")
+    {
+      if($threeType == "upload")
+        $project->update(Array('elementThree' => $three->getClientOriginalName(),'threeType' => $threeType));
+      else
+        $project->update(Array('elementThree' => $three, 'threeType' => $threeType));
+    }
+    if($four != "four")
+    {
+      if($fourType == "upload")
+        $project->update(Array('elementFour' => $four->getClientOriginalName(),'fourType' => $fourType));
+      else
+        $project->update(Array('elementFour' => $four, 'fourType' => $fourType));
+    }
+
+    if($five != "five")
+    {
+      if($fiveType == "upload")
+        $project->update(Array('elementFive' => $five->getClientOriginalName(), 'fiveType' => $fiveType));
+      else
+        $project->update(Array('elementFive' => $five, 'fiveType' => $fiveType));
+    }
   }
 
   foreach ($types as $type => $element)
@@ -178,14 +202,26 @@
   $message = "Your profile has been updated";
   return redirect()->to('/management');
 
-
   function saveUpload($upload)
   {
-    echo "The file to save is ".$upload;
-    /*if($upload != "")
-    {
-
-    }/
+    //echo "The file to save is ".$upload['name'];
+    $fileName = $upload->getClientOriginalName();
+    //Grab the allowed file types and max file size from the config.app file keys
+    $allowedUploadTypes = config('app.allowedUploadTypes');
+    $maxUploadSize = config('app.maxUploadSize');
+    //Assign the validation rules and run the command
+    $rules = [
+      'OneU' => 'nullable|mimes:'.$allowedUploadTypes.'|max:'.$maxUploadSize,
+      'TwoU' => 'nullable|mimes:'.$allowedUploadTypes.'|max:'.$maxUploadSize,
+      'ThreeU' => 'nullable|mimes:'.$allowedUploadTypes.'|max:'.$maxUploadSize,
+      'FourU' => 'nullable|mimes:'.$allowedUploadTypes.'|max:'.$maxUploadSize,
+      'FiveU' => 'nullable|mimes:'.$allowedUploadTypes.'|max:'.$maxUploadSize
+    ];
+    Request::validate($upload,$rules);
+    //Grab the destination path variable from the config.app file key
+    $destinationPath = config('app.fileDestinationPath').'/'.$user.'/images'.'/'.$fileName;
+    //Move the uploaded file from the temporary location to the folder of choice
+    $moveResult = Storage::put($destinationPath, file_get_contents($upload->getRealPath()));
   }
-  */
+
 ?>

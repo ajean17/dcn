@@ -32,11 +32,14 @@
     {{csrf_field()}}
 
     <input type="hidden" name="userName" value="{{Auth::user()->name}}">
-    <center><h5>You may add up to five elements to your project's profile</h5></center>
+    <center>
+      <h5>You may add up to five elements to your project's profile</h5>
+      @include ('layouts.errors')
+    </center>
 
     <div class="form-group">
       <label for="title"><b>Please provide a title for your project.</b></label><br/>
-      <input type="text" id="projectTitle" name="title" required>
+      <input type="text" id="projectTitle" name="title">
     </div>
 
     <?php

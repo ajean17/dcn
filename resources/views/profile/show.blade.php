@@ -11,7 +11,7 @@
   $ownerBlockViewer = false;
   $hasContent = false;
 
-  $profile = Profile::where('username','=',$loggedUser)->first();
+  $profile = Profile::where('username','=',$profileOwner->name)->first();
   if($profile == "")
   {
     $profile = Profile::create([
@@ -138,20 +138,36 @@
       </ul>
     </div>
     <div class="col-sm-10 projectContent">
-      <h1>Project Content</h1>
+      <!--h1>Project Content</h1-->
         <center>
           <?php
             if($hasContent == true)
             {
-              echo "<h3>Element One</h3>".$projectOne->elementOne."<hr/>";
-              echo "<h3>Element Two</h3>".$projectOne->elementTwo."<hr/>";
-              echo "<h3>Element Three</h3>".$projectOne->elementThree."<hr/>";
-              echo "<h3>Element Four</h3>".$projectOne->elementFour."<hr/>";
-              echo "<h3>Element Five</h3>".$projectOne->elementFive;
+              echo "<h1>".$projectOne->name."</h1>";
+              if($projectOne->oneType != "upload")
+                echo "<h3>Element One</h3>".$projectOne->elementOne."<hr/>";
+              else
+                echo '<img src="/uploads/user/'.$profileOwner->name.'/images'.'/'.$projectOne->elementOne.'" width="250px" height="250px" alt="Profile Picture"><br/>';
+              if($projectOne->twoType != "upload")
+                echo "<h3>Element Two</h3>".$projectOne->elementTwo."<hr/>";
+              else
+                echo '<img src="/uploads/user/'.$profileOwner->name.'/images'.'/'.$projectOne->elementTwo.'" width="250px" height="250px" alt="Profile Picture"><br/>';
+              if($projectOne->threeType != "upload")
+                echo "<h3>Element Three</h3>".$projectOne->elementThree."<hr/>";
+              else
+                echo '<img src="/uploads/user/'.$profileOwner->name.'/images'.'/'.$projectOne->elementThree.'" width="250px" height="250px" alt="Profile Picture"><br/>';
+              if($projectOne->fourType != "upload")
+                echo "<h3>Element Four</h3>".$projectOne->elementFour."<hr/>";
+              else
+                echo '<img src="/uploads/user/'.$profileOwner->name.'/images'.'/'.$projectOne->elementFour.'" width="250px" height="250px" alt="Profile Picture"><br/>';
+              if($projectOne->fiveType != "upload")
+                echo "<h3>Element Five</h3>".$projectOne->elementFive;
+              else
+                echo '<img src="/uploads/user/'.$profileOwner->name.'/images'.'/'.$projectOne->elementFive.'" width="250px" height="250px" alt="Profile Picture"><br/>';
             }
             else if($hasContent == false)
             {
-              echo "<h3>No content to display yet...</h3>";
+              echo "<h1>No content to display yet...</h1>";
             }
           ?>
         </center>

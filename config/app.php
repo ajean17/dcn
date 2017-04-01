@@ -6,6 +6,8 @@ return [
     'allowedFileTypes' => 'jpg,jpeg,gif,png,bmp',
     'maxFileSize' => 2000, //every thousand is a megabyte 1000 = 1mb
 
+    'allowedUploadTypes' => 'jpg,jpeg,gif,png,bmp',
+    'maxUploadSize' => 2000,
     /*
     |--------------------------------------------------------------------------
     | Application Name
