@@ -4,7 +4,10 @@
   Profile Management
 @endsection
 <?php
+  use App\Category;
 
+  $parent = "WHERE parent IS NULL";
+  $categories = DB::select(DB::raw('SELECT * FROM categories '.$parent.' ORDER BY name ASC'));
   function elementUpload($number)
   {
     ?>
@@ -38,6 +41,32 @@
     </center>
 
     <div class="form-group">
+      <label for="category"><b>Select a Category that Describes your Project</b></label><br/>
+        <?php
+          echo "<select id='categories' name=\"category\" onmouseup='showSub()'>";
+          echo "<option value='dummy' disabled selected>Select your option</option>";
+          foreach($categories as $category)
+          {
+            echo "<option value='".$category->name."'>".$category->name."</option>";
+          }
+          echo "</select><br/>";
+
+          foreach($categories as $category)
+          {
+            echo "<div style='display:none;' id='".$category->name."'><select name='subCategory'>";
+            echo "<option value='dummy2' disabled selected>Select an advanced category (Optional)</option>";
+            $subCategory = Category::where('parent','=',$category->name)->orderBy('name','asc')->get();
+            foreach($subCategory as $sub)
+            {
+              echo "<option value='".$sub->name."'>".$sub->name."</option>";
+            }
+            echo "</select></div>";
+          }
+        ?>
+      </select>
+    </div>
+
+    <div class="form-group">
       <label for="title"><b>Please provide a title for your project.</b></label><br/>
       <input type="text" id="projectTitle" name="title">
     </div>
@@ -64,6 +93,21 @@
 
 @section('javascript')
   <script>
+    function showSub()
+    {
+      var categories = document.getElementById('categories');
+      var list = categories.value;
+      if(list != "dummy")
+      {
+        var sub = document.getElementById(list);
+        //console.log("List is: "+list);
+
+        if(sub.style.display == "none")
+          sub.style.display = "block";
+        else if(sub.style.display == "block")
+          sub.style.display = "none";
+      }
+    }
 
     function showType(select)
     {

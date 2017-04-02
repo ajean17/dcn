@@ -18,6 +18,8 @@ class CreateProjectsTable extends Migration
             $table->increments('id');
             $table->integer('profileId');
             $table->string('name')->default('Show Me Off');
+            $table->string('category')->default('Other');
+            $table->string('subCategory')->nullable();
             $table->text('elementOne')->nullable();
             $table->string('oneType')->nullable();
             $table->text('elementTwo')->nullable();

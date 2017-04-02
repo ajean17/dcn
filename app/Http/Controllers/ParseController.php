@@ -46,13 +46,21 @@ class ParseController extends Controller
 
   public function project(Request $request)
   {
-    $name = $request->input('title');
+    $name = "Need to name me at some point...";
+    $category = $request->input('category');
+    echo $category;
+    $subCategory = $request->input('subCategory');
+    echo $subCategory;
     $one = "one";     $oneType = "blank1";
     $two = "two";     $twoType = "blank2";
     $three = "three"; $threeType = "blank3";
     $four = "four";   $fourType = "blank4";
     $five = "five";   $fiveType = "blank5";
 
+    if($request->has('title'))
+    {
+      $name = $request->input('title');
+    }
     if($request->has('OneType'))
     {
       $oneType = $request->input('OneType');
@@ -135,11 +143,7 @@ class ParseController extends Controller
       }
     }
 
-    $types = Array($oneType => $one,
-                   $twoType => $two,
-                   $threeType => $three,
-                   $fourType => $four,
-                   $fiveType => $five);
+    $types = Array($oneType => $one, $twoType => $two, $threeType => $three, $fourType => $four, $fiveType => $five);
     foreach ($types as $type => $element)
     {
        if($element == "" || $element == NULL)
@@ -160,67 +164,59 @@ class ParseController extends Controller
     //If the profile has no project associated with it, make one using the data the user sent
     {
       $newProject = Project::create([
-        'profileId' => $profile->id,
-        'name' => $name,
-        'elementOne' => $one,
-        'oneType' => $oneType,
-        'elementTwo' => $two,
-        'twoType' => $twoType,
-        'elementThree' => $three,
-        'threeType' => $threeType,
-        'elementFour' => $four,
-        'fourType' => $fourType,
-        'elementFive' => $five,
-        'fiveType' => $fiveType
+        'profileId' => $profile->id
       ]);
 
       $profile->update(Array('projectOneID' => $newProject->id));
     }
-    else if($profile->projectOneID != NULL)
+
+    $project = Project::where('id','=',$profile->projectOneID)->first();
+
+    if($name != "" || $name != NULL)
+      $project->update(Array('name' => $name));
+    if($category != "" || $category != NULL)
     {
-      $project = Project::where('id','=',$profile->projectOneID)->first();
-
-      if($name != "" || $name != NULL)
-        $project->update(Array('name' => $name));
-
-      if($one != "one")
-      {
-        if($oneType == "upload")
-          Project::where('id','=',$profile->projectOneID)->update(Array('elementOne' => $one->getClientOriginalName(),'oneType' => $oneType));
-        else if($oneType == "text" || $oneType == "embed")
-          Project::where('id','=',$profile->projectOneID)->update(Array('elementOne' => $one, 'oneType' => $oneType));
-      }
-      if($two != "two")
-      {
-        if($twoType == "upload")
-          Project::where('id','=',$profile->projectOneID)->update(Array('elementTwo' => $two->getClientOriginalName(),'twoType' => $twoType));
-        else if($twoType == "text" || $twoType == "embed")
-          Project::where('id','=',$profile->projectOneID)->update(Array('elementTwo' => $two, 'twoType' => $twoType));
-      }
-
-      if($three != "three")
-      {
-        if($threeType == "upload")
-          Project::where('id','=',$profile->projectOneID)->update(Array('elementThree' => $three->getClientOriginalName(),'threeType' => $threeType));
-        else if($threeType == "text" || $threeType == "embed")
-          Project::where('id','=',$profile->projectOneID)->update(Array('elementThree' => $three, 'threeType' => $threeType));
-      }
-      if($four != "four")
-      {
-        if($fourType == "upload")
-          Project::where('id','=',$profile->projectOneID)->update(Array('elementFour' => $four->getClientOriginalName(),'fourType' => $fourType));
-        else if($fourType == "text" || $fourType == "embed")
-          Project::where('id','=',$profile->projectOneID)->update(Array('elementFour' => $four, 'fourType' => $fourType));
-      }
-
-      if($five != "five")
-      {
-        if($fiveType == "upload")
-          Project::where('id','=',$profile->projectOneID)->update(Array('elementFive' => $five->getClientOriginalName(), 'fiveType' => $fiveType));
-        else if($fiveType == "text" || $fiveType == "embed")
-          Project::where('id','=',$profile->projectOneID)->update(Array('elementFive' => $five, 'fiveType' => $fiveType));
-      }
+      Project::where('id','=',$profile->projectOneID)->update(Array('category' => $category));
+      Project::where('id','=',$profile->projectOneID)->update(Array('subCategory' => $subCategory));
     }
+    if($one != "one")
+    {
+      if($oneType == "upload")
+        Project::where('id','=',$profile->projectOneID)->update(Array('elementOne' => $one->getClientOriginalName(),'oneType' => $oneType));
+      else if($oneType == "text" || $oneType == "embed")
+        Project::where('id','=',$profile->projectOneID)->update(Array('elementOne' => $one, 'oneType' => $oneType));
+    }
+    if($two != "two")
+    {
+      if($twoType == "upload")
+        Project::where('id','=',$profile->projectOneID)->update(Array('elementTwo' => $two->getClientOriginalName(),'twoType' => $twoType));
+      else if($twoType == "text" || $twoType == "embed")
+        Project::where('id','=',$profile->projectOneID)->update(Array('elementTwo' => $two, 'twoType' => $twoType));
+    }
+
+    if($three != "three")
+    {
+      if($threeType == "upload")
+        Project::where('id','=',$profile->projectOneID)->update(Array('elementThree' => $three->getClientOriginalName(),'threeType' => $threeType));
+      else if($threeType == "text" || $threeType == "embed")
+        Project::where('id','=',$profile->projectOneID)->update(Array('elementThree' => $three, 'threeType' => $threeType));
+    }
+    if($four != "four")
+    {
+      if($fourType == "upload")
+        Project::where('id','=',$profile->projectOneID)->update(Array('elementFour' => $four->getClientOriginalName(),'fourType' => $fourType));
+      else if($fourType == "text" || $fourType == "embed")
+        Project::where('id','=',$profile->projectOneID)->update(Array('elementFour' => $four, 'fourType' => $fourType));
+    }
+
+    if($five != "five")
+    {
+      if($fiveType == "upload")
+        Project::where('id','=',$profile->projectOneID)->update(Array('elementFive' => $five->getClientOriginalName(), 'fiveType' => $fiveType));
+      else if($fiveType == "text" || $fiveType == "embed")
+        Project::where('id','=',$profile->projectOneID)->update(Array('elementFive' => $five, 'fiveType' => $fiveType));
+    }
+
 
     foreach ($types as $type => $element)
     {
