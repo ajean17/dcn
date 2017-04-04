@@ -144,6 +144,8 @@
             if($hasContent == true)
             {
               echo "<h1>".$projectOne->name."</h1>";
+              echo "<h5>".$projectOne->category."</h5>";
+              echo "<h6>".$projectOne->subCategory."</h6>";
               if($projectOne->oneType != "upload")
                 echo "<h3>Element One</h3>".$projectOne->elementOne."<hr/>";
               else
@@ -178,8 +180,7 @@
 
 @section('javascript')
   <script type="text/javascript">
-
-    $(document).ready(mainJQuery);
+  
     function friendToggle(type, user, element)
     {
       /*var conf = confirm("Press OK to confirm the '"+type+"' action for user <?php echo $profileOwner->name; ?>.");

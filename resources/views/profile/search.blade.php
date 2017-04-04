@@ -11,48 +11,6 @@
   $parent = "WHERE parent IS NULL";
   $categories = DB::select(DB::raw('SELECT * FROM categories '.$parent.' ORDER BY name ASC'));
 
-  if(isset($_GET["search"]) && isset($_GET["video"]) && isset($_GET["mentor"]) && isset($_GET["investments"]) && isset($_GET["roi"]))
-  {
-    $search = $_GET("search");
-    $video = $_GET("video");
-    $investments = $_GET("investements");
-    $mentor = $_GET("mentor");
-    $roi = $_GET("roi");
-
-    if($video == "true")
-      $video = "WHERE video IS NOT NULL";
-    else
-      $video = "";
-
-    if($investments == "true")
-    {
-      $investments = "WHERE investments IS NOT NULL";
-      if($video == "true")
-        $investments = "AND WHERE investments IS NOT NULL";
-    }
-    else
-      $investments = "";
-
-    if($mentor == "true")
-    {
-      $mentor = "WHERE mentor IS NOT NULL";
-      if($video == "true" || $investments == "true")
-        $mentor = "AND WHERE mentor IS NOT NULL";
-    }
-    else
-      $mentor = "";
-
-    if($roi == "true")
-    {
-      $roi = "WHERE roi IS NOT NULL";
-      if($video == "true" || $investments == "true" || $mentor == "true")
-        $roi = "AND WHERE roi IS NOT NULL";
-    }
-    else
-      $roi = "";
-
-    //DB::select(DB::raw('SELECT * FROM profiles '.$video.$investments.$mentor.$roi);
-  }
 ?>
 @section('content')
   <h1>Search Page</h1>
@@ -72,7 +30,7 @@
         <hr/>
         <h4>Industries</h4>
           @foreach($categories as $category)
-            <p class="accordion" onclick="toggleList()">{{$category->name}}</p>
+            <p class="accordion" onmouseup="toggleList(); grabCat('{{$category->name}}')">{{$category->name}}</p>
             <?php
               $subCategory = Category::where('parent','=',$category->name)->orderBy('name','asc')->get();
               if($subCategory != "[]")
@@ -81,7 +39,7 @@
                 //echo "<div class=\"panel\">";
                 foreach($subCategory as $sub)
                 {
-                  echo "<li>".$sub->name."</li>";
+                  echo "<li onclick='grabCat(\"".$sub->name."\")'>".$sub->name."</li>";
                 }
                 //echo "</div>";
                 echo "</ul>";
@@ -98,7 +56,7 @@
       <div id="results">
         <h4>Search Results</h4>
         <hr/>
-        <ul>
+        <ul id = "resultList">
         </ul>
       </div>
     </div>
@@ -111,6 +69,14 @@
 @section('javascript')
 <script>
 
+  var category = "category";
+
+  function grabCat(cat)
+  {
+    category = cat;
+    console.log(cat);
+  }
+
   function searchNow()
   {
     var video = document.getElementById("video").checked;
@@ -119,15 +85,32 @@
     var roi = document.getElementById("ROI").checked;
     var search = document.getElementById("searchBar").value;
 
-    if(search != "")
-    {
-      var ajax = ajaxObj("GET", "/stargazer?search=" + search + "&video=" + video + "&mentor=" + mentor + "&investments=" + investments + "&roi=" + roi);
+    console.log(category);
+    //if(search != "")
+    //{
+      var output = "";
+      var ajax = ajaxObj("GET", "/searchSystem?search=" + search + "&video=" + video + "&mentor=" + mentor + "&investments=" + investments + "&roi=" + roi + "&category=" + category);
       ajax.onreadystatechange = function()
       {
-        ajax.responseText;
+        if(ajaxReturn(ajax) == true)
+        {
+          document.getElementById('resultList').innerHTML = output;
+          var response = ajax.responseText.split("\n");
+          var item = "";
+					for (var i = 0; i < response.length; i++)
+					{
+            item = response[i].split("\\");
+            if(item[0] != undefined && item[1] != undefined)
+            {
+              //console.log(item[0] + " my dude " + item[1]);
+              output += "<li>The profile owner is <a href='\\profile\\"+item[0]+"'>"+item[0]+"</a>, the name of their project is "+item[1]+".</li>";
+            }
+          }
+          document.getElementById('resultList').innerHTML = output;
+        }
       }
       ajax.send();
-    }
+    //}
   }
 
 
