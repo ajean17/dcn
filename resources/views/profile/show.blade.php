@@ -184,6 +184,7 @@
     {
       document.getElementById(element).innerHTML = "please wait ...";
       var ajax = ajaxObj("GET", "/friendSystem?type="+type+"&user="+user);
+      console.log('Type:'+type+" User: "+user+" Element: "+element);
       ajax.onreadystatechange = function()
       {
         if(ajaxReturn(ajax) == true)
@@ -199,7 +200,7 @@
           else
           {
             alert(ajax.responseText);
-            document.getElementById(element).innerHTML = 'Try again later';
+            document.getElementById(element).innerHTML = 'Try again later.';
           }
         }
       }
@@ -208,12 +209,6 @@
 
     function blockToggle(type, user, element)
     {
-      /*var conf = confirm("Press OK to confirm the '"+type+"' action on user <?php echo $profileOwner->name; ?>.");
-      if(conf != true)
-      {
-        return false;
-      }*/
-
       document.getElementById(element).innerHTML = 'please wait ...';
       var ajax = ajaxObj("GET", "/blockSystem?type="+type+"&user="+user);
       ajax.onreadystatechange = function()
