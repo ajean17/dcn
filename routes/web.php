@@ -1,5 +1,7 @@
 <?php
 
+use App\User;
+
 Route::get('/', function ()
 {
     return view('/homeIndex');
@@ -8,7 +10,7 @@ Route::get('/', function ()
 //Auth::routes();//everything related to login/regisration/passreset/logout
 Route::get('/register','RegistrationController@create');
 Route::get('/activation','RegistrationController@activation');
-//Route::post('/register','RegistrationController@store');
+Route::post('/register', 'RegistrationController@register')->name('register');
 
 Route::get('/login','SessionsController@create');
 Route::post('/login','SessionsController@store');
@@ -36,6 +38,7 @@ Route::get('/passwordSystem','ParseController@password');
 Route::post('/projectSystem','ParseController@project');
 Route::get('/categories','ParseController@categories');
 Route::post('/photoSystem/{User}','ParseController@photoHandle');
+Route::post('/registerSystem','ParseController@register');
 
 //IMAGE PULLING
 Route::get('images/{filename}', function ($filename)

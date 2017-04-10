@@ -3,107 +3,7 @@
 @section('title')
   Registration | DCN
 @endsection
-<?php
-  use App\User;
-  use App\Mail\Welcome;
 
-  if(isset($_GET["usernamecheck"]))
-  /*FORM VALIDATION CODE*/
-  {
-  	$username = preg_replace('#[^a-z0-9]#i', '', $_GET['usernamecheck']);
-    $uname_check = User::where('name','=',$username)->get();
-    //echo $uname_check;
-    if (strlen($username) < 3 || strlen($username) > 16)
-    //if the username is less than 3 character or more than 16 characters
-    {
-	    echo '<strong style="color:#F00;">3 - 16 characters please</strong>';
-	    exit();
-    }
-    if (is_numeric($username[0]))
-    //if the first character of the username is not a letter
-    {
-      echo '<strong style="color:#F00;">Usernames must begin with a letter</strong>';
-      exit();
-    }
-    if ($uname_check == "[]")
-    //if the username has not been taken
-    {
-	    echo '<strong style="color:#009900;">' . $username . ' is OK</strong>';
-	    exit();
-    }
-    else
-    {
-	    echo '<strong style="color:#F00;">' . $username . ' is taken</strong>';
-	    exit();
-    }
-  }
-
-  // Ajax calls this REGISTRATION code to execute
-  if(isset($_GET["u"]))
-  {
-  	// GATHER THE POSTED DATA INTO LOCAL VARIABLES
-  	$u = preg_replace('#[^a-z0-9]#i', '', $_GET['u']);
-  	$e = $_GET['e'];//$e = mysqli_real_escape_string($db_conx, $_GET['e']);
-  	$p = $_GET['p'];
-
-  	// DUPLICATE DATA CHECKS FOR USERNAME AND EMAIL
-    $u_check = User::where('name','=',$u)->get();
-  	$e_check = User::where('email','=',$e)->get();
-  	// FORM DATA ERROR HANDLING
-  	if($u == "" || $e == "" || $p == "")
-    {
-  		echo "The form submission is missing values.";
-      exit();
-  	}
-    else if ($u_check != "[]")
-    {
-      echo "The username you entered is already taken";
-      exit();
-  	}
-    else if ($e_check != "[]")
-    {
-      echo "That email address is already in use in the system";
-      exit();
-  	}
-    else if (strlen($u) < 3 || strlen($u) > 16)
-    {
-      echo "Username must be between 3 and 16 characters";
-      exit();
-    }
-     else if (is_numeric($u[0]))
-    {
-      echo 'Username cannot begin with a number';
-      exit();
-    }
-    else
-    {
-      // Add user info into the database table for the main site table
-      $user = User::create([
-        'name' => $u,
-        'email' => $e,
-        'password' => bcrypt($p)
-      ]);
-
-      // Create directory(folder) to hold each user's files(pics, MP3s, etc.)
-  		if (!file_exists("user/$u"))
-      {
-        Storage::disk('local')->makeDirectory('uploads/user/'.$u.'/images');
-        Storage::disk('local')->makeDirectory('uploads/user/'.$u.'/videos');
-        Storage::disk('local')->makeDirectory('uploads/user/'.$u.'/sounds');
-      }
-  		/* Establish their row in the useroptions table
-  		$sql = "INSERT INTO useroptions (id, username, background) VALUES ('$uid','$u','original')";
-  		$query = mysqli_query($db_conx, $sql);*/
-
-  		// Email the user their activation link || YOU NEED TO ESTABLISH WHO IT IS FROM HELLO@EXAMPLE IS UNACCEPTABLE
-      \Mail::to($user)->send(new Welcome($user));
-      //Be sure to set the env mail driver appropriately and restart the serve for it to take effect
-      echo "signup_success";
-      exit();
-  	}
-  	exit();
-  }
-?>
 @section('content')
   <!--div class="col-sm-8"-->
   <h1>Sign Up</h1>
@@ -113,31 +13,28 @@
 
     <div class="form-group">
     <label for="name">User Name:</label>
-    <input type="text" class="form-control" id="username" name="name"
-    onblur="checkusername()" onkeyup="restrict('username')" maxlength="16">
+    <input type="text" class="form-control" id="username" name="name" maxlength="16">
+    <!--onblur="checkusername()" onkeyup="restrict('username')"-->
     <span id="unamestatus"></span>
     </div>
 
     <div class="form-group">
     <label for="email">Email:</label>
-    <input type="email" class="form-control" id="email" name="email"
-    onfocus="emptyElement('status')" onkeyup="restrict('email')" maxlength="88">
+    <input type="email" class="form-control" id="email" name="email" maxlength="88">
     </div>
 
     <div class="form-group">
     <label for="password">Password:</label>
-    <input type="password" class="form-control" id="password" name="password"
-    onfocus="emptyElement('status')" maxlength="100">
+    <input type="password" class="form-control" id="password" name="password" maxlength="100">
     </div>
 
     <div class="form-group">
     <label for="password_confirmation">Confirm Password:</label>
-    <input type="password" class="form-control" id="password_confirmation" name="password_confirmation"
-    onfocus="emptyElement('status')" maxlength="100">
+    <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" maxlength="100">
     </div>
 
     <div class="form-group">
-      <button type="submit" id="signupbtn" onclick="signup()" class="btn btn-default">
+      <button type="submit" id="signupbtn" class="btn btn-default">
         Create Account
       </button>
       <span id="status"></span>
@@ -145,7 +42,7 @@
   </form>
   <hr/>
   <div>
-    <a href="#" id= "termsLink" onclick="return false" onmousedown="openTerms()">
+    <a href="#" id= "termsLink" onclick="return false">
       View the Terms Of Use
     </a>
   </div>
@@ -155,7 +52,141 @@
       <p>2. Don't be a troll.</p>
       <p>3. Get money.</p>
   </div>
-
   @include('layouts.errors')
+@endsection
 
+@section('javascript')
+  <script>
+    var token = '{{Session::token()}}';
+    var url = '{{route('register')}}';
+    $(document).ready(function()
+    {
+      var $user = $('#username');
+      var $email = $('#email');
+      var $pass = $('#password');
+      var $passConf = $('#password_confirmation');
+      var $status = $('#status');
+
+      $user.on('click', function(){$status.html("");});
+      $email.on('click', function(){$status.html("");});
+      $pass.on('click', function(){$status.html("");});
+      $passConf.on('click', function(){$status.html("");});
+      $('#termsLink').on('click', function()
+      {
+        console.log("show terms");
+        $('#terms').css('display','block');
+        $status.html("");
+      })
+      //checks user name
+      $user.on('blur', function()
+      {
+        if($user.val() != "")
+        {
+          $('#unamestatus').html('checking...');
+          console.log($user.val());
+          $.ajax(
+            {
+              method: 'POST',
+              url: url,
+              data: {username: $user.val(), _token: token}
+            }).done(function (msg)
+            {
+              console.log(msg['message']);
+              $('#unamestatus').html(msg['message']);
+            });
+        }
+      });
+
+      $('#signupbtn').on('click', function()
+      {
+        console.log("sign up");
+        var u = $user.val();
+        var e = $email.val();
+        var p1 = $pass.val();
+        var p2 = $passConf.val();
+
+        if(u == "" || e == "" || p1 == "" || p2 == "")//if any of the above elements are empty
+        {
+          $status.html('Fill out all of the form data');
+        }
+        else if(p1 != p2)//if the passwords do not match
+        {
+          $status.html('Your password fields do not match');
+        }
+        else if( $('#terms').css('display') == "none")//if the terms have not been views yet, display is still none
+        {
+          $status.html('Please view the terms of use');
+        }
+        else
+        {
+          $('#signupbtn').css('display','none');
+          $status.html("please wait...");
+
+          $.ajax(
+            {
+              method: 'POST',
+              url: url,
+              data: {user: u,email: e, password: p1, _token: token}
+            }).done(function (msg)
+            {
+              console.log(msg['message']);
+              if(msg['message'] != "signup_success")
+              {
+                $('#signupbtn').css('display','block');
+                $status.html(msg['message']);
+              }
+              else if(msg['message'] == "signup_success")
+              {
+                $('#signupform').html("OK "+u+", check your email inbox and junk mail box at <u>"+e+"</u> in a moment to complete the sign up process by activating your account. You will not be able to do anything on the site until you successfully activate your account.")
+                $('#terms').css('display','none');
+                $('#termsLink').css('display','none');
+              }
+            });
+        }
+        /*
+        //(--Custom Validation--)
+
+
+
+        else
+        {
+          document.getElementById("signupbtn").style.display = "none";
+          status.innerHTML = 'please wait ...';
+          var ajax = ajaxObj("GET", "register?u="+u+"&e="+e+"&p="+p1);
+          ajax.onreadystatechange = function()
+          {
+            if(ajaxReturn(ajax) == true)
+            {
+              if(ajax.responseText != "signup_success")
+              {
+                status.innerHTML = ajax.responseText;
+                document.getElementById("signupbtn").style.display = "block";
+              }
+              else if(ajax.responseText == "signup_success")
+              {
+                window.scrollTo(0,0);
+                document.getElementById("signupform").innerHTML = "OK "+u+", check your email inbox and junk mail box at <u>"+e+"</u> in a moment to complete the sign up process by activating your account. You will not be able to do anything on the site until you successfully activate your account.";
+                document.getElementById("terms").style.display = "none";
+                document.getElementById("termsLink").style.display = "none";
+              }
+            }
+          }
+          ajax.send();
+        }
+
+        */
+      });
+
+    });
+
+
+    function emptyElement(el)
+    {
+      console.log(el);
+    }
+    function restrict(el)
+    {
+      console.log(el);
+    }
+  </script>
 @endsection

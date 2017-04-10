@@ -44,6 +44,42 @@ class ParseController extends Controller
     return view('phpParsers.categories');
   }
 
+  public function register(Request $request)
+  {
+    if($request->has('usernamecheck'))
+    /*FORM VALIDATION CODE*/
+    {
+    	/*$username = preg_replace('#[^a-z0-9]#i', '', $_GET['usernamecheck']);
+      $uname_check = User::where('name','=',$username)->get();
+      //echo $uname_check;
+      if (strlen($username) < 3 || strlen($username) > 16)
+      //if the username is less than 3 character or more than 16 characters
+      {
+  	    echo '<strong style="color:#F00;">3 - 16 characters please</strong>';
+  	    exit();
+      }
+      if (is_numeric($username[0]))
+      //if the first character of the username is not a letter
+      {
+        echo '<strong style="color:#F00;">Usernames must begin with a letter</strong>';
+        exit();
+      }
+      if ($uname_check == "[]")
+      //if the username has not been taken
+      {
+  	    echo '<strong style="color:#009900;">' . $username . ' is OK</strong>';
+  	    exit();
+      }
+      else
+      {
+  	    echo '<strong style="color:#F00;">' . $username . ' is taken</strong>';
+  	    exit();
+      }*/
+      return Response::json(Array('Success'));
+    }
+    //return view('phpParsers.categories');
+  }
+
   public function project(Request $request)
   {
     $name = "Need to name me at some point...";
