@@ -168,7 +168,7 @@
             }
             else if($hasContent == false)
             {
-              echo "<h1>No content to display yet...</h1>";
+              echo "<h1>No content to display yet.....</h1>";
             }
           ?>
         </center>
