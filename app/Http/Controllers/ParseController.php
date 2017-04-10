@@ -210,7 +210,7 @@ class ParseController extends Controller
        return back()->withErrors(['message' => 'You cannot submit empty elements.']);
     }
 
-    $user = $_POST['userName'];
+    $user = $request['userName'];
     $profile = Profile::where('username','=',$user)->first();
 
     if($profile == "")
@@ -227,13 +227,13 @@ class ParseController extends Controller
         'profileId' => $profile->id
       ]);
 
-      $profile->update(Array('projectOneID' => $newProject->id));
+       Profile::where('username','=',$user)->update(Array('projectOneID' => $newProject->id));
     }
 
     $project = Project::where('id','=',$profile->projectOneID)->first();
 
     if($name != "" || $name != NULL)
-      $project->update(Array('name' => $name));
+      Project::where('id','=',$profile->projectOneID)->update(Array('name' => $name));
     if($category != "" || $category != NULL)
     {
       Project::where('id','=',$profile->projectOneID)->update(Array('category' => $category));
@@ -303,7 +303,7 @@ class ParseController extends Controller
       }
     }
 
-    $message = "Your profile has been updated";
+    $message = "Your profile has been updated";*/
     return redirect()->to('/management'.'/'.$user);
     //return redirect()->to('/profile'.'/'.$user);
   }
