@@ -91,6 +91,7 @@
             var parent = $parent.val();
             if(msg['message'] == "cat_added")
             {
+              $status.html(name+" has been added.");
               if($parent.val() == "")
               {
                 console.log('name');

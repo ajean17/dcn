@@ -82,7 +82,7 @@ class RegistrationController extends Controller
           $user = User::create([
             'name' => $u,
             'email' => $e,
-            'password' => bcrypt($p)
+            'password' => bcrypt($p),
             'activated' => '1'
           ]);
 
