@@ -143,5 +143,7 @@
               }
             });
         }
+      });
+    });
   </script>
 @endsection
