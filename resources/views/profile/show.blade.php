@@ -182,11 +182,6 @@
 
     function friendToggle(type, user, element)
     {
-      /*var conf = confirm("Press OK to confirm the '"+type+"' action for user <?php echo $profileOwner->name; ?>.");
-      if(conf != true)
-      {
-        return false;
-      }*/
       document.getElementById(element).innerHTML = "please wait ...";
       var ajax = ajaxObj("GET", "/friendSystem?type="+type+"&user="+user);
       ajax.onreadystatechange = function()
