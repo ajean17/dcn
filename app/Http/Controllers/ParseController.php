@@ -303,7 +303,7 @@ class ParseController extends Controller
       }
     }
 
-    $message = "Your profile has been updated";*/
+    $message = "Your profile has been updated";
     return redirect()->to('/management'.'/'.$user);
     //return redirect()->to('/profile'.'/'.$user);
   }

@@ -21,7 +21,7 @@ class CreateProfileTable extends Migration
           $table->enum('hasMentor',array('0','1'))->default('0');
           $table->enum('hasInvestments',array('0','1'))->default('0');
           $table->enum('hasROI',array('0','1'))->default('0');
-          $table->integer('projectOne')->nullable()->unique();
+          $table->integer('projectOneID')->nullable()->unique();
           $table->integer('projectTwo')->nullable()->unique();
           //$table->enum('type', array('inventor', 'investor', 'naive'))->default('naive');
           $table->timestamps();
