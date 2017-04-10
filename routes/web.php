@@ -1,6 +1,7 @@
 <?php
 
 use App\User;
+use App\Category;
 
 Route::get('/', function ()
 {
@@ -37,6 +38,7 @@ Route::get('/messageSystem','ParseController@message');
 Route::get('/passwordSystem','ParseController@password');
 Route::post('/projectSystem','ParseController@project');
 Route::get('/categories','ParseController@categories');
+Route::post('/categories','ParseController@cats')->name('category');
 Route::post('/photoSystem/{User}','ParseController@photoHandle');
 Route::post('/registerSystem','ParseController@register');
 

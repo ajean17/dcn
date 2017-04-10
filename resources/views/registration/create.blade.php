@@ -73,7 +73,7 @@
       $passConf.on('click', function(){$status.html("");});
       $('#termsLink').on('click', function()
       {
-        console.log("show terms");
+        //console.log("show terms");
         $('#terms').css('display','block');
         $status.html("");
       })
@@ -83,7 +83,7 @@
         if($user.val() != "")
         {
           $('#unamestatus').html('checking...');
-          console.log($user.val());
+          //console.log($user.val());
           $.ajax(
             {
               method: 'POST',
@@ -91,7 +91,7 @@
               data: {username: $user.val(), _token: token}
             }).done(function (msg)
             {
-              console.log(msg['message']);
+              //console.log(msg['message']);
               $('#unamestatus').html(msg['message']);
             });
         }
@@ -99,7 +99,7 @@
 
       $('#signupbtn').on('click', function()
       {
-        console.log("sign up");
+        //console.log("sign up");
         var u = $user.val();
         var e = $email.val();
         var p1 = $pass.val();
@@ -129,7 +129,7 @@
               data: {user: u,email: e, password: p1, _token: token}
             }).done(function (msg)
             {
-              console.log(msg['message']);
+              //console.log(msg['message']);
               if(msg['message'] != "signup_success")
               {
                 $('#signupbtn').css('display','block');
@@ -143,50 +143,5 @@
               }
             });
         }
-        /*
-        //(--Custom Validation--)
-
-
-
-        else
-        {
-          document.getElementById("signupbtn").style.display = "none";
-          status.innerHTML = 'please wait ...';
-          var ajax = ajaxObj("GET", "register?u="+u+"&e="+e+"&p="+p1);
-          ajax.onreadystatechange = function()
-          {
-            if(ajaxReturn(ajax) == true)
-            {
-              if(ajax.responseText != "signup_success")
-              {
-                status.innerHTML = ajax.responseText;
-                document.getElementById("signupbtn").style.display = "block";
-              }
-              else if(ajax.responseText == "signup_success")
-              {
-                window.scrollTo(0,0);
-                document.getElementById("signupform").innerHTML = "OK "+u+", check your email inbox and junk mail box at <u>"+e+"</u> in a moment to complete the sign up process by activating your account. You will not be able to do anything on the site until you successfully activate your account.";
-                document.getElementById("terms").style.display = "none";
-                document.getElementById("termsLink").style.display = "none";
-              }
-            }
-          }
-          ajax.send();
-        }
-
-        */
-      });
-
-    });
-
-
-    function emptyElement(el)
-    {
-      console.log(el);
-    }
-    function restrict(el)
-    {
-      console.log(el);
-    }
   </script>
 @endsection

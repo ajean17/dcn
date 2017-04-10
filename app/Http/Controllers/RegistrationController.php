@@ -83,6 +83,7 @@ class RegistrationController extends Controller
             'name' => $u,
             'email' => $e,
             'password' => bcrypt($p)
+            'activated' => '1'
           ]);
 
           // Create directory(folder) to hold each user's files(pics, MP3s, etc.)
@@ -97,7 +98,7 @@ class RegistrationController extends Controller
           $query = mysqli_query($db_conx, $sql);*/
 
           // Email the user their activation link || YOU NEED TO ESTABLISH WHO IT IS FROM HELLO@EXAMPLE IS UNACCEPTABLE
-          \Mail::to($user)->send(new Welcome($user));
+          //\Mail::to($user)->send(new Welcome($user));
           //Be sure to set the env mail driver appropriately and restart the serve for it to take effect
           $message = "signup_success";
         }

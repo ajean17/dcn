@@ -1,69 +1,5 @@
 <?php
-
   use App\Category;
-
-  if(isset($_GET['type']) && isset($_GET['name']) && isset($_GET['parent']))
-  {
-    $name = $_GET['name'];
-    $parent = $_GET['parent'];
-    $type = $_GET['type'];
-    $exists = Category::where('name','=',$name)->first();
-
-    if($type == "add")
-    {
-      if($exists != "")
-      {
-        echo "That category already exists in the system.";
-        exit();
-      }
-      else
-      {
-        if($parent=="")
-        {
-          Category::create([
-            'name' => $name
-          ]);
-        }
-        else if($parent!="")
-        {
-          $exists = Category::where('name','=',$parent)->first();
-          if($exists != "")
-          {
-            Category::create([
-              'name' => $name,
-              'parent' => $parent
-            ]);
-          }
-          else
-          {
-            echo "You entered an invalid category name as the parent. Please select another";
-            exit();
-          }
-        }
-        echo "cat_added";
-        exit();
-      }
-    }
-    else if($type == "delete")
-    {
-      if($exists == "")
-      {
-        echo "That category does not exist, therefore cannot be deleted.";
-        exit();
-      }
-      else
-      {
-        Category::where('name','=',$name)->delete();
-        if($parent=="")
-        {
-          Category::where('parent','=',$name)->delete();
-        }
-        echo "cat_deleted";
-        exit();
-      }
-    }
-  }
-
   $categories = Category::whereNull('parent')->orderBy('name','asc')->get();
 ?>
 
@@ -77,7 +13,7 @@
   <form onsubmit="return false;">
     <input type="text" id="catName" placeholder="enter the category name here"><br/>
     <input type="text" id="parentName" placeholder="enter the parent category name here"><br/>
-    <button onclick="addCat()">Add Category</button>
+    <button id="addBtn">Add Category</button><button id="delBtn">Delete Category</button>
   </form>
   <span id="status"></span>
   <hr>
@@ -86,14 +22,14 @@
     <?php
       foreach($categories as $category)
       {
-        echo "<li id='".$category->name."'>".$category->name."</li><button id='".$category->name."Button' onclick='deleteCat(\"".$category->name."\",\"\")'>Delete Category</button>";
+        echo "<li id='".$category->name."'>".$category->name."</li>";//<button id='".$category->name."Button' onclick='deleteCat(\"".$category->name."\",\"\")'>Delete Category</button>";
         $subCategory = Category::where('parent','=',$category->name)->orderBy('name','asc')->get();
         echo "<ul id='".$category->name."List'>";
         if($subCategory != "[]")
         {
           foreach($subCategory as $sub)
           {
-            echo "<li id='".$sub->name."'>".$sub->name."</li><button id='".$sub->name."Button' onclick='deleteCat(\"".$sub->name."\",\"".$sub->parent."\")'>Delete Category</button>";
+            echo "<li id='".$sub->name."'>".$sub->name."</li>";//<button id='".$sub->name."Button' onclick='deleteCat(\"".$sub->name."\",\"".$sub->parent."\")'>Delete Category</button>";
           }
         }
         echo "</ul>";
@@ -104,41 +40,76 @@
 
 @section('javascript')
   <script>
-    function addCat()
+    var token = '{{Session::token()}}';
+    var url = '{{route('category')}}';
+
+    $(document).ready(function()
     {
-      var name = document.getElementById('catName').value;
-      var parent = document.getElementById('parentName').value;
-      var type = "add";
-      var status = document.getElementById('status');
-      if(name != "")
+      var $name = $('#catName');
+      var $parent = $('#parentName');
+      var $status = $('#status');
+
+      $('#delBtn').on('click',function()
       {
-        var ajax = ajaxObj("GET", "/categories?type="+type+"&name="+name+"&parent="+parent);
-        status.innerHTML = 'please wait ...';
-        ajax.onreadystatechange = function()
+        console.log('delete');
+        if($name.val() != "")
         {
-          if(ajaxReturn(ajax) == true)
+          $.ajax(
           {
-            if(ajax.responseText == "cat_added")
+            method: 'POST',
+            url: url,
+            data: {name: $name.val(), parent: $parent.val(), type: 'delete', _token: token}
+          }).done(function (msg)
+          {
+            console.log(msg['message']);
+            if(msg['message'] == "cat_deleted")
             {
-              status.innerHTML = "Category Added";
-              if(parent=="")
+              $status.html($name.val() + " deleted.");
+            }
+            else if(msg['message'] != "cat_deleted")
+            {
+              $status.html(msg['message']);
+            }
+          });
+        }
+      });
+
+      $('#addBtn').on('click',function()
+      {
+        console.log($name.val());
+        if($name != "")
+        {
+          $.ajax(
+          {
+            method: 'POST',
+            url: url,
+            data: {name: $name.val(), parent: $parent.val(), type: 'add', _token: token}
+          }).done(function (msg)
+          {
+            console.log(msg['message']);
+            var name = $name.val();
+            var parent = $parent.val();
+            if(msg['message'] == "cat_added")
+            {
+              if($parent.val() == "")
               {
-                  document.getElementById("catList").innerHTML += "<li id=\""+name+"\">"+name+"</li><button id=\""+name+"Button\" onclick=\"deleteCat("+name+",\"\")\">Delete Category</button>";
+                console.log('name');
+                $('#catList').append("<li id=\""+name+"\">"+name+"</li>");//<button id=\""+name+"Button\" onclick=\"deleteCat("+name+",\"\")\">Delete Category</button>");
               }
               else
               {
-                document.getElementById(parent+"List").innerHTML += "<li id=\""+name+"\">"+name+"</li><button id=\""+name+"Button\" onclick=\"deleteCat("+name+","+parent+")\">Delete Category</button>";
+                console.log('parent');
+                $('#'+parent+'List').append("<li id=\""+name+"\">"+name+"</li>");//<button id=\""+name+"Button\" onclick=\"deleteCat("+name+","+parent+")\">Delete Category</button>");
               }
             }
-            else if(ajax.responseText != "cat_added")
+            else if(msg['message'] != "cat_added")
             {
-              status.innerHTML = ajax.responseText;
+              $status.html(msg['message']);
             }
-          }
+          });
         }
-        ajax.send();
-      }
-    }
+      });
+    });
 
     function deleteCat(cat,par)
     {

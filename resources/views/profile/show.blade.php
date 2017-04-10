@@ -148,23 +148,27 @@
               if($projectOne->oneType != "upload")
                 echo "<h3>Element One</h3>".$projectOne->elementOne."<hr/>";
               else
-                echo '<img src="/uploads/user/'.$profileOwner->name.'/images'.'/'.$projectOne->elementOne.'" width="250px" height="250px" alt="Profile Picture"><br/>';
+                echo '<h3>Element One</h3><img src="/uploads/user/'.$profileOwner->name.'/images'.'/'.$projectOne->elementOne.'" width="250px" height="250px" alt="Profile Picture"><hr/>';
+
               if($projectOne->twoType != "upload")
                 echo "<h3>Element Two</h3>".$projectOne->elementTwo."<hr/>";
               else
-                echo '<img src="/uploads/user/'.$profileOwner->name.'/images'.'/'.$projectOne->elementTwo.'" width="250px" height="250px" alt="Profile Picture"><br/>';
+                echo '<h3>Element Two</h3><img src="/uploads/user/'.$profileOwner->name.'/images'.'/'.$projectOne->elementTwo.'" width="250px" height="250px" alt="Profile Picture"><hr/>';
+
               if($projectOne->threeType != "upload")
                 echo "<h3>Element Three</h3>".$projectOne->elementThree."<hr/>";
               else
-                echo '<img src="/uploads/user/'.$profileOwner->name.'/images'.'/'.$projectOne->elementThree.'" width="250px" height="250px" alt="Profile Picture"><br/>';
+                echo '<h3>Element Three</h3><img src="/uploads/user/'.$profileOwner->name.'/images'.'/'.$projectOne->elementThree.'" width="250px" height="250px" alt="Profile Picture"><hr/>';
+
               if($projectOne->fourType != "upload")
                 echo "<h3>Element Four</h3>".$projectOne->elementFour."<hr/>";
               else
-                echo '<img src="/uploads/user/'.$profileOwner->name.'/images'.'/'.$projectOne->elementFour.'" width="250px" height="250px" alt="Profile Picture"><br/>';
+                echo '<h3>Element Four</h3><img src="/uploads/user/'.$profileOwner->name.'/images'.'/'.$projectOne->elementFour.'" width="250px" height="250px" alt="Profile Picture"><hr/>';
+
               if($projectOne->fiveType != "upload")
                 echo "<h3>Element Five</h3>".$projectOne->elementFive;
               else
-                echo '<img src="/uploads/user/'.$profileOwner->name.'/images'.'/'.$projectOne->elementFive.'" width="250px" height="250px" alt="Profile Picture"><br/>';
+                echo '<h3>Element Five</h3><img src="/uploads/user/'.$profileOwner->name.'/images'.'/'.$projectOne->elementFive.'" width="250px" height="250px" alt="Profile Picture"><hr/>';
             }
             else if($hasContent == false)
             {

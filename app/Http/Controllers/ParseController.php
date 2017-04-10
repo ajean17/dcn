@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\User;
 use App\Project;
 use App\Profile;
+use App\Category;
 use \Storage;
 
 class ParseController extends Controller
@@ -44,46 +45,69 @@ class ParseController extends Controller
     return view('phpParsers.categories');
   }
 
-  public function register(Request $request)
+  public function cats(\Illuminate\Http\Request $request)
   {
-    if($request->has('usernamecheck'))
-    /*FORM VALIDATION CODE*/
+    $message = "Working...";
+
+    if($request->has('type') && $request->has('name'))
     {
-    	/*$username = preg_replace('#[^a-z0-9]#i', '', $_GET['usernamecheck']);
-      $uname_check = User::where('name','=',$username)->get();
-      //echo $uname_check;
-      if (strlen($username) < 3 || strlen($username) > 16)
-      //if the username is less than 3 character or more than 16 characters
+      //Assing the values from the ajax request
+      $name = $request['name'];
+      $parent = $request['parent'];
+      $type = $request['type'];
+      //Check to see if there is already a category with the name sent
+      $exists = Category::where('name','=',$name)->first();
+      $message = "Not working well though...";
+
+      if($type == "add")//If we are adding a category
       {
-  	    echo '<strong style="color:#F00;">3 - 16 characters please</strong>';
-  	    exit();
+        if($exists != "")//If one already exists
+          $message = "That category already exists in the system.";
+        else
+        {
+          if($parent == "")//If there is not a category with that name yet and the parent field is empty
+          { //Make the category
+            Category::create([
+              'name' => $name
+            ]);
+          }
+          else if($parent != "")//If the parent field is not empty
+          { //Check to see if a category with the parent name exists
+            $exists = Category::where('name','=',$parent)->first();
+            if($exists != "")//If the parent is there, create the subcategory
+            {
+              Category::create([
+                'name' => $name,
+                'parent' => $parent
+              ]);
+            }
+            else
+              $message = "You entered an invalid category name as the parent. Please select another";
+          }
+          $message = "cat_added"; //Add complete
+        }
       }
-      if (is_numeric($username[0]))
-      //if the first character of the username is not a letter
+      else if($type == "delete")
       {
-        echo '<strong style="color:#F00;">Usernames must begin with a letter</strong>';
-        exit();
+        if($exists == "")//If the category does not exist it cannot be deleted
+        {
+          $message = "That category does not exist, therefore cannot be deleted.";
+        }
+        else
+        {
+          Category::where('name','=',$name)->delete();
+          Category::where('parent','=',$name)->delete();
+          $message = "cat_deleted";
+        }
       }
-      if ($uname_check == "[]")
-      //if the username has not been taken
-      {
-  	    echo '<strong style="color:#009900;">' . $username . ' is OK</strong>';
-  	    exit();
-      }
-      else
-      {
-  	    echo '<strong style="color:#F00;">' . $username . ' is taken</strong>';
-  	    exit();
-      }*/
-      return Response::json(Array('Success'));
     }
-    //return view('phpParsers.categories');
+    return response()->json(['message' => $message]);
   }
 
   public function project(Request $request)
   {
     $name = "Need to name me at some point...";
-    $category = $request->input('category');
+    $category = $request['category'];
     echo $category;
     $subCategory = $request->input('subCategory');
     echo $subCategory;
@@ -95,19 +119,19 @@ class ParseController extends Controller
 
     if($request->has('title'))
     {
-      $name = $request->input('title');
+      $name = $request['title'];
     }
     if($request->has('OneType'))
     {
-      $oneType = $request->input('OneType');
+      $oneType = $request['OneType'];
 
       switch($oneType)
       {
         case "text":
-          $one = $request->input('OneT');
+          $one = $request['OneT'];
         break;
         case "embed":
-          $one = $request->input('OneE');
+          $one = $request['OneE'];
         break;
         case "upload":
           $one = $request->file('OneU');
@@ -116,14 +140,14 @@ class ParseController extends Controller
     }
     if($request->has('TwoType'))
     {
-      $twoType = $request->input('TwoType');
+      $twoType = $request['TwoType'];
       switch($twoType)
       {
         case "text":
-          $two = $request->input('TwoT');
+          $two = $request['TwoT'];
         break;
         case "embed":
-          $two = $request->input('TwoE');
+          $two = $request['TwoE'];
         break;
         case "upload":
           $two = $request->file('TwoU');
@@ -132,14 +156,14 @@ class ParseController extends Controller
     }
     if($request->has('ThreeType'))
     {
-      $threeType = $request->input('ThreeType');
+      $threeType = $request['ThreeType'];
       switch($threeType)
       {
         case "text":
-          $three = $request->input('ThreeT');
+          $three = $request['ThreeT'];
         break;
         case "embed":
-          $three =$request->input('ThreeE');
+          $three =$request['ThreeE'];
         break;
         case "upload":
           $three = $request->file('ThreeU');
@@ -148,14 +172,14 @@ class ParseController extends Controller
     }
     if($request->has('FourType'))
     {
-      $fourType = $request->input('FourType');
+      $fourType = $request['FourType'];
       switch($fourType)
       {
         case "text":
-          $four = $request->input('FourT');
+          $four = $request['FourT'];
         break;
         case "embed":
-          $four = $request->input('FourE');
+          $four = $request['FourE'];
         break;
         case "upload":
           $four = $request->file('FourU');
@@ -164,14 +188,14 @@ class ParseController extends Controller
     }
     if($request->has('FiveType'))
     {
-      $fiveType = $request->input('FiveType');
+      $fiveType = $request['FiveType'];
       switch($fiveType)
       {
         case "text":
-          $five = $request->input('FiveT');
+          $five = $request['FiveT'];
         break;
         case "embed":
-          $five = $request->input('FiveE');
+          $five = $request['FiveE'];
         break;
         case "upload":
           $five = $request->file('FiveU');
