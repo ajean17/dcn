@@ -41,7 +41,6 @@
 
 @section('content')
   <?php
-
     $friend_button = '<button disabled>Request As Friend</button>';
     $block_button = '<button disabled>Block User</button>';
     if($isOwner == "true")
@@ -180,7 +179,7 @@
 
 @section('javascript')
   <script type="text/javascript">
-  
+
     function friendToggle(type, user, element)
     {
       /*var conf = confirm("Press OK to confirm the '"+type+"' action for user <?php echo $profileOwner->name; ?>.");
