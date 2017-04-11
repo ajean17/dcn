@@ -85,15 +85,15 @@
           $('#unamestatus').html('checking...');
           //console.log($user.val());
           $.ajax(
-            {
-              method: 'POST',
-              url: url,
-              data: {username: $user.val(), _token: token}
-            }).done(function (msg)
-            {
-              //console.log(msg['message']);
-              $('#unamestatus').html(msg['message']);
-            });
+          {
+            method: 'POST',
+            url: url,
+            data: {username: $user.val(), _token: token}
+          }).done(function (msg)
+          {
+            //console.log(msg['message']);
+            $('#unamestatus').html(msg['message']);
+          });
         }
       });
 

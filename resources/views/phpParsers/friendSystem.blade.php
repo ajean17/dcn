@@ -102,7 +102,7 @@ if (isset($_GET['type']) && isset($_GET['user']))
 
 <?php
 	/*PARSING FOR ACCEPTING OR REJECTING FRIENDSHIPS*/
-	if (isset($_GET['action']) && isset($_GET['reqid']) && isset($_GET['user1']))
+	if(isset($_GET['action']) && isset($_GET['reqid']) && isset($_GET['user1']))
 	{
 		$reqid = preg_replace('#[^0-9]#', '', $_GET['reqid']);
 		$user = preg_replace('#[^a-z0-9]#i', '', $_GET['user1']);

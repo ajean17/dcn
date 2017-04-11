@@ -4,35 +4,302 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
+use App\Dialogue;
 use App\Project;
 use App\Profile;
 use App\Category;
+use App\Friend;
+use App\Block;
+use App\Message;
 use \Storage;
+use Carbon\Carbon;
 
 class ParseController extends Controller
 {
-  //***Find a way to place all parser content within this controller***//
-  public function friend()
+  public function friend(\Illuminate\Http\Request $request)
   {
-    //dd(request('type'));
-    return view('/phpParsers.friendSystem');
+    $message = "Something went wrong";
+    if($request->has('type') && $request->has('user'))
+  	{
+      //The profile owner being added
+  		$user = $request['user'];//preg_replace('#[^a-z0-9]#i', '', $_GET['user']);
+  		$log_username = $request['log'];//The one logged in
+  		//Check to see if the user to befriend or block exists
+  		$exists= User::where('name','=',$user)->first();/*->where('activated','=','1')*->get();*/
+
+      if($exists == "")//If nothing matches in the DB stop everything and tell the user
+  			$message = "$user does not exist.";
+
+  		if($request['type'] == "friend")
+  		//If friend request
+  		{
+  			//Check to see if the logged in user sent a request to the profile owner already that has been accepted
+  			$row_count1 = Friend::where('user1','=',$log_username)
+  			->where('user2','=',$user)
+  			->where('accepted','=','1')->get();
+
+  			//Check to see if the profile owner has sent a request to the logged in user already that has been accepted
+  			$row_count2 = Friend::where('user1','=',$user)
+  			->where('user2','=',$log_username)
+  			->where('accepted','=','1')->get();
+
+  			//Check to see if the logged in user sent a request to the profile owner already that has not been accepted
+  			$row_count3 = Friend::where('user1','=',$log_username)
+  			->where('user2','=',$user)
+  			->where('accepted','=','0')->get();
+
+  			//Check to see if the profile owner has sent a request to the logged in user already that has not been accepted
+  			$row_count4 = Friend::where('user1','=',$user)
+  			->where('user2','=',$log_username)
+  			->where('accepted','=','0')->get();
+
+  			if ($row_count1 != "[]" || $row_count2 != "[]")//If the profile owner and logged in user are already friends
+          $message =  "You are already friends with $user.";
+
+  			else if ($row_count3 != "[]")//If the logged in user has already sent request to the profile owner
+  	      $message = "You have a pending friend request already sent to $user.";
+
+  			else if ($row_count4 != "[]")//If the profile owner has already sent a request to the logged in user
+  	      $message =  "$user has requested to friend with you first. Check your friend requests.";
+
+  			else//Create a new friendship request between the logged in user and the profile owner
+  			{
+  				$newFriendship = Friend::create([
+  					'user1' => $log_username,
+  					'user2' => $user
+  				]);
+  	      $message = "friend_request_sent";
+  			}
+  		}
+  		else if($request['type'] == "unfriend")
+  		{
+  			//Check to see if the logged in user and profile owner are currently friends
+  			$row_count = Friend::where('user1','=',$user)
+  			->where('user2','=',$log_username)
+  			->where('accepted','=','1')
+  			->orWhere('user1','=',$log_username)
+  			->where('user2','=',$user)
+  			->where('accepted','=','1')->get();
+
+  			if ($row_count != '[]')//If the two are friends, delete their friendship record
+  			{
+  				//DB::table('friends')
+  				Friend::where('user1','=',$user)
+  				->where('user2','=',$log_username)
+  				->where('accepted','=','1')
+  				->orWhere('user1','=',$log_username)
+  				->where('user2','=',$user)
+  				->where('accepted','=','1')->delete();
+
+  		    $message = "unfriend_ok";
+  		  }
+  			else//Otherwide notify the user that they are not even friends
+          $message = "No friendship could be found between your account and $user, therefore we cannot unfriend you.";
+  		}
+  	}
+
+    /*PARSING FOR ACCEPTING OR REJECTING FRIENDSHIPS*/
+  	if($request->has('action') && $request->has('reqid') && $request->has('user1'))
+  	{
+  		$reqid = $request['reqid'];//preg_replace('#[^0-9]#', '', $_GET['reqid']);
+  		$user = $request['user1'];//preg_replace('#[^a-z0-9]#i', '', $_GET['user1']);
+  		$log_username = $request['log'];//The one logged in
+  		$exists = User::where('name','=',$user)->first();//->where('activated','=','1')*->get();
+
+  		if($exists == "")//If nothing matches in the DB stop everything and tell the user
+  			$message = $user." does not exist.";
+
+  		if($request['action'] == "accept")
+  		{
+  			$row_count = Friend::where('user1','=',$user)
+  			->where('user2','=',$log_username)
+  			->where('accepted','=','1')
+  			->orWhere('user1','=',$log_username)
+  			->where('user2','=',$user)
+  			->where('accepted','=','1')->get();
+
+  	    if ($row_count != "[]")
+          $message = "You are already friends with $user.";
+  			else
+  			{
+  				Friend::where('id','=',$reqid)
+  				->where('user1','=',$user)
+  				->where('user2','=',$log_username)
+  				->update(array('accepted' => '1'));
+          $message = "<b>Request Accepted!</b><br />Your are now friends...";
+  			}
+  		}
+  		else if($request['action'] == "reject")
+  		{
+  			Friend::where('user1','=',$user)
+  			->where('user2','=',$log_username)
+  			->where('accepted','=','0')->delete();
+  			 $message = "<b>Request Rejected</b><br />You chose to reject friendship with this user...";
+  		}
+  	}
+
+    return response()->json(['message' => $message]);
   }
 
-  public function block()
+  public function block(\Illuminate\Http\Request $request)
   {
-    //dd(request('type'));
-    return view('/phpParsers.blockSystem');
+    $message = "Something went wrong";
+
+    if($request->has('type') && $request->has('user'))
+    {
+      //The profile owner being blocked
+      $blockee = $request['user'];//preg_replace('#[^a-z0-9]#i', '', $_GET['user']);
+      $log_username = $request['log'];//The one logged in
+      //Check to see if the user to befriend or block exists
+      $exists= User::where('name','=',$blockee)->first();/*->where('activated','=','1')*->get();*/
+
+      if($exists == "")
+        $message = $blockee." does not exist";
+
+      if($request['type'] == "block")
+      {
+        $block_check = Block::where('blocker','=',$log_username) //check if block exists between users
+        ->where('blockee','=', $blockee)
+        ->orWhere('blocker','=', $blockee)
+        ->where('blockee','=',$log_username)->get();
+
+        if($block_check != "[]") //if user is already blocked
+          $message = "You have already blocked this user.";
+
+        else
+        {
+          $block = Block::create([
+          'blocker' => $log_username,
+          'blockee' => $blockee
+        ]);
+          $message = "blocked_ok";
+        }
+      }
+      else if ($request['type'] == "unblock")//If the request is to unblock
+      {
+        //Checks to see if they owner has been blocked yet
+        $block_check = Block::where('blocker','=', $log_username)->where('blockee','=', $blockee)->get();
+        if($block_check == "[]")//If they have not been, they can't unblock
+          $message = "User is not blocked, unable to unblock them.";
+
+        else
+        {
+          //same query as block_check2, individual variable
+          $block_check3 = Block::where('blocker','=', $log_username)->where('blockee','=', $blockee)->delete();
+          $message = "unblocked_ok";
+        }
+      }
+    }
+
+    return response()->json(['message' => $message]);
   }
 
-  public function message()
+  public function message(\Illuminate\Http\Request $request)
   {
-    //dd(request('msg'));
-    return view('phpParsers.messageSystem');
+    $message = "Something is wrong";
+
+    if($request->has('username') && $request->has('talkTo') && $request->has('message'))//SEND MESSAGE
+    {
+      //Save message
+      $username = stripcslashes(htmlspecialchars($request['username']));
+      $talkTo = stripcslashes(htmlspecialchars($request['talkTo']));
+      $message = stripslashes(htmlspecialchars($request['message']));
+
+      if ($message == "" || $username == "" || $talkTo == "")
+        $message = "";
+
+      $c = Message::create([
+        'user1' => $username,
+        'user2'=> $talkTo,
+        'message' => $message
+      ]);
+
+      $d = Dialogue::where('user1','=',$username)
+      ->where('user2','=',$talkTo)
+      ->orWhere('user2','=',$username)
+      ->where('user1','=',$talkTo)->get();
+
+      if($d == "[]")//If no dialogue exists, make one
+      {
+        Dialogue::create([
+          'user1' => $username,
+          'user2'=> $talkTo,
+          'lastMessage' => $c->created_at
+        ]);
+      }
+      else//Otherwise update the last message
+      {
+        Dialogue::where('user1','=',$username)
+        ->where('user2','=',$talkTo)
+        ->orWhere('user2','=',$username)
+        ->where('user1','=',$talkTo)->update(Array('lastMessage' => $c->created_at));
+      }
+    }
+
+    if($request->has('username') && $request->has('talkTo') && $request->has('action'))//UPDATE MESSAGES
+    {
+      //Load Message
+      if($request['action']=="update")
+      {
+        $username = stripslashes(htmlspecialchars($request['username']));
+        $talkTo = stripcslashes(htmlspecialchars($request['talkTo']));
+        $messages = Message::where('user1','=',$username)->where('user2','=',$talkTo)
+        ->where('message','!=','')
+        ->orWhere('user1','=',$talkTo)->where('user2','=',$username)
+        ->where('message','!=','')->orderBy('created_at','asc')->get();
+        $message = "";
+        foreach ($messages as $mezzage)
+        {
+          $message = $message.$mezzage->user1;
+          $message = $message."\\";
+          $message = $message.$mezzage->user2;
+          $message = $message."\\";
+          $message = $message.$mezzage->message;
+          $message = $message."\n";
+        }
+      }
+    }
+
+    return response()->json(['message' => $message]);
   }
 
-  public function search()
+  public function search(\Illuminate\Http\Request $request)
   {
-    return view('phpParsers.searchSystem');
+    $message = "Something is wrong.";
+
+    if($request->has('whoSearched') && $request->has('inboxSearch'))
+    {
+      $criteria = stripcslashes(htmlspecialchars($request['inboxSearch']));
+      $whoSearched = stripcslashes(htmlspecialchars($request['whoSearched']));
+      $newTalkTo = User::where('name','=',$criteria)->first();
+
+      if($newTalkTo != "")
+      //If the person being searched for does exist
+      {
+          $d = Dialogue::where('user1','=',$whoSearched)->where('user2','=',$criteria)
+          ->orWhere('user1','=',$criteria)->where('user2','=',$whoSearched)->first();
+
+          if($d != "")
+            $message = "You already have a dialogue with ".$criteria;
+
+          else
+          {
+            Dialogue::create([
+              'user1' => $whoSearched,
+              'user2'=> $criteria,
+              'lastMessage' => Carbon::now()
+            ]);
+
+            $message = "new_dialogue";
+          }
+      }
+      else if($newTalkTo == "")
+      {
+          $message = "Sorry, That user does not exist yet.";
+      }
+    }
+
+    return response()->json(['message' => $message]);
   }
 
   public function password()

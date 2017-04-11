@@ -31,16 +31,17 @@ Route::get('/profile/{profileOwner}', 'ProfileController@show');
 Route::get('/stargazer', 'ProfileController@search');
 
 //PHP PARSE ROUTES
-Route::get('/friendSystem','ParseController@friend');
-Route::get('/blockSystem','ParseController@block');
-Route::get('/searchSystem','ParseController@search');
-Route::get('/messageSystem','ParseController@message');
-Route::get('/passwordSystem','ParseController@password');
-Route::post('/projectSystem','ParseController@project');
-Route::get('/categories','ParseController@categories');
+Route::post('/friendSystem','ParseController@friend')->name('friend');
+Route::post('/blockSystem','ParseController@block')->name('block');
+Route::post('/searchSystem','ParseController@search')->name('search');
+Route::post('/messageSystem','ParseController@message')->name('message');
 Route::post('/categories','ParseController@cats')->name('category');
+
+Route::get('/categories','ParseController@categories');
+Route::get('/passwordSystem','ParseController@password');
+
+Route::post('/projectSystem','ParseController@project');
 Route::post('/photoSystem/{User}','ParseController@photoHandle');
-Route::post('/registerSystem','ParseController@register');
 
 //IMAGE PULLING
 Route::get('images/{filename}', function ($filename)

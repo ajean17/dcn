@@ -87,15 +87,43 @@
 
 @section('javascript')
 <script type="text/javascript">
+  var token = '{{Session::token()}}';
+  var url= '{{route('friend')}}';
+  /*$(document).ready(function()
+  {
+
+  });*/
   function friendReqHandler(action,reqid,user1,elem)
   {
-    /*var conf = confirm("Press OK to '"+action+"' this friend request.");
-    if(conf != true)
+    //document.getElementById(elem).innerHTML = "processing ...";
+    var $elem = $('#'+elem);
+    var log = "<?php echo Auth::user()->name?>";
+
+    $elem.html("processing...");
+    //console.log("Action "+action+" ReqID "+reqid+" User1 "+user1+" elem "+elem);
+    $.ajax(
     {
-      return false;
-    }*/
-    document.getElementById(elem).innerHTML = "processing ...";
-    var ajax = ajaxObj("GET", "/friendSystem?action="+action+"&reqid="+reqid+"&user1="+user1);//+"&logged="+loggedin);
+      method: 'POST',
+      url: url,
+      data: {action: action, reqid: reqid, user1: user1, log: log, _token: token}
+    }).done(function (msg)
+    {
+      console.log(msg['message']);
+      if(msg['message'] == "accepted")
+      {
+        $elem.html("<b>Request Accepted!</b><br />Your are now friends");//$tog.html('<button id="unblock">Unblock User</button>');
+      }
+      else if(msg['message'] == "rejected")
+      {
+        $elem.html("<b>Request Rejected</b><br />You chose to reject friendship with this user");//$tog.html('<button id="block">Block User</button>');
+      }
+      else
+      {
+        $elem.html(msg['message'])
+      }
+    });
+
+    /*var ajax = ajaxObj("GET", "/friendSystem?action="+action+"&reqid="+reqid+"&user1="+user1);//+"&logged="+loggedin);
     ajax.onreadystatechange = function()
     {
       if(ajaxReturn(ajax) == true)
@@ -114,7 +142,7 @@
         }
       }
     }
-    ajax.send();
+    ajax.send();*/
   }
 </script>
 @endsection

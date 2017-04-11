@@ -15,7 +15,7 @@
   if($profile == "")
   {
     $profile = Profile::create([
-      'username' => $loggedUser
+      'username' => $profileOwner->name
     ]);
   }
 
@@ -68,21 +68,21 @@
       if($friend_check!="[]")//If the friend check is not empty
       {
         $isFriend = true;
-        $friend_button = '<button onclick="friendToggle(\'unfriend\',\''.$profileOwner->name.'\',\'friendBtn\')">Unfriend</button>';
+        $friend_button = '<button id="unfriend">Unfriend</button>';
       }
       else
       {
         $isFriend = false;
         if($ownerBlockViewer == false)
         {
-          $friend_button = '<button onclick="friendToggle(\'friend\',\''.$profileOwner->name.'\',\'friendBtn\')">Request As Friend</button>';
-          $block_button = '<button onclick="blockToggle(\'block\',\''.$profileOwner->name.'\',\'blockBtn\')">Block User</button>';
+          $friend_button = '<button id="friend">Request As Friend</button>';
+          $block_button = '<button id="block">Block User</button>';
         }
       }
       if($block_check != "[]")
       {
         $ownerBlockViewer = true;
-        $block_button = '<button onclick="blockToggle(\'unblock\',\''.$profileOwner->name.'\',\'blockBtn\')">Unblock User</button>';
+        $block_button = '<button id="unblock">Unblock User</button>';
         $friend_button = '<button disabled>Request As Friend</button>';
       }
     }
@@ -183,58 +183,83 @@
 
 @section('javascript')
   <script type="text/javascript">
+    var token = '{{Session::token()}}';
+    var urlf= '{{route('friend')}}';
+    var urlb= '{{route('block')}}';
 
-    function friendToggle(type, user, element)
+    function toggle(type)
     {
-      document.getElementById(element).innerHTML = "please wait ...";
-      var ajax = ajaxObj("GET", "/friendSystem?type="+type+"&user="+user);
-      console.log('Type:'+type+" User: "+user+" Element: "+element);
-      ajax.onreadystatechange = function()
+      var $tog = $('#'+type);
+      var user = "<?php echo $profileOwner->name?>";
+      var log = "<?php echo Auth::user()->name?>";
+      console.log(type + " " + user + " " + log);
+      $tog.html("please wait...");
+
+      if(type == "friend" || type == "unfriend")
       {
-        if(ajaxReturn(ajax) == true)
+        $.ajax(
         {
-          if(ajax.responseText == "friend_request_sent")
+          method: 'POST',
+          url: urlf,
+          data: {type: type, user: user, log: log, _token: token}
+        }).done(function (msg)
+        {
+          console.log(msg['message']);
+          if(msg['message'] == "friend_request_sent")
           {
-            document.getElementById(element).innerHTML = 'OK Friend Request Sent';
+            $tog.html('OK Friend Request Sent');
           }
-          else if(ajax.responseText == "unfriend_ok")
+          else if(msg['message'] == "unfriend_ok")
           {
-            document.getElementById(element).innerHTML = '<button onclick="friendToggle(\'friend\',\'<?php echo $profileOwner->name; ?>\',\'friendBtn\')">Request As Friend</button>';
+            $tog.html('Unfriended');//$tog.html('<button id="friend">Request As Friend</button>');
           }
           else
           {
-            alert(ajax.responseText);
-            document.getElementById(element).innerHTML = 'Try again later.';
+            alert(msg['message']);
+            $tog.html('Try again later.')
           }
-        }
+        });
       }
-      ajax.send();
-    }
 
-    function blockToggle(type, user, element)
-    {
-      document.getElementById(element).innerHTML = 'please wait ...';
-      var ajax = ajaxObj("GET", "/blockSystem?type="+type+"&user="+user);
-      ajax.onreadystatechange = function()
+      if(type == "block" || type == "unblock")
       {
-        if(ajaxReturn(ajax) == true)
+        $.ajax(
         {
-          if(ajax.responseText == "blocked_ok")
+          method: 'POST',
+          url: urlb,
+          data: {type: type, user: user, log: log, _token: token}
+        }).done(function (msg)
+        {
+          console.log(msg['message']);
+          if(msg['message'] == "blocked_ok")
           {
-            document.getElementById(element).innerHTML = '<button onclick="blockToggle(\'unblock\',\'<?php echo $profileOwner->name; ?>\',\'blockBtn\')">Unblock User</button>';
+            $tog.html('Blocked');//$tog.html('<button id="unblock">Unblock User</button>');
           }
-          else if(ajax.responseText == "unblocked_ok")
+          else if(msg['message'] == "unblocked_ok")
           {
-            document.getElementById(element).innerHTML = '<button onclick="blockToggle(\'block\',\'<?php echo $profileOwner->name; ?>\',\'blockBtn\')">Block User</button>';
+            $tog.html('Unblocked');//$tog.html('<button id="block">Block User</button>');
           }
           else
           {
-            alert(ajax.responseText);
-            document.getElementById(element).innerHTML = 'Try again later';
+            alert(msg['message']);
+            $tog.html('Try again later.')
           }
-        }
+        });
       }
-      ajax.send();
     }
+
+    $(document).ready(function()
+    {
+      var $friend = $('#friend');
+      var $block = $('#block');
+      var $unfriend = $('#unfriend');
+      var $unblock = $('#unblock');
+
+      $friend.on('click', function(){toggle('friend');});
+      $unfriend.on('click',function(){toggle('unfriend');});
+      $block.on('click',function(){toggle('block');});
+      $unblock.on('click',function(){toggle('unblock');});
+    });
+
   </script>
 @endsection

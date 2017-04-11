@@ -16,10 +16,10 @@ class CreateBlockedTable extends Migration
 
     Schema::create('blocked', function (Blueprint $table)
     {
-    $table->increments('id');
-    $table->string('blocker');
-    $table->string('blockee');
-    $table->dateTime('dateblocked');
+      $table->increments('id');
+      $table->string('blocker');
+      $table->string('blockee');
+      $table->timestamps();
     });
 
     }

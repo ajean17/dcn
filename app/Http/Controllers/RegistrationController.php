@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use App\User;
 use App\Profile;
 use App\Mail\Welcome;
+use \Storage;
 
 class RegistrationController extends Controller
 {
@@ -84,6 +85,10 @@ class RegistrationController extends Controller
             'email' => $e,
             'password' => bcrypt($p),
             'activated' => '1'
+          ]);
+
+          $profile = Profile::create([
+            'username' => $u
           ]);
 
           // Create directory(folder) to hold each user's files(pics, MP3s, etc.)

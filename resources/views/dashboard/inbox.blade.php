@@ -55,7 +55,7 @@
 
 @section('content')
   <h1>Inbox</h1>
-  <div class="row"> <!--onload="update("<?php //echo $talkTo;?>");"-->
+  <div class="row">
     <div class="col-2 convoList">
       <h4>Conversations</h4>
       <input type="text" name="startConvo" class="startConvo" id="startConvo"
@@ -104,63 +104,63 @@
 
 @section('javascript')
   <script>
-
     var talkTo = "<?php echo $talkTo;?>";
+    var token = '{{Session::token()}}';
+    var urlm = '{{route('message')}}';
+    var urls = '{{route('search')}}';
 
     function talkingTo(talk)
     {
       talkTo = talk;
-      document.getElementById('conversationHead').innerHTML = talkTo;
+      $('#conversationHead').html(talkTo);
       update(talkTo);
     }
 
     function inboxSearch()
     {
-      var inboxSearch = document.getElementById("startConvo").value;
+      var $startConvo = $('#startConvo');
+      var inboxSearch = $startConvo.val();
       var whoSearched = "<?php echo Auth::user()->name;?>";
       if(inboxSearch != "")
       {
-        var ajax = ajaxObj("GET", "/searchSystem?whoSearched=" + whoSearched + "&inboxSearch=" + inboxSearch);
-        ajax.onreadystatechange = function()
+        $.ajax(
         {
-          if(ajaxReturn(ajax) == true)
+          method: 'POST',
+          url: urls,
+          data: {whoSearched: whoSearched, inboxSearch: inboxSearch, _token: token}
+        }).done(function (msg)
+        {
+          //console.log(msg['message']);
+          if(msg['message'] == "new_dialogue")
           {
-            if(ajax.responseText == "new_dialogue")
-            {
-              document.getElementById("dialogues").innerHTML += "<li><a href='#' onclick='return false;' onmouseup='talkingTo(\"" + inboxSearch + "\")''>" + inboxSearch +"</a></li><br/>";
-            }
-            else
-            {
-              alert(""+ajax.responseText+"");
-            }
+            $('#dialogues').append("<li><a href='#' onclick='return false;' onmouseup='talkingTo(\"" + inboxSearch + "\")''>" + inboxSearch +"</a></li><br/>");
           }
-        }
-        ajax.send();
+          else
+            alert(msg['message']);
+        });
       }
     }
 
     function sendmsg()
     {
-      var msginput = document.getElementById("messageInput");
-      var msgarea = document.getElementById("appearMessage");
-      var message = msginput.value;
-      if (message != "")
+      var msginput = $('#messageInput');
+      var msgarea = $('#appearMessage');
+      var message = msginput.val();
+      if(message != "")
       {
-
         var username = "<?php echo Auth::user()->name;?>";
-        var ajax = ajaxObj("GET", "/messageSystem?username=" + username + "&talkTo=" + talkTo + "&message=" + message);
-        ajax.onreadystatechange = function()
-    		{
-          if(ajaxReturn(ajax) == true)
-    			{
-              //document.getElementById("unamestatus").innerHTML = ajax.responseText;
-              message = escapehtml(message)
-              msgarea.innerHTML +=
-              "<div class=\"msgc\" style=\"margin-bottom: 30px;\"><div class=\"msg msgfrom\">"	+ message + "</div><div class=\"msgarr msgarrfrom\"></div><div class=\"msgsentby msgsentbyfrom\">Sent by " + username + "</div></div>";
-              msginput.value = "";
-          }
-        }
-        ajax.send();
+        $.ajax(
+        {
+          method: 'POST',
+          url: urlm,
+          data: {username: username, talkTo: talkTo, message: message, _token: token}
+        }).done(function (msg)
+        {
+          //console.log(msg['message']);
+          message = escapehtml(message);
+          msgarea.append("<div class=\"msgc\" style=\"margin-bottom: 30px;\"><div class=\"msg msgfrom\">"	+ message + "</div><div class=\"msgarr msgarrfrom\"></div><div class=\"msgsentby msgsentbyfrom\">Sent by " + username + "</div></div>");
+          msginput.val("");
+        });
       }
 
     }
@@ -177,40 +177,39 @@
 
     function update(talkTo)
     {
-      var msgarea = document.getElementById("appearMessage")
+      var msgarea = $('#appearMessage');
       var username = "<?php echo Auth::user()->name;?>";
       var output = "";
-      var ajax = ajaxObj("GET", "/messageSystem?username=" + username + "&talkTo=" + talkTo + "&action=update");
-      ajax.onreadystatechange = function()
+
+      $.ajax(
       {
-        if(ajaxReturn(ajax) == true)
+        method: 'POST',
+        url: urlm,
+        data: {username: username, talkTo: talkTo, action: 'update', _token: token}
+      }).done(function (msg)
+      {
+        //console.log(msg['message']);
+        var response = msg['message'].split("\n");
+        var rl = response.length;
+        var item = "";
+
+        for (var i = 0; i < rl; i++)
         {
-          var response = ajax.responseText.split("\n")
-          var rl = response.length
-          var item = "";
-          for (var i = 0; i < rl; i++)
+          item = response[i].split("\\")
+          if (item[2] != undefined)
           {
-            item = response[i].split("\\")
-            if (item[2] != undefined)
+            if (item[0] == username)
             {
-              if (item[0] == username)
-              {
-                output += "<div class=\"msgc\" style=\"margin-bottom: 30px;\"> <div class=\"msg msgfrom\">" + item[2] + "</div> <div class=\"msgarr msgarrfrom\"></div> <div class=\"msgsentby msgsentbyfrom\">Sent by " + item[0] + "</div> </div>";
-              }
-              else
-              {
-                output += "<div class=\"msgc\"> <div class=\"msg\">" + item[2] + "</div> <div class=\"msgarr\"></div> <div class=\"msgsentby\">Sent by " + item[0] + "</div> </div>";
-              }
+              output += "<div class=\"msgc\" style=\"margin-bottom: 30px;\"> <div class=\"msg msgfrom\">" + item[2] + "</div> <div class=\"msgarr msgarrfrom\"></div> <div class=\"msgsentby msgsentbyfrom\">Sent by " + item[0] + "</div> </div>";
+            }
+            else
+            {
+              output += "<div class=\"msgc\"> <div class=\"msg\">" + item[2] + "</div> <div class=\"msgarr\"></div> <div class=\"msgsentby\">Sent by " + item[0] + "</div> </div>";
             }
           }
-
-          msgarea.innerHTML = output;
-          msgarea.scrollTop = msgarea.scrollHeight;
-
+          msgarea.html(output);
         }
-      }
-      ajax.send();
-
+      });
     }
 
     setInterval(function()
