@@ -13,6 +13,7 @@ use App\Block;
 use App\Message;
 use \Storage;
 use Carbon\Carbon;
+use DB;
 
 class ParseController extends Controller
 {
@@ -297,6 +298,60 @@ class ParseController extends Controller
       {
           $message = "Sorry, That user does not exist yet.";
       }
+    }
+
+    if($request->has("search") && $request->has("video") && $request->has("mentor") && $request->has("investments") && $request->has("roi") && $request->has("category"))
+    {
+      $search = $request["search"];
+      $video = $request["video"];
+      $investments = $request["investments"];
+      $mentor = $request["mentor"];
+      $roi = $request["roi"];
+      $category = $request["category"];
+
+      $videoQ = "";
+      $investmentsQ = "";
+      $mentorQ = "";
+      $roiQ = "";
+
+      if($video == "true")
+        $videoQ= " WHERE hasVideo = '1'";
+
+      if($investments == "true")
+      {
+        if($video == "true")
+          $investmentsQ = " AND hasInvestments = '1'";
+        else
+          $investmentsQ = " WHERE hasInvestments = '1'";
+      }
+
+      if($mentor == "true")
+      {
+        if($video == "true" || $investments == "true")
+          $mentorQ = " AND hasMentor = '1'";
+        else
+          $mentorQ = " WHERE hasMentor = '1'";
+      }
+
+      if($roi == "true")
+      {
+        if($video == "true" || $investments == "true" || $mentor == "true")
+          $roiQ = " AND hasROI = '1'";
+        else
+          $roiQ = " WHERE hasROI = '1'";
+      }
+
+      $results = DB::select(DB::raw('SELECT * FROM profiles'.$videoQ.$investmentsQ.$mentorQ.$roiQ.''));
+      $show = "";
+
+      foreach($results as $result)
+      {
+        $project = Project::where('id','=',$result->projectOneID)->first();
+        if($project != "" || $project != NULL)
+          $show = $show.$result->username."\\".$project->name."\n";
+      }
+      $message = $show;
+      //echo "Here are the values".$videoQ.$investmentsQ.$mentorQ.$roiQ.$category;
     }
 
     return response()->json(['message' => $message]);

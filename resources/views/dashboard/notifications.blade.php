@@ -89,10 +89,7 @@
 <script type="text/javascript">
   var token = '{{Session::token()}}';
   var url= '{{route('friend')}}';
-  /*$(document).ready(function()
-  {
 
-  });*/
   function friendReqHandler(action,reqid,user1,elem)
   {
     //document.getElementById(elem).innerHTML = "processing ...";

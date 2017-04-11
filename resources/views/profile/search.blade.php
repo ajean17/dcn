@@ -6,10 +6,13 @@
 <?php
   use App\Category;
   use App\User;
+  use App\Project;
+  use App\Profile;
 
   //$categories = Category::whereNull('parent')->orderBy('name','asc')->get();
   $parent = "WHERE parent IS NULL";
   $categories = DB::select(DB::raw('SELECT * FROM categories '.$parent.' ORDER BY name ASC'));
+  $profiles = Profile::all();
 
 ?>
 @section('content')
@@ -57,6 +60,12 @@
         <h4>Search Results</h4>
         <hr/>
         <ul id = "resultList">
+          <?php
+            foreach($profiles as $profile)
+            {
+              echo "<li>The profile owner is <a href='\\profile\\".$profile->username."'>".$profile->username."</a></li>";
+            }
+          ?>
         </ul>
       </div>
     </div>
@@ -68,8 +77,9 @@
 
 @section('javascript')
 <script>
-
   var category = "category";
+  var token = '{{Session::token()}}';
+  var url= '{{route('search')}}';
 
   function grabCat(cat)
   {
@@ -79,38 +89,39 @@
 
   function searchNow()
   {
-    var video = document.getElementById("video").checked;
-    var mentor = document.getElementById("mentor").checked;
-    var investments = document.getElementById("investments").checked;
-    var roi = document.getElementById("ROI").checked;
-    var search = document.getElementById("searchBar").value;
+    var video = $('#video').prop('checked');//document.getElementById("video").checked;
+    var mentor = $('#mentor').prop('checked');//document.getElementById("mentor").checked;
+    var investments = $('#investments').prop('checked');//document.getElementById("investments").checked;
+    var roi = $('#ROI').prop('checked');//document.getElementById("ROI").checked;
+    var search = $('#video').val();//document.getElementById("searchBar").value;
 
     console.log(category);
+    console.log("video "+video+" mentor "+mentor+" investments "+investments+" roi "+roi);
     //if(search != "")
     //{
       var output = "";
-      var ajax = ajaxObj("GET", "/searchSystem?search=" + search + "&video=" + video + "&mentor=" + mentor + "&investments=" + investments + "&roi=" + roi + "&category=" + category);
-      ajax.onreadystatechange = function()
+      $.ajax(
       {
-        if(ajaxReturn(ajax) == true)
+        method: 'POST',
+        url: url,
+        data: {search: search, video: video, mentor: mentor, investments: investments, roi: roi, category: category, _token: token}
+      }).done(function (msg)
+      {
+        console.log(msg['message']);
+        $('#resultList').html(output);
+        var response = msg['message'].split("\n");
+        var item = "";
+
+        for (var i = 0; i < response.length; i++)
         {
-          document.getElementById('resultList').innerHTML = output;
-          var response = ajax.responseText.split("\n");
-          var item = "";
-					for (var i = 0; i < response.length; i++)
-					{
-            item = response[i].split("\\");
-            if(item[0] != undefined && item[1] != undefined)
-            {
-              //console.log(item[0] + " my dude " + item[1]);
-              output += "<li>The profile owner is <a href='\\profile\\"+item[0]+"'>"+item[0]+"</a>, the name of their project is "+item[1]+".</li>";
-            }
+          item = response[i].split("\\");
+          if(item[0] != undefined && item[1] != undefined)
+          {
+            output += "<li>The profile owner is <a href='\\profile\\"+item[0]+"'>"+item[0]+"</a>, the name of their project is "+item[1]+".</li>";
           }
-          document.getElementById('resultList').innerHTML = output;
         }
-      }
-      ajax.send();
-    //}
+        $('#resultList').html(output);
+      });
   }
 
 
