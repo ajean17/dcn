@@ -8,6 +8,11 @@ Route::get('/', function ()
     return view('/homeIndex');
 });
 
+Route::get('/connections', function ()
+{
+    return view('/dashboard.connections');
+});
+
 //Auth::routes();//everything related to login/regisration/passreset/logout
 Route::get('/register','RegistrationController@create');
 Route::get('/activation','RegistrationController@activation');

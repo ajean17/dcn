@@ -46,7 +46,8 @@
 
 .profileHead
 {
-  background-color: #aaaaaa;
+  background-color: rgba(31,6,64,.2);
+  color: white;
 }
 .profilePic
 {
@@ -54,23 +55,26 @@
 }
 .banner
 {
-  background-color: #cccccc;
+  background-color: rgba(31,6,64,.8);
+  color: white;
 }
 .bannerTabs
 {
   text-align: center;;
   bottom:0px;
+  color: white;
 }
 .profileBody
 {
-  background-color: #dddddd;
+  background-color: rgba(125,25,255,.5);
   position: relative;
+  color: white;
   /*height:80%;*/
 }
 
 .quickNav
 {
-  background-color: #eeeeee;
+  background-color:  rgba(31,6,64,.3);
   position: absolute fixed;
   //height:20%;
 }
@@ -84,7 +88,7 @@
 
 .projectContent
 {
-  background-color:#33343e;
+  //background-color:#33343e;
   height: 500px;
   overflow-y: scroll;
 }

@@ -63,7 +63,7 @@
           <?php
             foreach($profiles as $profile)
             {
-              echo "<li>The profile owner is <a href='\\profile\\".$profile->username."'>".$profile->username."</a></li>";
+              echo "<li>Click to view <a href='\\profile\\".$profile->username."'>".$profile->username."'s</a> Profile</li>";
             }
           ?>
         </ul>

@@ -116,12 +116,12 @@
     @endif
     @include ('layouts.errors')
     <div class="col-sm-9 banner">
-      <h1>Banner</h1>
-      <div class="bannerTabs">
+      <!--h1>Banner</h1>
+      <!--div class="bannerTabs">
         <a href="#">Project One</a>
         <a href="#">| Project Two</a>
         <a href="#">| Project Three</a>
-      </div>
+      </div-->
     </div>
   </div>
   <hr>

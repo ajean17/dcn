@@ -82,11 +82,9 @@
       </ul>
     </div>
     <div class="col-10 convoContent">
-      <h4>Messages Go Here!</h4>
       <div id="messageBox">
-        <p>messageBox</p>
         <div id="conversationHead">
-          <h4>{{$talkTo}}</h4>
+          <h4> Message {{$talkTo}}</h4>
         </div>
         <div id="appearMessage">
 
@@ -112,7 +110,7 @@
     function talkingTo(talk)
     {
       talkTo = talk;
-      $('#conversationHead').html(talkTo);
+      $('#conversationHead').html("Message"+talkTo);
       update(talkTo);
     }
 

@@ -21,9 +21,9 @@
       <li class="nav-item">
         <a class="nav-link" href="/inbox/{{Auth::user()->name}}">Inbox</a>
       </li>
-      <li class="nav-item">
+      <!--li class="nav-item">
         <a class="nav-link" href="/account/{{Auth::user()->name}}">Account Settings</a>
-      </li>
+      </li-->
       <li class="nav-item">
         <a class="nav-link" href="{{ url('/logout') }}">Logout</a>
       </li>
@@ -38,7 +38,7 @@
     </ul>
     @if(Auth::check())
     <form class="form-inline mt-2 mt-md-0">
-      <a class="nav-link" href="/notifications/{{Auth::user()->name}}">{{ Auth::user()->name }}</a>
+      <a class="nav-link" href="/notifications/{{Auth::user()->name}}">Notifications for {{ Auth::user()->name }}</a>
       <!--input class="form-control mr-sm-2" type="text" placeholder="Search">
       <button class="btn btn-outline-default my-2 my-sm-0" type="submit">Search</button-->
     </form>

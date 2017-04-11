@@ -8,7 +8,7 @@
   <div class="row dashboard">
     <div class="col-sm-4 dashOption">
       <h1>
-        <a href="#">Connections</a>
+        <a href="/connections">Connections</a>
       </h1>
     </div>
     <div class="col-sm-4 dashOption">
@@ -23,7 +23,7 @@
     </div>
   </div>
   <hr>
-  <div class="row dashboard">
+  <!--div class="row dashboard">
     <div class="col-sm-6 dashOption">
       <h1>
         <a href="#">Business Diagrams</a>
@@ -34,5 +34,5 @@
         <a href="#">Additional Content</a>
       </h1>
     </div>
-  </div>
+  </div-->
 @endsection

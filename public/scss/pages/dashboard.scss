@@ -14,8 +14,13 @@ h1
 }
 .dashOption
 {
-  background-color: pink;
+  background-color: rgba(125,25,255,.6);
   padding:3px;
   border-radius: 15px;
-  border: 8px solid #eeeeee;
+  border: 8px solid #333333;
+
+  a
+  {
+    color:white;
+  }
 }
