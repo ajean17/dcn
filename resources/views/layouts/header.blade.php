@@ -35,6 +35,9 @@
           <a class="nav-link" href="{{ url('/register') }}">Register</a>
         </li>
       @endif
+      <li class="nav-item">
+        <a style="color:pink" class="nav-link" href="https://www.surveymonkey.com/r/QN6KYN2">Take Our Survey!</a>
+      </li>
     </ul>
     @if(Auth::check())
     <form class="form-inline mt-2 mt-md-0">
