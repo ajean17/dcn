@@ -44,7 +44,7 @@ class SessionsController extends Controller
           'message' => 'Wrong username or password, please try again.']);
       }
 
-      return redirect('/');
+      return redirect('/dashboard');
     }
 
     public function destroy()

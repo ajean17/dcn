@@ -30,14 +30,16 @@ div.user_info {
   float: left;
   border: #999 2px solid;
   width: 156px;
-  height: 156px;
-  overflow-y: hidden; }
+  height: 160px; }
   #profile_pic_box img {
-    width: 150px;
-    height: 150px; }
+    position: absolute;
+    left: 0;
+    width: 187px;
+    height: 159px; }
   #profile_pic_box a {
     display: block;
     position: absolute;
+    z-index: 4000;
     background: #D8F08E;
     border: #81A332 1px solid;
     border-radius: 3px;
@@ -45,8 +47,6 @@ div.user_info {
     font-size: 12px;
     text-decoration: none;
     color: #60750B; }
-    #profile_pic_box a:hover {
-      display: block; }
   #profile_pic_box form {
     display: none;
     position: absolute;
@@ -54,8 +54,11 @@ div.user_info {
     padding: 10px;
     opacity: .8;
     background: #F0FEC2;
-    width: 180px;
-    height: 180px; }
+    width: 187px;
+    height: 157px;
+    left: 0;
+    color: black;
+    overflow-x: hidden; }
 
 .profileHead {
   background-color: rgba(31, 6, 64, 0.2);
@@ -66,7 +69,12 @@ div.user_info {
 
 .banner {
   background-color: rgba(31, 6, 64, 0.8);
-  color: white; }
+  text-align: center;
+  color: white;
+  padding: 55px 0px; }
+
+.element {
+  display: none; }
 
 .bannerTabs {
   text-align: center;
@@ -82,6 +90,11 @@ div.user_info {
 .quickNav {
   background-color: rgba(31, 6, 64, 0.3);
   position: absolute fixed; }
+  .quickNav a {
+    color: white;
+    text-decoration: none; }
+    .quickNav a:hover {
+      text-decoration: underline; }
 
 .stickyFix {
   position: fixed;

@@ -428,21 +428,29 @@ class ParseController extends Controller
 
   public function project(Request $request)
   {
-    $name = "Need to name me at some point...";
+    $name = "";
     $category = $request['category'];
     echo $category;
     $subCategory = $request->input('subCategory');
     echo $subCategory;
-    $one = "one";     $oneType = "blank1";
-    $two = "two";     $twoType = "blank2";
-    $three = "three"; $threeType = "blank3";
-    $four = "four";   $fourType = "blank4";
-    $five = "five";   $fiveType = "blank5";
+    $one = "one";     $oneType = "blank1";    $oneN = "1name";
+    $two = "two";     $twoType = "blank2";    $twoN = "2name";
+    $three = "three"; $threeType = "blank3";  $threeN = "3name";
+    $four = "four";   $fourType = "blank4";   $fourN = "4name";
+    $five = "five";   $fiveType = "blank5";   $fiveN = "5name";
 
     if($request->has('title'))
-    {
       $name = $request['title'];
-    }
+    if($request->has('OneName'))
+      $oneN = $request['OneName'];
+    if($request->has('TwoName'))
+      $twoN = $request['TwoName'];
+    if($request->has('ThreeName'))
+      $threeN = $request['ThreeName'];
+    if($request->has('FourName'))
+      $fourN = $request['FourName'];
+    if($request->has('FiveName'))
+      $fiveN = $request['FiveName'];
     if($request->has('OneType'))
     {
       $oneType = $request['OneType'];
@@ -545,18 +553,28 @@ class ParseController extends Controller
     if($profile->projectOneID == NULL)
     //If the profile has no project associated with it, make one using the data the user sent
     {
-      $newProject = Project::create([
+      $project = Project::create([
         'profileId' => $profile->id
       ]);
 
-       Profile::where('username','=',$user)->update(Array('projectOneID' => $newProject->id));
+       Profile::where('id','=',$profile->id)->update(Array('projectOneID' => $project->id));
     }
 
-    $project = Project::where('id','=',$profile->projectOneID)->first();
+    $profile = Profile::where('username','=',$user)->first();
 
-    if($name != "" || $name != NULL)
+    if($name != "" && $name != NULL)
       Project::where('id','=',$profile->projectOneID)->update(Array('name' => $name));
-    if($category != "" || $category != NULL)
+    if($oneN != "" && $oneN != NULL && $oneN != "1name")
+      Project::where('id','=',$profile->projectOneID)->update(Array('oneName' => $oneN));
+    if($twoN != "" && $twoN != NULL && $twoN != "2name")
+      Project::where('id','=',$profile->projectOneID)->update(Array('twoName' => $twoN));
+    if($threeN != "" &&$threeN != NULL && $threeN != "3name")
+      Project::where('id','=',$profile->projectOneID)->update(Array('threeName' => $threeN));
+    if($fourN != "" && $fourN != NULL && $fourN != "4name")
+      Project::where('id','=',$profile->projectOneID)->update(Array('fourName' => $fourN));
+    if($fiveN != "" && $fiveN != NULL && $fiveN != "5name")
+      Project::where('id','=',$profile->projectOneID)->update(Array('fiveName' => $fiveN));
+    if($category != "" && $category != NULL)
     {
       Project::where('id','=',$profile->projectOneID)->update(Array('category' => $category));
       Project::where('id','=',$profile->projectOneID)->update(Array('subCategory' => $subCategory));
@@ -626,7 +644,7 @@ class ParseController extends Controller
     }
 
     $message = "Your profile has been updated";
-    return redirect()->to('/management'.'/'.$user);
+    return redirect()->to('/profile'.'/'.$user);
     //return redirect()->to('/profile'.'/'.$user);
   }
 

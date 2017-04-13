@@ -5,7 +5,7 @@
 */
 var scrollY = 0;
 var distance = 40;
-var speed = 15;
+var speed = 30;
 
 function autoScrollTo(element)
 {
