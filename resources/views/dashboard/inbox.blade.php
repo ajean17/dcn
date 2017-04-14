@@ -7,6 +7,8 @@
 <?php
   use App\Conversation;
   use App\Dialogue;
+  use App\Friend;
+  use App\User;
 
   if(isset($_GET['focus']))
   {
@@ -51,6 +53,9 @@
   ->orWhere('user2','=',$inboxOwner->name)
   ->where('user1','!=',$inboxOwner->name)->get();
 
+  $friends = Friend::where('user2','=',$inboxOwner->name)->where('accepted','=','1')
+  ->orWhere('user1','=',$inboxOwner->name)->where('accepted','=','1')->get();
+
 ?>
 
 @section('content')
@@ -74,14 +79,13 @@
             {
               echo "<li><a href='#' onclick='return false;' onmouseup='talkingTo(\"".$conversation->user1."\")'>".$conversation->user1."</a></li><br/>";
             }
-
             //echo $conversation->user1;
           }
           //<li id="newConvo"></li>
         ?>
       </ul>
     </div>
-    <div class="col-10 convoContent">
+    <div class="col-8 convoContent">
       <div id="messageBox">
         <div id="conversationHead">
           <h4> Message {{$talkTo}}</h4>
@@ -97,7 +101,40 @@
         </div>
       </div>
     </div>
+    <div class="col-2 frndConvoList">
+    <h4>Friends</h4>
+    <input type="text" name="startConvo" class="startConvo" id="startConvo"
+    onkeydown="if (event.keyCode == 13) inboxSearch()"
+    value=""
+    placeholder="Start a dialogue...(Press enter)">
+    <ul id="dialogues">
+      <?php
+        foreach($friends as $friend)
+        {
+          $buddy = "";
+          if($friend->user1 == $inboxOwner->name)
+          {
+            $buddy = $friend->user2;
+          }
+          else if($friend->user2 == $inboxOwner->name)
+          {
+            $buddy = $friend->user1;
+          }
+          $guy =  User::where('name','=',$buddy)->first();
+          $user1avatar = $guy->avatar;
+          $user1pic = '<img src="/uploads/user/'.$guy->name.'/images'.'/'.$user1avatar.'" alt="'.$guy->name.'" class="im_pic">';
+          if($user1avatar == NULL)
+          {
+            $picURL = "/images/Default.jpg";
+            $user1pic = '<img src="'.$picURL.'" alt="'.$guy->name.'" class="im_pic">';
+          }
+          echo '<div><a href="/profile/'.$guy->name.'">'.$user1pic.'</a><b><p>'.$guy->name.'</p></b></div>';
+        }
+      ?>
+    </ul>
+    </div>
   </div>
+
 @endsection
 
 @section('javascript')
@@ -110,7 +147,7 @@
     function talkingTo(talk)
     {
       talkTo = talk;
-      $('#conversationHead').html("Message"+talkTo);
+      $('#conversationHead').html("Message "+talkTo);
       update(talkTo);
     }
 

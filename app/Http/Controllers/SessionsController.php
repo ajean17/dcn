@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
+use Illuminate\Support\Facades\Auth;
 
 class SessionsController extends Controller
 {
@@ -44,7 +45,7 @@ class SessionsController extends Controller
           'message' => 'Wrong username or password, please try again.']);
       }
 
-      return redirect('/dashboard');
+      return redirect('/profile'.'/'.$request['name']);
     }
 
     public function destroy()
