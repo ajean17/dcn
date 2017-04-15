@@ -7,7 +7,7 @@
 
 <script type='text/javascript' src='/js/main.js'></script>
 <script type='text/javascript' src='/js/ajax.js'></script>
-<!--script type='text/javascript' src='/js/autoScrollTo.js'></script-->
+<script type='text/javascript' src='/js/sidebar.js'></script>
 <!--script type='text/javascript' src='/js/register.js'></script-->
 
 <link href="/css/main.css" rel="stylesheet">
