@@ -251,11 +251,14 @@ class ParseController extends Controller
         $message = "";
         foreach ($messages as $mezzage)
         {
+          $date= Carbon::parse($mezzage['created_at']);
           $message = $message.$mezzage->user1;
           $message = $message."\\";
           $message = $message.$mezzage->user2;
           $message = $message."\\";
           $message = $message.$mezzage->message;
+          $message = $message."\\";
+          $message = $message.$mezzage->created_at->format('h:i A F jS');
           $message = $message."\n";
         }
       }
@@ -277,21 +280,29 @@ class ParseController extends Controller
       if($newTalkTo != "")
       //If the person being searched for does exist
       {
-          $d = Dialogue::where('user1','=',$whoSearched)->where('user2','=',$criteria)
-          ->orWhere('user1','=',$criteria)->where('user2','=',$whoSearched)->first();
+          $checkFriend = Friend::where('user1','=',$whoSearched)->where('user2','=',$criteria)->where('accepted','=','1')
+          ->orWhere('user1','=',$criteria)->where('user2','=',$whoSearched)->where('accepted','=','1')->first();
 
-          if($d != "")
-            $message = "You already have a dialogue with ".$criteria;
-
+          if($checkFriend != "")
+            $message = "You are already friends with ".$criteria.", please check the list on the right.";
           else
           {
-            Dialogue::create([
-              'user1' => $whoSearched,
-              'user2'=> $criteria,
-              'lastMessage' => Carbon::now()
-            ]);
+            $d = Dialogue::where('user1','=',$whoSearched)->where('user2','=',$criteria)
+            ->orWhere('user1','=',$criteria)->where('user2','=',$whoSearched)->first();
 
-            $message = "new_dialogue";
+            if($d != "")
+              $message = "You already have a dialogue with ".$criteria;
+
+            else
+            {
+              Dialogue::create([
+                'user1' => $whoSearched,
+                'user2'=> $criteria,
+                'lastMessage' => Carbon::now()
+              ]);
+
+              $message = "new_dialogue";
+            }
           }
       }
       else if($newTalkTo == "")

@@ -38,7 +38,7 @@
               $subCategory = Category::where('parent','=',$category->name)->orderBy('name','asc')->get();
               if($subCategory != "[]")
               {
-                echo "<ul class=\"panel\">";
+                echo "<ul class=\"panell\">";
                 //echo "<div class=\"panel\">";
                 foreach($subCategory as $sub)
                 {

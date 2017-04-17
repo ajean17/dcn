@@ -5,90 +5,52 @@
 @endsection
 
 <?php
-  use App\Conversation;
   use App\Dialogue;
   use App\Friend;
   use App\User;
-
-  if(isset($_GET['focus']))
-  {
-    $talkTo = stripcslashes(htmlspecialchars($_GET['focus']));
-  }
-  else
-  {
-    $mostRecent = "";
-    $mostRecent1 = Dialogue::where('user1','=',$inboxOwner->name)->max('lastMessage');
-    $mostRecent2 = Dialogue::where('user2','=',$inboxOwner->name)->max('lastMessage');
-    if($mostRecent1 == "" && $mostRecent2 == "")
-    {
-      $talkTo = "";
-    }
-    else
-    {
-      if($mostRecent1 >= $mostRecent2)
-      {
-        $mostRecent = $mostRecent1;
-      }
-      else if ($mostRecent1 <= $mostRecent2)
-      {
-        $mostRecent = $mostRecent2;
-      }
-      //echo $mostRecent;
-      $currentDialogue = Dialogue::where('lastMessage','=',$mostRecent)->first();
-
-      if($currentDialogue->user1 == $inboxOwner->name)
-      {
-        $talkTo = $currentDialogue->user2;
-      }
-      else if($currentDialogue->user2 == $inboxOwner->name)
-      {
-        $talkTo = $currentDialogue->user1;
-      }
-    }
-  }
-
-
-  $conversations = Dialogue::where('user1','=',$inboxOwner->name)
-  ->where('user2','!=',$inboxOwner->name)
-  ->orWhere('user2','=',$inboxOwner->name)
-  ->where('user1','!=',$inboxOwner->name)->get();
-
-  $friends = Friend::where('user2','=',$inboxOwner->name)->where('accepted','=','1')
-  ->orWhere('user1','=',$inboxOwner->name)->where('accepted','=','1')->get();
-
 ?>
 
 @section('content')
   <h1>Inbox</h1>
+  <hr/>
   <div class="row">
     <div class="col-2 convoList">
       <h4>Conversations</h4>
+      <hr/>
       <input type="text" name="startConvo" class="startConvo" id="startConvo"
       onkeydown="if (event.keyCode == 13) inboxSearch()"
       value=""
       placeholder="Start a dialogue...(Press enter)">
-      <ul id="dialogues">
+      <hr/>
         <?php
           foreach($conversations as $conversation)
           {
-            if($conversation->user1 == $inboxOwner->name)
+            $checkFriend = Friend::where('user1','=',$inboxOwner->name)->where('user2','=',$conversation->user1)->where('accepted','=','1')
+      			->orWhere('user1','=',$conversation->user1)->where('user2','=',$inboxOwner->name)->where('accepted','=','1')
+            ->orWhere('user1','=',$inboxOwner->name)->where('user2','=',$conversation->user2)->where('accepted','=','1')
+      			->orWhere('user1','=',$conversation->user2)->where('user2','=',$inboxOwner->name)->where('accepted','=','1')->first();
+            //dd($checkFriend);
+            if($checkFriend == "")
             {
-              echo "<li><a href='#' onclick='return false;' onmouseup='talkingTo(\"".$conversation->user2."\")'>".$conversation->user2."</a></li><br/>";
+              $guy="";
+              if($conversation->user1 == $inboxOwner->name)
+                $guy =  User::where('name','=',$conversation->user2)->first();
+              else if($conversation->user2 == $inboxOwner->name)
+                $guy =  User::where('name','=',$conversation->user1)->first();
+
+              $user1avatar = $guy->avatar;
+              $user1pic = '<img src="/uploads/user/'.$guy->name.'/images'.'/'.$user1avatar.'" alt="'.$guy->name.'" class="im_pic">';
+              if($user1avatar == NULL)
+                $user1pic = '<img src="/images/Default.jpg" alt="'.$guy->name.'" class="im_pic">';
+              echo '<div id="talks">'.$user1pic.'<a href="#" onclick="return false;" onmouseup="talkingTo(\''.$guy->name.'\')">'.$guy->name.'</a></div><br/>';
             }
-            if($conversation->user2 == $inboxOwner->name)
-            {
-              echo "<li><a href='#' onclick='return false;' onmouseup='talkingTo(\"".$conversation->user1."\")'>".$conversation->user1."</a></li><br/>";
-            }
-            //echo $conversation->user1;
           }
-          //<li id="newConvo"></li>
         ?>
-      </ul>
     </div>
     <div class="col-8 convoContent">
       <div id="messageBox">
         <div id="conversationHead">
-          <h4> Message {{$talkTo}}</h4>
+          <h4 id="talkingWith">Message {{$talkTo}}</h4>
         </div>
         <div id="appearMessage">
 
@@ -102,36 +64,28 @@
       </div>
     </div>
     <div class="col-2 frndConvoList">
-    <h4>Friends</h4>
-    <input type="text" name="startConvo" class="startConvo" id="startConvo"
-    onkeydown="if (event.keyCode == 13) inboxSearch()"
-    value=""
-    placeholder="Start a dialogue...(Press enter)">
-    <ul id="dialogues">
-      <?php
-        foreach($friends as $friend)
-        {
-          $buddy = "";
-          if($friend->user1 == $inboxOwner->name)
+      <h4>Friends</h4>
+      <hr/>
+        <?php
+          foreach($friends as $friend)
           {
-            $buddy = $friend->user2;
+            $buddy = "";
+            if($friend->user1 == $inboxOwner->name)
+            {
+              $buddy = $friend->user2;
+            }
+            else if($friend->user2 == $inboxOwner->name)
+            {
+              $buddy = $friend->user1;
+            }
+            $guy =  User::where('name','=',$buddy)->first();
+            $user1avatar = $guy->avatar;
+            $user1pic = '<img src="/uploads/user/'.$guy->name.'/images'.'/'.$user1avatar.'" alt="'.$guy->name.'" class="im_pic">';
+            if($user1avatar == NULL)
+              $user1pic = '<img src="/images/Default.jpg" alt="'.$guy->name.'" class="im_pic">';
+            echo '<div id="talks"><div><a href="#" onclick="return false;" onmouseup="talkingTo(\''.$guy->name.'\')">'.$guy->name.'</a></div></div><br/>';
           }
-          else if($friend->user2 == $inboxOwner->name)
-          {
-            $buddy = $friend->user1;
-          }
-          $guy =  User::where('name','=',$buddy)->first();
-          $user1avatar = $guy->avatar;
-          $user1pic = '<img src="/uploads/user/'.$guy->name.'/images'.'/'.$user1avatar.'" alt="'.$guy->name.'" class="im_pic">';
-          if($user1avatar == NULL)
-          {
-            $picURL = "/images/Default.jpg";
-            $user1pic = '<img src="'.$picURL.'" alt="'.$guy->name.'" class="im_pic">';
-          }
-          echo '<div><a href="/profile/'.$guy->name.'">'.$user1pic.'</a><b><p>'.$guy->name.'</p></b></div>';
-        }
-      ?>
-    </ul>
+        ?>
     </div>
   </div>
 
@@ -147,7 +101,7 @@
     function talkingTo(talk)
     {
       talkTo = talk;
-      $('#conversationHead').html("Message "+talkTo);
+      $('#talkingWith').html("Message "+talkTo);
       update(talkTo);
     }
 
@@ -235,11 +189,11 @@
           {
             if (item[0] == username)
             {
-              output += "<div class=\"msgc\" style=\"margin-bottom: 30px;\"> <div class=\"msg msgfrom\">" + item[2] + "</div> <div class=\"msgarr msgarrfrom\"></div> <div class=\"msgsentby msgsentbyfrom\">Sent by " + item[0] + "</div> </div>";
+              output += "<div class=\"msgc\" style=\"margin-bottom: 30px;\"> <div class=\"msg msgfrom\">" + item[2] +"</div> <div class=\"msgarr msgarrfrom\"></div> <div class=\"msgsentby msgsentbyfrom\">"+ item[3] +" | Sent by " + item[0] + "</div></div>";
             }
             else
             {
-              output += "<div class=\"msgc\"> <div class=\"msg\">" + item[2] + "</div> <div class=\"msgarr\"></div> <div class=\"msgsentby\">Sent by " + item[0] + "</div> </div>";
+              output += "<div class=\"msgc\"> <div class=\"msg\">" + item[2] + "</div> <div class=\"msgarr\"></div> <div class=\"msgsentby\">"+ item[3] +" | Sent by " + item[0] + "</div> </div>";
             }
           }
           msgarea.html(output);
@@ -250,6 +204,6 @@
     setInterval(function()
     {
       update(talkTo)
-    }, 2500);
+    }, 1000);
   </script>
 @endsection

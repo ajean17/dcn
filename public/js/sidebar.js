@@ -18,11 +18,12 @@ $(function()
        }
     }
   );
-  $('#chatList > li').stop().animate({'marginLeft':'-90px'},1000);
-  $('#chatList').on.click(function()
+  /*$('#chatList > li').stop().animate({'marginLeft':'-90px'},1000);
+  $('#chatList').on.('click',function()
   {
-    $('#chatList > li').stop().animate({'marginLeft':'-55px'})
-  });
+    console.log("Chat");
+  //  $('#chatList > li').stop().animate({'marginLeft':'-55px'})
+});*/
 });
 
 
@@ -48,11 +49,8 @@ function close_popup(id)
         if(id == popups[iii])
         {
             Array.remove(popups, iii);
-
             document.getElementById(id).style.display = "none";
-
             calculate_popups();
-
             return;
         }
     }
@@ -92,12 +90,8 @@ function register_popup(id, name)
         if(id == popups[iii])
         {
             Array.remove(popups, iii);
-
             popups.unshift(id);
-
             calculate_popups();
-
-
             return;
         }
     }

@@ -1,39 +1,44 @@
+h4
+{
+  text-align: center;
+}
 .frndConvoList
 {
+  box-shadow: 5px 5px 5px #888888;
   background-color: rgba(0, 200, 200, .2);
-
-  #startConvo
+  border:#60A0FF 2.5px solid;
+  border-radius: 5px;
+  #talks
   {
-    margin:auto;
-    width:100%
-    //left:0;
+    width: 150px;
+    left:-5px;
+    padding:2px 0px;
+    background-color: white;
+    //text-align: center;
+    border:#182840 1.5px solid;
+    border-radius: 5px;
+    box-shadow: 1px 1px 5px #888888;
+    text-align: center;
   }
 }
 .convoList
 {
-  background-color: rgba(0, 200, 200, .2);
+  @extend .frndConvoList;
+  box-shadow: 0px 5px 5px #888888;
 
   #startConvo
   {
     margin:auto;
-    width:100%
-    //left:0;
-  }
-
-  ul
-  {
-    list-style-type: none;
+    width:100%;
+    border-style: inset;
+    border-radius: 5px;
   }
 }
 
 .convoContent
 {
-  background-color: rgba(200, 0, 200, .2);
-  h4
-  {
-    text-align: center;
-
-  }
+  @extend .frndConvoList;
+  box-shadow: 0px 5px 5px #888888;
 
   #messageBox
   {
@@ -41,7 +46,7 @@
     height: 100%;
     margin: auto;
     //position:relative;
-    background-color: rgba(100, 0, 100,.3);
+    //background-color: rgba(100, 0, 100,.3);
 
     #conversationHead
     {
@@ -56,12 +61,14 @@
 
     #appearMessage
     {
-      height:600px;
+      height:480px;
       width: 100%;
       background-color:#FFF;
-      overflow-y: scroll;
+      overflow-y: auto;
       //position: absolute;
       margin: auto;
+      border-style: inset;
+      border-radius: 5px;
 
       .msg
       {
@@ -115,7 +122,7 @@
     //position: absolute fixed;
     margin:auto;
     border-top: 1px solid #CCC;
-    background-color: #EBABEB;
+    //background-color: #EBABEB;
 
     #messageInput
     {
@@ -124,68 +131,7 @@
       font-size: 14px;
       margin:auto;
       outline: none;
+      border-radius: 5px;
     }
   }
-
 }
-
-
-/*
-button
-{
-  background-color: #43ACEC;
-  border: none;
-  color: #FFF;
-  font-size: 16px;
-  margin: 0px auto;
-  width: 150px;
-}
-.buttonp
- {
-  width: 150px;
-  margin: 0px auto;
-}
-
-.msg
-{
-  margin: 10px 10px;
-  background-color: #f1f0f0;
-  max-width: calc(45% - 20px);
-  color: #000;
-  padding: 10px;
-  font-size: 14px;
-}
-.msgfrom
-{
-  background-color: #0084ff;
-  color: #FFF;
-  margin: 10px 10px 10px 55%;
-}
-.msgarr
-{
-  width: 0;
-  height: 0;
-  border-left: 8px solid transparent;
-  border-right: 8px solid transparent;
-  border-bottom: 8px solid #f1f0f0;
-  transform: rotate(315deg);
-  margin: -12px 0px 0px 45px;
-}
-.msgarrfrom
-{
-  border-bottom: 8px solid #0084ff;
-  float: right;
-  margin-right: 45px;
-}
-.msgsentby
- {
-  color: #8C8C8C;
-  font-size: 12px;
-  margin: 4px 0px 0px 10px;
-}
-.msgsentbyfrom
-{
-  float: right;
-  margin-right: 12px;
-}
-*/

@@ -3,18 +3,20 @@
     <ul id="navigation">
         <li class="home"><a href="{{ url('/') }}" title="Home"><b>Home</b> &nbsp;&nbsp;<span><i class="fa fa-home"></i></span></a></li>
         @if (Auth::check())
-        <li class="about"><a href="/profile/{{Auth::user()->name}}" title="Profile"><b>Profile</b>  &nbsp;&nbsp;<span><i class="fa fa-sign-in"></i></span></a></li>
+        <li class="search"><a href="{{ url('/logout') }}" title="Logout"><b>Logout</b>  &nbsp;&nbsp;<span><i class="fa fa-sign-out"></i></span></a></li>
+        <li class="about"><a href="/notifications/{{Auth::user()->name}}" title="Notifications"><b>Notifications</b>  &nbsp;&nbsp;<span><i class="fa fa-bell"></i></span></a></li>
+        <li class="about"><a href="/profile/{{Auth::user()->name}}" title="Profile"><b>Profile</b>  &nbsp;&nbsp;<span><i class="fa fa-money"></i></span></a></li>
         <li class="search"><a href="{{ url('/stargazer') }}" title="Search"><b>Search</b>  &nbsp;&nbsp;<span><i class="fa fa-search"></i></span></a></li>
         <li id="chat" class="chat dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" title="Chat"><b>Chat</b>  &nbsp;&nbsp;<span><i class="fa fa-commenting"></i></span></a>
           <ul id="chatList" class="dropdown-menu">
             <li><a href="#" title="chatOps"><b>Friends</b>  &nbsp;&nbsp;<span><i class="fa fa-smile-o"></i></span></a></li>
-            <li><a href="#" title="chatOps"><b>Inbox</b>  &nbsp;&nbsp;<span><i class="fa fa-comments-o"></i></span></a></li>
+            <li><a href="/inbox/{{Auth::user()->name}}" title="chatOps"><b>Inbox</b>  &nbsp;&nbsp;<span><i class="fa fa-comments-o"></i></span></a></li>
           </ul>
         </li>
         @else
-        <li class="search"><a href="{{ url('/login') }}" title="Search"><span><i class="fa fa-search"></i></span></a></li>
-        <li class="contact"><a href="{{ url('/register') }}" title="Contact"><span><i class="fa fa-commenting"></i></span></a></li>
+        <li class="search"><a href="{{ url('/login') }}" title="Login"><b>Login</b>&nbsp;&nbsp;<span><i class="fa fa-sign-in"></i></span></a></li>
+        <li class="contact"><a href="{{ url('/register') }}" title="Register"><b>Register</b>&nbsp;&nbsp;<span><i class="fa fa-user"></i></span></a></li>
         @endif
     </ul>
   </div>

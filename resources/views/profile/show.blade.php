@@ -90,6 +90,7 @@
 
 @section('content')
   <h1>{{$who}} Profile</h1>
+  
   @include ('layouts.errors')
   @if($isOwner == false)
     <span id="friendBtn"><?php echo $friend_button; ?></span>
