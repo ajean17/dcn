@@ -319,49 +319,108 @@ class ParseController extends Controller
       $mentor = $request["mentor"];
       $roi = $request["roi"];
       $category = $request["category"];
-
+      //$message = "in search";
       $videoQ = "";
       $investmentsQ = "";
       $mentorQ = "";
       $roiQ = "";
+      $categoryQ = "";
+      $show = "";
+      $isParent = false;
 
-      if($video == "true")
-        $videoQ= " WHERE hasVideo = '1'";
-
-      if($investments == "true")
+      if($search != "searching")//If there is a name in the search, look for the profile that matches
+      {
+        $user = User::where('name','=',$search)->first();
+        if($user == "")
+          $message = "Sorry, no users match your search.";
+        else
+        {
+          $profile = Profile::where('username','=',$user->name)->first();
+          $project = Project::where('id','=',$profile->projectOneID)->first();
+          if($project != "")
+            $message = $user->name."\\".$project->name."\n";
+          else
+            $message = $user->name."\\Under Construction\n";
+        }
+      }
+      else if($video == "false" && $investments == "false" && $mentor == "false" && $roi == "false" && $category == "category")
+      {
+        $results = Profile::all();
+        foreach($results as $result)
+        {
+          $project = Project::where('id','=',$result->projectOneID)->first();
+          if($project != "" || $project != NULL)
+            $show = $show.$result->username."\\".$project->name."\n";
+          /*else
+            $show = $show.$result->username."\\Under Construction\n";*/
+        }
+        $message = $show;
+      }
+      else//If the search bar is empty, search based on the boxes and category
       {
         if($video == "true")
-          $investmentsQ = " AND hasInvestments = '1'";
-        else
-          $investmentsQ = " WHERE hasInvestments = '1'";
+          $videoQ= " WHERE hasVideo = '1'";
+
+        if($investments == "true")
+        {
+          if($video == "true")
+            $investmentsQ = " AND hasInvestments = '1'";
+          else
+            $investmentsQ = " WHERE hasInvestments = '1'";
+        }
+
+        if($mentor == "true")
+        {
+          if($video == "true" || $investments == "true")
+            $mentorQ = " AND hasMentor = '1'";
+          else
+            $mentorQ = " WHERE hasMentor = '1'";
+        }
+
+        if($roi == "true")
+        {
+          if($video == "true" || $investments == "true" || $mentor == "true")
+            $roiQ = " AND hasROI = '1'";
+          else
+            $roiQ = " WHERE hasROI = '1'";
+        }
+
+        if($category != "category")
+        {
+          $cat = Category::where('name','=',$category)->first();
+          if($cat != "")
+          {
+            if($cat->parent == "" || $cat->parent == NULL)
+              $isParent = true;
+          }
+          else
+            $category = "category";
+        }
+
+        $results = DB::select(DB::raw('SELECT * FROM profiles'.$videoQ.$investmentsQ.$mentorQ.$roiQ.''));
+
+        foreach($results as $result)
+        {
+          $project = Project::where('id','=',$result->projectOneID)->first();
+          if($project != "" || $project != NULL)
+          {
+            if($category == "category")
+              $show = $show.$result->username."\\".$project->name."\n";
+            else if($category != "category")
+            {
+              //$message = "Parent? ".$isParent." Category: ".$category." Project Category: ".$project->category;
+              if($isParent == true  && $category == $project->category)
+                $show = $show.$result->username."\\".$project->name."\n";
+              else if($isParent == false && $category == $project->subCategory)
+                $show = $show.$result->username."\\".$project->name."\n";
+            }
+          }
+          /*else
+            $show = $show.$result->username."\\Under Construction\n";*/
+        }
+        $message = $show;
       }
 
-      if($mentor == "true")
-      {
-        if($video == "true" || $investments == "true")
-          $mentorQ = " AND hasMentor = '1'";
-        else
-          $mentorQ = " WHERE hasMentor = '1'";
-      }
-
-      if($roi == "true")
-      {
-        if($video == "true" || $investments == "true" || $mentor == "true")
-          $roiQ = " AND hasROI = '1'";
-        else
-          $roiQ = " WHERE hasROI = '1'";
-      }
-
-      $results = DB::select(DB::raw('SELECT * FROM profiles'.$videoQ.$investmentsQ.$mentorQ.$roiQ.''));
-      $show = "";
-
-      foreach($results as $result)
-      {
-        $project = Project::where('id','=',$result->projectOneID)->first();
-        if($project != "" || $project != NULL)
-          $show = $show.$result->username."\\".$project->name."\n";
-      }
-      $message = $show;
       //echo "Here are the values".$videoQ.$investmentsQ.$mentorQ.$roiQ.$category;
     }
 
@@ -579,7 +638,7 @@ class ParseController extends Controller
       Project::where('id','=',$profile->projectOneID)->update(Array('oneName' => $oneN));
     if($twoN != "" && $twoN != NULL && $twoN != "2name")
       Project::where('id','=',$profile->projectOneID)->update(Array('twoName' => $twoN));
-    if($threeN != "" &&$threeN != NULL && $threeN != "3name")
+    if($threeN != "" && $threeN != NULL && $threeN != "3name")
       Project::where('id','=',$profile->projectOneID)->update(Array('threeName' => $threeN));
     if($fourN != "" && $fourN != NULL && $fourN != "4name")
       Project::where('id','=',$profile->projectOneID)->update(Array('fourName' => $fourN));
@@ -628,7 +687,6 @@ class ParseController extends Controller
         Project::where('id','=',$profile->projectOneID)->update(Array('elementFive' => $five, 'fiveType' => $fiveType));
     }
 
-
     foreach ($types as $type => $element)
     {
       if($type == "upload")
@@ -654,6 +712,10 @@ class ParseController extends Controller
       }
     }
 
+    if($oneType != "embed" && $twoType != "embed" && $threeType != "embed" && $fourType != "embed" && $fiveType != "embed")
+      Profile::where('username','=',$user)->update(Array('hasVideo' => '0'));
+    else
+      Profile::where('username','=',$user)->update(Array('hasVideo' => '1'));
     $message = "Your profile has been updated";
     return redirect()->to('/profile'.'/'.$user);
     //return redirect()->to('/profile'.'/'.$user);

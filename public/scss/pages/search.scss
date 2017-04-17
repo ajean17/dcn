@@ -1,15 +1,68 @@
+h4, h6
+{
+  text-align: center;
+}
+#checks
+{
+  //background-color: pink;
+  text-align: right;
+}
 #searchCriteria
 {
   background-color: #eee;
+  box-shadow: 1px 1px 5px #888888;
+  border-radius: 5px;
+  #searchBar
+  {
+    border-radius: 5px;
+  }
   ul
   {
     list-style-position: inside;
     list-style-type: none;
     margin-left: 0;
   }
-  h4
+}
+#starMap
+{
+  box-shadow: 1px 1px 5px #888888;
+  border-radius: 5px;
+  height:375px;
+  padding:10px;
+  //align-items: center;
+  img
   {
-    text-align: center;
+    border-radius: 5px;
+    width:805px;
+    height:300px;
+  }
+}
+#results
+{
+  box-shadow: 1px 1px 5px #888888;
+  background-color: #eee;
+  border-radius: 5px;
+  #resultList
+  {
+    height:200px;
+    overflow-y: auto;
+    list-style: none;
+    li
+    {
+      border:#182840 1.5px solid;
+      border-radius: 5px;
+      box-shadow: 1px 1px 5px #888888;
+      background-color: white;
+      padding-left: 5px;
+      padding-right: 5px;
+      width: 735px;
+
+      &:hover
+      {
+        color: white;
+        background-color: #ddd;
+      }
+    }
   }
 }
 .accordion
@@ -36,10 +89,29 @@
 .panell
 {
     padding: 0 18px;
-    background-color: rgba(200,200,200,.3);
+    //background-color: rgba(200,200,200,.3);
     list-style: none;
     text-align: center;
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.2s ease-out;
+
+    li
+    {
+      background-color: #eee;
+      padding-left: 5px;
+      padding-right: 5px;
+
+      &:hover
+      {
+        color: white;
+        background-color: #ddd;
+        cursor: pointer;
+      }
+    }
+    li:active
+    {
+      color: purple;
+      background-color: #ddd;
+    }
 }

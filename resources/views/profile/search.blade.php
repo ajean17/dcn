@@ -21,17 +21,23 @@
     <div id="searchCriteria" class="col-sm-3">
       <h4>Search Bar</h4>
       <hr/>
-      <input type="text" id="searchBar" name="searchBar" onkeydown="if (event.keyCode == 13) searchNow()">
+      <input type="text" id="searchBar" name="searchBar" onkeydown="if (event.keyCode == 13) searchNow()"
+      placeholder="Search for users by name">
       <button id="startSearch" onclick="searchNow()">Search</button>
       <div id="criteriaList">
         <hr/>
         <h4>Preferences</h4>
-        <input type="checkbox" id="video" name="video"> Has a Video <br/>
-        <input type="checkbox" id="mentor" name="mentor"> Has a Mentor <br/>
-        <input type="checkbox" id="investments" name="investments"> Has Investments <br/>
-        <input type="checkbox" id="ROI" name="ROI"> Has ROI forcast reports <br/>
+        <div id = "checks">
+          Has a Video <input type="checkbox" id="video" name="video"><br/>
+          Has a Mentor <input type="checkbox" id="mentor" name="mentor"><br/>
+          Has Investments <input type="checkbox" id="investments" name="investments"><br/>
+          Has ROI forcast reports <input type="checkbox" id="ROI" name="ROI"><br/>
+        </div>
         <hr/>
-        <h4>Industries</h4>
+        <h4>Categories</h4>
+        <h6 id="catChoose"></h6>
+        <hr/>
+          <button class="btn btn-sm" onclick="grabCat('category')">Clear!</button></br>
           @foreach($categories as $category)
             <p class="accordion" onmouseup="toggleList(); grabCat('{{$category->name}}')">{{$category->name}}</p>
             <?php
@@ -54,16 +60,18 @@
     <div class="col-sm-9">
       <div id="starMap">
         <h4>Animated Star Map</h4>
+        <hr/>
+        <div id="map"><img src="/images/galaxy.jpg" width="245px" height="245px" alt="Profile Picture"></div>
       </div>
-      <hr/>
       <div id="results">
+        <hr/>
         <h4>Search Results</h4>
         <hr/>
         <ul id = "resultList">
           <?php
             foreach($profiles as $profile)
             {
-              echo "<li>Click to view <a href='\\profile\\".$profile->username."'>".$profile->username."'s</a> Profile</li>";
+              echo "<li>Click to view <a href='\\profile\\".$profile->username."'>".$profile->username."'s</a> Profile</li><br/>";
             }
           ?>
         </ul>
@@ -84,7 +92,11 @@
   function grabCat(cat)
   {
     category = cat;
-    console.log(cat);
+    //console.log(cat);
+    if(category == "category")
+      $('#catChoose').html("Chosen: None");
+    else
+    $('#catChoose').html("Chosen: "+ category);
   }
 
   function searchNow()
@@ -93,10 +105,11 @@
     var mentor = $('#mentor').prop('checked');//document.getElementById("mentor").checked;
     var investments = $('#investments').prop('checked');//document.getElementById("investments").checked;
     var roi = $('#ROI').prop('checked');//document.getElementById("ROI").checked;
-    var search = $('#video').val();//document.getElementById("searchBar").value;
-
-    console.log(category);
-    console.log("video "+video+" mentor "+mentor+" investments "+investments+" roi "+roi);
+    var search = $('#searchBar').val();//document.getElementById("searchBar").value;
+    if(search == "")
+      search = "searching";
+    //console.log(category);
+    //console.log("video "+video+" mentor "+mentor+" investments "+investments+" roi "+roi);
     //if(search != "")
     //{
       var output = "";
@@ -107,17 +120,23 @@
         data: {search: search, video: video, mentor: mentor, investments: investments, roi: roi, category: category, _token: token}
       }).done(function (msg)
       {
-        console.log(msg['message']);
+        //console.log(msg['message']);
         $('#resultList').html(output);
-        var response = msg['message'].split("\n");
-        var item = "";
 
-        for (var i = 0; i < response.length; i++)
+        if(msg['message']=="")
+          output += "<li>Sorry, no users or projects matched your search.</li>";
+        else
         {
-          item = response[i].split("\\");
-          if(item[0] != undefined && item[1] != undefined)
+          var response = msg['message'].split("\n");
+          var item = "";
+
+          for (var i = 0; i < response.length; i++)
           {
-            output += "<li>The profile owner is <a href='\\profile\\"+item[0]+"'>"+item[0]+"</a>, the name of their project is "+item[1]+".</li>";
+            item = response[i].split("\\");
+            if(item[0] != undefined && item[1] != undefined)
+            {
+              output += "<li>The profile owner is <a href='\\profile\\"+item[0]+"'>"+item[0]+"</a>, their project is "+item[1]+".</li><br/>";
+            }
           }
         }
         $('#resultList').html(output);
@@ -142,12 +161,12 @@
             if (panel.style.maxHeight)
             {
               panel.style.maxHeight = null;
-              console.log("maxlength is " + panel.style.maxHeight);
+              //console.log("maxlength is " + panel.style.maxHeight);
             }
             else
             {
               panel.style.maxHeight = panel.scrollHeight + "px";
-              console.log("maxlength is " + panel.scrollHeight);
+              //console.log("maxlength is " + panel.scrollHeight);
             }
         }
     }
