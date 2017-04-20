@@ -1,0 +1,64 @@
+@import url(https://fonts.google.com/specimen/Graduate);
+/*
+html, body{
+  height: 100%;
+  font-weight: 800;
+}
+
+body{
+  background: black; /* #030321
+  font-family: Arial;
+}
+ */
+
+svg {
+    display: block;
+    font: 10.5em 'Graduate';
+    width: 900px;
+    height: 500px;
+    margin: 0 auto;
+}
+
+.text-copy {
+    fill: none;
+    stroke: black;
+    stroke-dasharray: 6% 29%;
+    stroke-width: 3px;
+    stroke-dashoffset: 0%;
+    animation: stroke-offset 5.5s infinite linear;
+}
+
+.text-copy:nth-child(1){
+  stroke: #CF5D5D; /* #4D163D */
+	animation-delay: -1s;
+}
+
+.text-copy:nth-child(2){
+	stroke: #87D7D4; /* #840037 */
+	animation-delay: -2s;
+}
+
+.text-copy:nth-child(3){
+	stroke: #C88187; /* #BD0034 */
+	animation-delay: -3s;
+}
+
+.text-copy:nth-child(4){
+	stroke: #695175; /* #BD0034 */
+	animation-delay: -4s;
+}
+
+.text-copy:nth-child(5){
+	stroke: #6296A1; /* #FDB731 */
+	animation-delay: -5s;
+}
+
+/* Remove this later, 5 is enough.*/
+.text-copy:nth-child(6){
+	stroke: white; /* #FDB731 */
+	animation-delay: -6s;
+}
+
+@keyframes stroke-offset{
+	100% {stroke-dashoffset: -35%;}
+}
