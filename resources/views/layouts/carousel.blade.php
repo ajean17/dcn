@@ -6,34 +6,32 @@
   </ol>
   <div class="carousel-inner" role="listbox">
     <div class="carousel-item active">
-      <img class="first-slide" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="First slide">
+      <!--img class="first-slide" src="" alt="First slide"-->
       <div class="container">
         <div class="carousel-caption d-none d-md-block text-left">
-          <h1>Example headline.</h1>
-          <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
-          <p><a class="btn btn-lg btn-primary" href="#" role="button">Sign up today</a></p>
+          <h1>Unique profiles at Dream Catcher Network</h1>
+          <p>With unique user interfaces for both Innovators and Investors, we provide a seamless way of a connecting the two.
+             Our users are only presented with subject matter they are interested, removing clutter from view. Become appart of the network and turn your dreams into reality.</p>
+          <p><a class="btn btn-lg btn-outline-info" href="/register" role="button">Sign up today</a></p>
         </div>
       </div>
     </div>
     <div class="carousel-item">
-      <img class="second-slide" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Second slide">
+      <img class="second-slide" src="images/dcn2.png" alt="Second slide">
       <div class="container">
-        <div class="carousel-caption d-none d-md-block">
-          <h1>Another example headline.</h1>
-          <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+        <!--div class="carousel-caption d-none d-md-block">
           <p><a class="btn btn-lg btn-primary" href="#" role="button">Learn more</a></p>
-        </div>
+        </div-->
       </div>
     </div>
     <div class="carousel-item">
-      <img class="third-slide" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Third slide">
+      <img class="third-slide" src="images/dcn3.png" alt="Third slide">
       <div class="container">
-        <div class="carousel-caption d-none d-md-block text-right">
-          <h1>One more for good measure.</h1>
-          <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+        <!--div class="carousel-caption d-none d-md-block text-righ">
           <p><a class="btn btn-lg btn-primary" href="#" role="button">Browse gallery</a></p>
-        </div>
+        </div-->
       </div>
+
     </div>
   </div>
   <a class="carousel-control-prev" href="#myCarousel" role="button" data-slide="prev">
@@ -45,3 +43,9 @@
     <span class="sr-only">Next</span>
   </a>
 </div>
+
+<script>
+$('.carousel').carousel({
+  interval: 5000
+})
+</script>
