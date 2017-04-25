@@ -6,7 +6,7 @@
 
 @section('content')
   <!--div class="col-sm-8"-->
-  <h1>Sign Up</h1>
+  <legend class="m-b-1 text-xs-center">Registration</legend>
 
   <form method="GET" id="signupform" onsubmit="return false;"><!--action="/register"-->
     {{csrf_field()}}

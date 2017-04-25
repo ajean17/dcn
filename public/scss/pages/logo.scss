@@ -1,0 +1,64 @@
+@import url(https://fonts.google.com/specimen/Indie+Flower);
+/*
+html, body{
+  height: 100%;
+  font-weight: 800;
+}
+
+body{
+  background: black; /* #030321
+  font-family: Arial;
+}
+ */
+
+svg {
+    display: block;
+    font: 50.5em 'Indie+Flower';
+    width: 900px;
+    height: 100px;
+    margin: 0 auto;
+    background-color: white;
+}
+
+.text-copy {
+    fill: none;
+    stroke: black;
+    stroke-dasharray: 6% 29%;
+    stroke-width: 15px;
+    stroke-dashoffset: 0%;
+    animation: stroke-offset 5.5s infinite linear;
+}
+
+.text-copy:nth-child(1){
+  stroke: black; /* #FF82FD */
+	animation-delay: -1s;
+}
+
+.text-copy:nth-child(2){
+	stroke: black; /* #00C8FF */
+	animation-delay: -2s;
+}
+
+.text-copy:nth-child(3){
+	stroke: white; /* #9A21FF*/
+	animation-delay: -3s;
+}
+
+.text-copy:nth-child(4){
+	stroke: black; /* #695175*/
+	animation-delay: -4s;
+}
+
+.text-copy:nth-child(5){
+	stroke: white; /* #6296A1*/
+	animation-delay: -5s;
+}
+
+.text-copy:nth-child(6){
+	stroke: black; /* #6296A1*/
+	animation-delay: -6s;
+}
+
+@keyframes stroke-offset{
+	100% {stroke-dashoffset: -35%;}
+}

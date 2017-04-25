@@ -5,9 +5,26 @@
 @endsection
 
 @section('content')
-<br/>
+<!--canvas id="canvasOne" width="100" height="100"></canvas-->
+
+<svg viewBox="0 0 8000 580">
+<symbol id="s-text">
+    <text text-anchor="middle" x="49.8%" y="98%">Dream Catcher Network</text>
+</symbol>
+<!-- Each line corresponds to an animated line in the CSS code-->
+<g>
+  <use xlink:href="#s-text" class="text-copy"></use>
+  <use xlink:href="#s-text" class="text-copy"></use>
+  <use xlink:href="#s-text" class="text-copy"></use>
+  <use xlink:href="#s-text" class="text-copy"></use>
+  <use xlink:href="#s-text" class="text-copy"></use>
+  <use xlink:href="#s-text" class="text-copy"></use>
+</g>
+</svg>
+@include('layouts.carousel')
+<!-- include('layouts.roundedcircle')-->
   <!--h3>Welcome to the Dream Catcher Network</h3-->
-  @include('layouts.roundedcircle')
+
         <!-- START THE FEATURETTES -->
 
         <!--hr class="featurette-divider">
