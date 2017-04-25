@@ -39,10 +39,10 @@
                 $guy =  User::where('name','=',$conversation->user1)->first();
 
               $user1avatar = $guy->avatar;
-              $user1pic = '<img src="/uploads/user/'.$guy->name.'/images'.'/'.$user1avatar.'" alt="'.$guy->name.'" class="im_pic">';
+              $user1pic = '<img src="/uploads/user/'.$guy->name.'/images'.'/'.$user1avatar.'" alt="'.$guy->name.'" class="talk_pic">';
               if($user1avatar == NULL)
-                $user1pic = '<img src="/images/Default.jpg" alt="'.$guy->name.'" class="im_pic">';
-              echo '<div id="talks">'.$user1pic.'<a href="#" onclick="return false;" onmouseup="talkingTo(\''.$guy->name.'\')">'.$guy->name.'</a></div><br/>';
+                $user1pic = '<img src="/images/Default.jpg" alt="'.$guy->name.'" class="talk_pic">';
+              echo '<div id="talks">'.$user1pic.'<div class="talkData"><a href="#" onclick="return false;" onmouseup="talkingTo(\''.$guy->name.'\')">'.$guy->name.'</a></div></div><br/>';
             }
           }
         ?>
@@ -147,7 +147,7 @@
         {
           //console.log(msg['message']);
           message = escapehtml(message);
-          msgarea.append("<div class=\"msgc\" style=\"margin-bottom: 30px;\"><div class=\"msg msgfrom\">"	+ message + "</div><div class=\"msgarr msgarrfrom\"></div><div class=\"msgsentby msgsentbyfrom\">Sent by " + username + "</div></div>");
+          msgarea.append("<div class=\"msgc\" style=\"margin-bottom: 30px;\"><div class=\"msg msgfrom\">"	+ message + "</div><div class=\"msgarr msgarrfrom\"></div><div class=\"msgsentby msgsentbyfrom\">" + msg['message'] + " | Sent by " + username + "</div></div>");
           msginput.val("");
         });
       }

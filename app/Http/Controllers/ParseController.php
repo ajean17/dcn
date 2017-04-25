@@ -235,6 +235,7 @@ class ParseController extends Controller
         ->orWhere('user2','=',$username)
         ->where('user1','=',$talkTo)->update(Array('lastMessage' => $c->created_at));
       }
+      $message = $c->created_at->format('h:i A F jS');
     }
 
     if($request->has('username') && $request->has('talkTo') && $request->has('action'))//UPDATE MESSAGES
