@@ -2,36 +2,37 @@
 -------------------------------------------------- */
 /* Padding below the footer and lighter body text */
 
-body {
+/*body {
   padding-top: 3rem;
   padding-bottom: 3rem;
   color: black;
 }
-
+*/
 
 /* CUSTOMIZE THE CAROUSEL
 -------------------------------------------------- */
 
 /* Carousel base class */
 .carousel {
-  margin-bottom: 4rem;
+  margin-bottom: 0rem;
+  color: black;
 }
 /* Since positioning the image, we need to help out the caption */
 .carousel-caption {
   z-index: 10;
   bottom: 3rem;
+  color: black;
 }
 
 /* Declare heights because of positioning of img element */
 .carousel-item {
-  border: 2px solid #a1a1a1;
+  /*border: 2px solid #a1a1a1;*/
   border-radius: 25px;
-  height: 32rem;
-  background-color: grey;
+  height: 40rem;
+  /*background-color: #bbb;*/
 }
 .carousel-item > img {
-  border: 2px solid #a1a1a1;
-  border-radius: 25px;
+  border-radius: 5px;
   position: absolute;
   top: 0;
   left: 0;

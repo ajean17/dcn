@@ -9,27 +9,34 @@
       <!--img class="first-slide" src="" alt="First slide"-->
       <div class="container">
         <div class="carousel-caption d-none d-md-block text-left">
-          <h1>Unique profiles at Dream Catcher Network</h1>
-          <p>With unique user interfaces for both Innovators and Investors, we provide a seamless way of a connecting the two.
-             Our users are only presented with subject matter they are interested, removing clutter from view. Become appart of the network and turn your dreams into reality.</p>
-          <p><a class="btn btn-lg btn-outline-info" href="/register" role="button">Sign up today</a></p>
+          <img class="first-slide" width="800px" height="450px" src="images/home.jpeg" alt="First slide">
+          <p>
+            We are getting with the client to fill out some cool words to put here.
+          </p>
         </div>
       </div>
     </div>
     <div class="carousel-item">
-      <img class="second-slide" src="images/dcn2.png" alt="Second slide">
       <div class="container">
+        <div class="carousel-caption d-none d-md-block text-left">
+          <img class="second-slide" width="800px" height="450px" src="images/dcn2.png" alt="Second slide">
+            <p>
+              We are also going to get better pictures once everything is 100% sexy.
+            </p>
+        </div>
         <!--div class="carousel-caption d-none d-md-block">
           <p><a class="btn btn-lg btn-primary" href="#" role="button">Learn more</a></p>
         </div-->
       </div>
     </div>
     <div class="carousel-item">
-      <img class="third-slide" src="images/dcn3.png" alt="Third slide">
       <div class="container">
-        <!--div class="carousel-caption d-none d-md-block text-righ">
-          <p><a class="btn btn-lg btn-primary" href="#" role="button">Browse gallery</a></p>
-        </div-->
+        <div class="carousel-caption d-none d-md-block text-left">
+          <img class="third-slide" width="800px" height="450px" src="images/dcn3.png" alt="Third slide">
+          <p>
+            This is our ugly golden goose.
+          </p>
+        </div>
       </div>
 
     </div>

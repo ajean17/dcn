@@ -21,6 +21,7 @@
   <use xlink:href="#s-text" class="text-copy"></use>
 </g>
 </svg>
+<center><a class="btn btn-lg btn-outline-info" href="/register" role="button">Sign up today</a></center>
 @include('layouts.carousel')
 <!-- include('layouts.roundedcircle')-->
   <!--h3>Welcome to the Dream Catcher Network</h3-->

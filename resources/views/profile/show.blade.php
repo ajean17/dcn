@@ -98,7 +98,7 @@
     <span id="friendBtn"><?php echo $friend_button; ?></span>
     <span id="blockBtn"><?php echo $block_button; ?></span>
   @endif
-  <hr>
+  <br/>
   <!--THE PROFILE HEADER-->
   <div class="row profileHead">
     <!--THE PROFILE PICTURE/AVATAR-->
@@ -255,7 +255,7 @@
       </div>
     </div>
   </div>
-  <hr>
+  <br/>
   <!--THE PROFILE BODY-->
   <div class="row profileBody">
     <!--THE QUICK NAVIGATION-->
@@ -277,33 +277,33 @@
           <?php
             if($hasContent == true)
             {
-              echo "<h1>".$projectOne->name."</h1><hr/>";
+              echo "<h1>".$projectOne->name."</h1><br/>";
               echo "<h5>".$projectOne->category."</h5>";
-              echo "<h6>".$projectOne->subCategory."</h6><hr/>";
+              echo "<h6>".$projectOne->subCategory."</h6><hr>";
               if($projectOne->oneType != "upload")
-                echo "<div id='elementOne'><h3>".$projectOne->oneName."</h3><br/>".$projectOne->elementOne."<hr/>";
+                echo "<div id='elementOne'><h3>".$projectOne->oneName."</h3><br/>".$projectOne->elementOne."<br/>";
               else
-                echo '<div id="elementOne"><h3>'.$projectOne->oneName.'</h3><br/><img src="/uploads/user/'.$profileOwner->name.'/images'.'/'.$projectOne->elementOne.'" width="600px" height="600px" alt="Profile Picture"><hr/>';
+                echo '<div id="elementOne"><h3>'.$projectOne->oneName.'</h3><br/><img src="/uploads/user/'.$profileOwner->name.'/images'.'/'.$projectOne->elementOne.'" width="600px" height="600px" alt="Profile Picture"><br/><br/>';
 
               if($projectOne->twoType != "upload")
-                echo "<div id='elementTwo'><h3>".$projectOne->twoName."</h3><br/>".$projectOne->elementTwo."<hr/>";
+                echo "<div id='elementTwo'><h3>".$projectOne->twoName."</h3><br/>".$projectOne->elementTwo."<br/>";
               else
-                echo '<div id="elementTwo"><h3>'.$projectOne->twoName.'</h3><br/><img src="/uploads/user/'.$profileOwner->name.'/images'.'/'.$projectOne->elementTwo.'" width="600px" height="600px" alt="Profile Picture"><hr/>';
+                echo '<div id="elementTwo"><h3>'.$projectOne->twoName.'</h3><br/><img src="/uploads/user/'.$profileOwner->name.'/images'.'/'.$projectOne->elementTwo.'" width="600px" height="600px" alt="Profile Picture"><br/><br/>';
 
               if($projectOne->threeType != "upload")
-                echo "<div id='elementThree'><h3>".$projectOne->threeName."</h3><br/>".$projectOne->elementThree."<hr/>";
+                echo "<div id='elementThree'><h3>".$projectOne->threeName."</h3><br/>".$projectOne->elementThree."<br/>";
               else
-                echo '<div id="elementThree"><h3'.$projectOne->threeName.'</h3><br/><img src="/uploads/user/'.$profileOwner->name.'/images'.'/'.$projectOne->elementThree.'" width="600px" height="600px" alt="Profile Picture"><hr/>';
+                echo '<div id="elementThree"><h3'.$projectOne->threeName.'</h3><br/><img src="/uploads/user/'.$profileOwner->name.'/images'.'/'.$projectOne->elementThree.'" width="600px" height="600px" alt="Profile Picture"><br/><br/>';
 
               if($projectOne->fourType != "upload")
-                echo "<div id='elementFour'><h3>".$projectOne->fourName."</h3><br/>".$projectOne->elementFour."<hr/>";
+                echo "<div id='elementFour'><h3>".$projectOne->fourName."</h3><br/>".$projectOne->elementFour."<br/>";
               else
-                echo '<div id="elementFour"><h3>'.$projectOne->fourName.'</h3><br/><img src="/uploads/user/'.$profileOwner->name.'/images'.'/'.$projectOne->elementFour.'" width="600px" height="600px" alt="Profile Picture"><hr/>';
+                echo '<div id="elementFour"><h3>'.$projectOne->fourName.'</h3><br/><img src="/uploads/user/'.$profileOwner->name.'/images'.'/'.$projectOne->elementFour.'" width="600px" height="600px" alt="Profile Picture"><br/><br/>';
 
               if($projectOne->fiveType != "upload")
                 echo "<div id='elementFive'><h3>".$projectOne->fiveName."<br/>".$projectOne->elementFive;
               else
-                echo '<div id="elementFive"><h3>'.$projectOne->fiveName.'</h3><br/><img src="/uploads/user/'.$profileOwner->name.'/images'.'/'.$projectOne->elementFive.'" width="600px" height="600px" alt="Profile Picture"><hr/>';
+                echo '<div id="elementFive"><h3>'.$projectOne->fiveName.'</h3><br/><img src="/uploads/user/'.$profileOwner->name.'/images'.'/'.$projectOne->elementFive.'" width="600px" height="600px" alt="Profile Picture"><br/><br/>';
             }
             else if($hasContent == false)
             {
@@ -313,7 +313,7 @@
         </center>
     </div>
   </div>
-  <hr>
+  <br/>
 @endsection
 
 @section('javascript')

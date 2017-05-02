@@ -13,4 +13,3 @@
 <!--script type='text/javascript' src='/js/register.js'></script-->
 
 <link href="/css/main.css" rel="stylesheet">
-<link href="/css/carousel.css" rel="stylesheet">
