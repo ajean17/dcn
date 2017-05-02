@@ -1,20 +1,21 @@
 #profile_pic_box
 {
+  border-radius: 5px;
+  box-shadow: 1px 1px 5px #888888;
   float:left;
   border:#999 2px solid;
   width:156px;
   height:160px;
   //margin:20px 30px 0px 0px;
   //overflow-y:hidden;
-
   img
   {
+    border-radius: 5px;
     position: absolute;
     left:0;
     width: 187px;
     height: 159px;
   }
-
   a
   {
     display: block;
@@ -47,8 +48,19 @@
 
 .profileHead
 {
-  background-color: rgba(31,6,64,.2);
-  color: white;
+  border-radius: 5px;
+  box-shadow: 1px 1px 5px #888888;
+  background-color: #eee;
+  button
+  {
+    cursor: pointer;
+    background-color: #bbb;
+    &:hover
+    {
+      text-decoration: underline;
+      background-color: #fff;
+    }
+  }
 }
 .profilePic
 {
@@ -56,9 +68,7 @@
 }
 .banner
 {
-  background-color: rgba(31,6,64,.8);
   text-align: center;
-  color: white;
   padding: 55px 0px;
 }
 .element
@@ -69,23 +79,23 @@
 {
   text-align: center;;
   bottom:0px;
-  color: white;
 }
 .profileBody
 {
-  background-color: rgba(125,25,255,.5);
+  border-radius: 5px;
+  box-shadow: 1px 1px 5px #888888;
   position: relative;
-  color: white;
   /*height:80%;*/
 }
 
 .quickNav
 {
-  background-color:  rgba(31,6,64,.3);
+  border-radius: 5px;
+  box-shadow: 1px 1px 5px #888888;
+  background-color: #eee;
   position: absolute fixed;
   a
   {
-    color:white;
     text-decoration: none;
     &:hover
     {
@@ -104,7 +114,6 @@
 
 .projectContent
 {
-  //background-color:#33343e;
   height: 500px;
   overflow-y: scroll;
 }

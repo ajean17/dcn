@@ -83,7 +83,8 @@
             $user1pic = '<img src="/uploads/user/'.$guy->name.'/images'.'/'.$user1avatar.'" alt="'.$guy->name.'" class="im_pic">';
             if($user1avatar == NULL)
               $user1pic = '<img src="/images/Default.jpg" alt="'.$guy->name.'" class="im_pic">';
-            echo '<div id="talks"><div><a href="#" onclick="return false;" onmouseup="talkingTo(\''.$guy->name.'\')">'.$guy->name.'</a></div></div><br/>';
+            //echo '<div id="talks"><div><a href="#" onclick="return false;" onmouseup="talkingTo(\''.$guy->name.'\')">'.$guy->name.'</a></div></div><br/>';
+            echo '<div id="talks">'.$user1pic.'<div class="talkData"><b><a href="#" onclick="return false;" onmouseup="talkingTo(\''.$guy->name.'\')">'.$guy->name.'</a></b></div></div><br/>';
           }
         ?>
     </div>

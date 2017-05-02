@@ -36,8 +36,8 @@
         <hr/>
         <h4>Categories</h4>
         <h6 id="catChoose"></h6>
+        <button class="btn btn-sm" onclick="grabCat('category')">None</button></br>
         <hr/>
-          <button class="btn btn-sm" onclick="grabCat('category')">Clear!</button></br>
           @foreach($categories as $category)
             <p class="accordion" onmouseup="toggleList(); grabCat('{{$category->name}}')">{{$category->name}}</p>
             <?php

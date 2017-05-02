@@ -71,12 +71,12 @@
     ?>
     <div class="form-group">
       <label for="element{{$number}}"><b>Element {{$number}}:</b></label>
-      &nbsp<button type='button' class="btn btn-outline-primary btn-sm" id="{{$number}}NameTog">Rename Element</button><br/>
+      &nbsp;<button type='button' class="btn btn-outline-primary btn-sm" id="{{$number}}NameTog">Rename Element</button><br/>
       <input type="text" id="{{$number}}Name" class="form-control element" name="{{$number}}Name" placeholder="Provide a new name for this element." size="29" maxlength="28">
       Select the type of content you wish to place for this element.<br/>
-      <input type="radio" name="{{$number}}Type" value="text" onclick="showType('{{$number}}')">Text &nbsp
-      <input type="radio" name="{{$number}}Type" value="embed" onclick="showType('{{$number}}')">Embedding &nbsp
-      <input type="radio" name="{{$number}}Type" value="upload" onclick="showType('{{$number}}')">Upload &nbsp<br/>
+      <input type="radio" name="{{$number}}Type" value="text" onclick="showType('{{$number}}')">Text &nbsp;
+      <input type="radio" name="{{$number}}Type" value="embed" onclick="showType('{{$number}}')">Embedding &nbsp;
+      <input type="radio" name="{{$number}}Type" value="upload" onclick="showType('{{$number}}')">Upload &nbsp;<br/>
       <input type="text" class="form-control element" id="el-{{$number}}-text" name="{{$number}}T" placeholder="Enter Description">
       <input type="text" class="form-control element" id="el-{{$number}}-embed" name="{{$number}}E" placeholder="Enter Embed Link">
       <input type="file" class="form-control element" id="el-{{$number}}-upload" name="{{$number}}U" placeholder="Upload File">
@@ -90,9 +90,9 @@
 
 @section('content')
   <h1>{{$who}} Profile</h1>
-  <div class="progress">
-  <div class="progress-bar progress-bar-striped progress-bar-animated bg-danger" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 25%"></div>
-  </div>
+  <!--div class="progress">
+    <div class="progress-bar progress-bar-striped progress-bar-animated bg-danger" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 25%"></div>
+  </div-->
   @include ('layouts.errors')
   @if($isOwner == false)
     <span id="friendBtn"><?php echo $friend_button; ?></span>
@@ -158,7 +158,12 @@
                 $picURL = "/images/Default.jpg";
           			$user1pic = '<img src="'.$picURL.'" alt="'.$guy->name.'" class="user_pic">';
           		}
-              echo '<div><a href="/profile/'.$guy->name.'">'.$user1pic.'</a><b><p>'.$guy->name.'</p></b></div>';
+              //echo '<div><a href="/profile/'.$guy->name.'">'.$user1pic.'</a><b><p>'.$guy->name.'</p></b></div>';
+              echo '<div class="friendrequests">
+                      <a href="/profile/'.$guy->name.'">'.$user1pic.'</a>
+                      <div class="user_info"><b><p>'.$guy->name.'</p></b>
+                      </div>
+                    </div><hr/>';
             }
           ?>
         </div>

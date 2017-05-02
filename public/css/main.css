@@ -35,11 +35,14 @@ div.user_info {
   font-size: 14px; }
 
 #profile_pic_box {
+  border-radius: 5px;
+  box-shadow: 1px 1px 5px #888888;
   float: left;
   border: #999 2px solid;
   width: 156px;
   height: 160px; }
   #profile_pic_box img {
+    border-radius: 5px;
     position: absolute;
     left: 0;
     width: 187px;
@@ -69,16 +72,21 @@ div.user_info {
     overflow-x: hidden; }
 
 .profileHead {
-  background-color: rgba(31, 6, 64, 0.2);
-  color: white; }
+  border-radius: 5px;
+  box-shadow: 1px 1px 5px #888888;
+  background-color: #eee; }
+  .profileHead button {
+    cursor: pointer;
+    background-color: #bbb; }
+    .profileHead button:hover {
+      text-decoration: underline;
+      background-color: #fff; }
 
 .profilePic {
   background-color: #bbbbbb; }
 
 .banner {
-  background-color: rgba(31, 6, 64, 0.8);
   text-align: center;
-  color: white;
   padding: 55px 0px; }
 
 .element {
@@ -86,20 +94,20 @@ div.user_info {
 
 .bannerTabs {
   text-align: center;
-  bottom: 0px;
-  color: white; }
+  bottom: 0px; }
 
 .profileBody {
-  background-color: rgba(125, 25, 255, 0.5);
+  border-radius: 5px;
+  box-shadow: 1px 1px 5px #888888;
   position: relative;
-  color: white;
   /*height:80%;*/ }
 
 .quickNav {
-  background-color: rgba(31, 6, 64, 0.3);
+  border-radius: 5px;
+  box-shadow: 1px 1px 5px #888888;
+  background-color: #eee;
   position: absolute fixed; }
   .quickNav a {
-    color: white;
     text-decoration: none; }
     .quickNav a:hover {
       text-decoration: underline; }
@@ -115,9 +123,6 @@ div.user_info {
 .profileFoot {
   background-color: #123456; }
 
-h4 {
-  text-align: center; }
-
 .frndConvoList, .convoList, .convoContent {
   box-shadow: 5px 5px 5px #888888;
   background-color: rgba(0, 200, 200, 0.2);
@@ -125,13 +130,22 @@ h4 {
   border-radius: 5px; }
   .frndConvoList #talks, .convoList #talks, .convoContent #talks {
     width: 150px;
-    left: -5px;
-    padding: 2px 0px;
-    background-color: white;
+    height: 60px;
+    background-color: #FFF;
+    margin-bottom: 8px;
+    text-align: center;
     border: #182840 1.5px solid;
     border-radius: 5px;
     box-shadow: 1px 1px 5px #888888;
-    text-align: center; }
+    padding: 4px 4px; }
+    .frndConvoList #talks .talk_pic, .convoList #talks .talk_pic, .convoContent #talks .talk_pic {
+      float: left;
+      width: 55px;
+      height: 50px;
+      margin-right: 8px;
+      border-radius: 5px; }
+    .frndConvoList #talks .talkData, .convoList #talks .talkData, .convoContent #talks .talkData {
+      float: left; }
 
 .convoList {
   box-shadow: 0px 5px 5px #888888; }
@@ -162,25 +176,27 @@ h4 {
       border-radius: 5px; }
       .convoContent #messageBox #appearMessage .msg {
         margin: 10px 10px;
-        background-color: #f1f0f0;
+        background-color: #6778FF;
         max-width: calc(45% - 20px);
-        color: #000;
-        padding: 10px;
-        font-size: 14px; }
-      .convoContent #messageBox #appearMessage .msgfrom {
-        background-color: #0084ff;
         color: #FFF;
-        margin: 10px 10px 10px 55%; }
+        padding: 10px;
+        font-size: 14px;
+        border-radius: 5px; }
+      .convoContent #messageBox #appearMessage .msgfrom {
+        background-color: #6CE559;
+        color: #FFF;
+        margin: 10px 10px 10px 55%;
+        border-radius: 5px; }
       .convoContent #messageBox #appearMessage .msgarr {
         width: 0;
         height: 0;
         border-left: 8px solid transparent;
         border-right: 8px solid transparent;
-        border-bottom: 8px solid #f1f0f0;
+        border-bottom: 8px solid #6778FF;
         transform: rotate(315deg);
         margin: -12px 0px 0px 45px; }
       .convoContent #messageBox #appearMessage .msgarrfrom {
-        border-bottom: 8px solid #0084ff;
+        border-bottom: 8px solid #6CE559;
         float: right;
         margin-right: 45px; }
       .convoContent #messageBox #appearMessage .msgsentby {
@@ -221,17 +237,6 @@ h1 {
   border: 8px solid #333333; }
   .dashOption a {
     color: white; }
-  .dashOption a {
-    display: block;
-    padding: 10px;
-    position: absolute;
-    z-index: -1;
-    top: 1rem;
-    left: 100%;
-    margin-left: -62px;
-    transition: all .2s; }
-  .dashOption a:hover {
-    margin-left: 0; }
 
 h4, h6 {
   text-align: center; }
@@ -494,5 +499,7 @@ svg {
 @keyframes stroke-offset {
   100% {
     stroke-dashoffset: -35%; } }
+h4 {
+  text-align: center; }
 
 /*# sourceMappingURL=main.css.map */
