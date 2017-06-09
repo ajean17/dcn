@@ -13,23 +13,15 @@ class DashboardController extends Controller
   {
       $this->middleware('auth');
   }
-
-  public function index()
-  {
-      return view('dashboard.home');
-  }
-
   public function account(User $User)
   {
     return view('dashboard.settings',compact('User'));
   }
-
   public function notifications(User $User)
   {
     //$notes = Notification::where('username','=',$User)->orderBy('created_at','desc')->get();
     return view('dashboard.notifications',compact('User'));
   }
-
   public function inbox(User $inboxOwner)
   {
     $mostRecent = "";
@@ -71,8 +63,8 @@ class DashboardController extends Controller
     return view('dashboard.inbox',compact('inboxOwner','conversations','friends','talkTo'));
   }
 
-  public function manage(User $User)
+  public function search()
   {
-    return view('dashboard.management',compact('User'));
+    return view('dashboard.search');
   }
 }

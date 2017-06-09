@@ -1,43 +1,21 @@
-<?php
-  use App\User;
-
-  if(isset($_GET['u']) && isset($_GET['e']))
-  {
-    $u = preg_replace('#[^a-z0-9]#i', '', $_GET['u']);
-  	$e = $_GET['e'];
-  }
-?>
 @extends('layouts.master')
 
 @section('title')
-  Change Password | OneTribe
+  Reclaim Account | OneTribe
 @endsection
 
 @section('content')
-  <form method="GET" onsubmit="return false;" id="newPasswordForm">
+  <form method="GET" onsubmit="return false;" id="reclaimForm">
     {{ csrf_field() }}
-    <h4>Enter your new password</h4>
-
-    <!--div class="form-group">
-      <label for="password"> Temporary Password:</label>
-      <input type="password" class="form-control" id="temppassword" name="temppassword"
-      onfocus="emptyElement('status')" maxlength="100">
-    </div-->
+    <h4>Enter your email address to reclaim your account</h4>
 
     <div class="form-group">
-      <label for="password"> New Password:</label>
-      <input type="password" class="form-control" id="newPassword" name="newPassword"
-      onfocus="emptyElement('status')" maxlength="100">
+      <label for="email">Email:</label>
+      <input type="email" class="form-control" id="forgotPasswordEmail" name="forgotPasswordEmail">
     </div>
 
     <div class="form-group">
-      <label for="password_confirmation">Confirm Password:</label>
-      <input type="password" class="form-control" id="newpassword_confirmation" name="newpassword_confirmation"
-      onfocus="emptyElement('status')" maxlength="100">
-    </div>
-
-    <div class="form-group">
-      <button type="submit" id="updatePasswordButton" onclick="updatePassword()" class="btn btn-default">Send</button>
+      <button type="submit" id="emailButton" class="btn btn-default">Send</button>
     </div>
     <span id="status"></span>
   </form>
@@ -45,43 +23,66 @@
 
 @section('javascript')
   <script>
-    function updatePassword()
+    var token = '{{Session::token()}}';
+    var url= '{{route('password')}}';
+
+    $(document).ready(function()
     {
-      var password = document.getElementById('newPassword').value;
-      var confirm = document.getElementById('newpassword_confirmation').value;
-      var status = document.getElementById('status');
-      var u = "<?php echo $u?>";
-      var e = "<?php echo $e?>";
-      if(password != "" && confirm != "")
+      $('#emailButton').on('click',function()
       {
-        if(password != confirm)
+        var email = $('#forgotPasswordEmail').val;
+        var status = $('#status');
+        if(email != "")
         {
-          status.innerHTML = 'Passwords do not match.';
-        }
-        else
-        {
-          document.getElementById("updatePasswordButton").style.display = "none";
-          status.innerHTML = 'please wait ...';
-      		var ajax = ajaxObj("GET", "passwordSystem?u="+u+"&e="+e+"&p="+password);
-      		ajax.onreadystatechange = function()
-      		{
-            if(ajaxReturn(ajax) == true)
-      			{
-              if(ajax.responseText != "reset_success")
-      				{
-      					status.innerHTML = ajax.responseText;
-      					document.getElementById("updatePasswordButton").style.display = "block";
-      				}
-      				else if(ajax.responseText == "reset_success")
-      				{
-      					window.scrollTo(0,0);
-      					document.getElementById("newPasswordForm").innerHTML = "Your password has successfully been reset!";
-      				}
+          $('#emailButton').hide();
+          status.html('please wait...');
+
+          $.ajax(
+          {
+            method: 'POST',
+            url: url,
+            data: {email:email, _token:token}
+          }).done(function (msg)
+          {
+            //console.log(msg['message']);
+            if(msg['message'] != "email_success")
+            {
+              status.html(msg['message']);
+              $('#emailButton').show();
             }
-          }
-          ajax.send();
+            else if(msg['message'] == "email_success")
+              $('#reclaimForm').html('An email has been sent to '+email+' with instructions for reclaiming your account.');
+          });
         }
+      });
+    });
+    /*function reclaim()
+    {
+      var email = document.getElementById('forgotPasswordEmail').value;
+      var status = document.getElementById('status');
+      if(email != "")
+      {
+        document.getElementById("emailButton").style.display = "none";
+        status.innerHTML = 'please wait ...';
+    		var ajax = ajaxObj("GET", "passwordSystem?email="+email);
+    		ajax.onreadystatechange = function()
+    		{
+          if(ajaxReturn(ajax) == true)
+    			{
+            if(ajax.responseText != "email_success")
+    				{
+    					status.innerHTML = ajax.responseText;
+    					document.getElementById("emailButton").style.display = "block";
+    				}
+    				else if(ajax.responseText == "email_success")
+    				{
+    					window.scrollTo(0,0);
+    					document.getElementById("reclaimForm").innerHTML = "An email has been sent to "+email+" with instructions for reclaiming your account.";
+    				}
+          }
+        }
+        ajax.send();
       }
-    }
+    }*/
   </script>
 @endsection

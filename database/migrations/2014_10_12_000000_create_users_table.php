@@ -20,7 +20,7 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->string('avatar')->nullable();
-            //$table->enum('userlevel', array('1', '2', '3', '4'))->default('1');
+            $table->enum('userType', array('0', '1', '2'))->default('0');
             $table->enum('activated', array('0', '1'))->default('0');
             //$table->enum('firstTime',array('0','1'))->default('0');
             //$table->string('ip');

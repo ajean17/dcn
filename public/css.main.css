@@ -238,6 +238,9 @@ h1 {
   .dashOption a {
     color: white; }
 
+h4, h6 {
+  text-align: center; }
+
 #checks {
   text-align: right; }
 
@@ -496,40 +499,6 @@ svg {
 @keyframes stroke-offset {
   100% {
     stroke-dashoffset: -35%; } }
-#gettingStartedPanel {
-  text-align: center;
-  border: #999 2.5px solid;
-  border-radius: 5px;
-  box-shadow: 5px 5px 5px #888888;
-  margin-top: 125px;
-  margin-bottom: 150px; }
-  #gettingStartedPanel .pathOption {
-    width: 350px;
-    height: 175px;
-    color: white;
-    background-color: #4A9CBF;
-    border-radius: 10px;
-    font-size: 40px;
-    border: #fff 1.5px solid;
-    /*&:focus
-    {
-      background-color:#193440;
-    }*/ }
-    #gettingStartedPanel .pathOption:hover, #gettingStartedPanel .pathOption:focus {
-      background-color: #63D1FF; }
-
-.continue {
-  width: 300px;
-  height: 80px;
-  color: white;
-  background-color: #AAA;
-  border-radius: 10px;
-  font-size: 40px;
-  border: #fff 1.5px solid;
-  outline-style: none; }
-  .continue:hover {
-    background-color: #555; }
-
 .carousel {
   margin-bottom: 0rem;
   color: black; }
@@ -595,12 +564,7 @@ svg {
 @media (min-width: 62em) {
   .featurette-heading {
     margin-top: 7rem; } }
-h1, h2, h3, h4, h5, h6 {
+h4 {
   text-align: center; }
 
-/*body
-{
-  background-color: #777;
-}*/
-
-/*# sourceMappingURL=main.css.map */
+/*# sourceMappingURL=css.main.css.map */

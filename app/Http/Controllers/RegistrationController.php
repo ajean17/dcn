@@ -16,15 +16,42 @@ class RegistrationController extends Controller
 
     public function create()
     {
-        return view('registration.create');
+        return view('registration.register');
     }
 
-    public function activation()
+    public function activation(Request $request)
     {
-        return view('registration.activate');
+      $message = "";
+      if($request->has('u') && $request->has('e') && $request->has('p'))
+      {
+        //Connect to database and sanitize incoming $_GET variables
+        $u = $request['u'];//preg_replace('#[^a-z0-9]#i', '', $_GET['u']);
+        $e = $request['e'];
+        $p = $request['p'];
+        //Evaluate the lengths of the incoming $_GET variables
+        if(strlen($u) < 3 || strlen($e) < 5 || strlen($p) == "")
+          //Log this issue into a text file and email details to yourself
+          $message = "activation_string_length_issues";
+
+        //Check their credentials against the database
+        $numrows = User::where('name','=',$u)->where('email','=',$e)->where('password','=',$p)->where('activated','=','0')->first();
+
+        // Evaluate for a match in the system (0 = no match, 1 = match)
+        if($numrows == "")
+          //Log this potential hack attempt to text file and email details to yourself
+          $message = "Either your credentials are not matching anything in our system, or you have already been activated.";
+
+        else // Match was found, you can activate them
+          User::where('name','=',$u)->update(Array('activated'=> '1'));
+      }
+      else
+        // Log this issue of missing initial $_GET variables
+        $message = "missing_GET_variables";
+
+      return view('message', compact('message'));
     }
 
-    public function register(\Illuminate\Http\Request $request)
+    public function register(Request $request)
     {
       if($request->has('username'))
       {

@@ -6,10 +6,15 @@
 @import "pages/popup.scss";
 @import "pages/navpop.scss";
 @import "pages/logo.scss";
+@import "pages/gettingStarted.scss";
 
 @import "layouts/carousel.scss";
 
-h4
+h1,h2,h3,h4,h5,h6
 {
   text-align: center;
 }
+/*body
+{
+  background-color: #777;
+}*/

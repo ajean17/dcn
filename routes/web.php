@@ -3,15 +3,21 @@
 use App\User;
 use App\Category;
 
-Route::get('/', function ()
+Route::get('/', function()
 {
     return view('/homeIndex');
 });
 
-Route::get('/connections', function ()
+Route::get('/connections', function()
 {
     return view('/dashboard.connections');
 });
+
+Route::get('/gettingStarted', function()
+{
+    return view('/gettingStarted');
+});
+Route::post('/gettingStarted', 'ProfileController@setup');
 
 //Auth::routes();//everything related to login/regisration/passreset/logout
 Route::get('/register','RegistrationController@create');
@@ -25,27 +31,23 @@ Route::get('/forgotPassword','SessionsController@reset');
 Route::get('/reclaim','SessionsController@reclaim');
 
 //DASHBOARD ROUTES
-Route::get('/dashboard', 'DashboardController@index');
 Route::get('/account/{User}', 'DashboardController@account');
 Route::get('/notifications/{User}', 'DashboardController@notifications');
 Route::get('/inbox/{inboxOwner}','DashboardController@inbox');
-Route::get('/management/{User}', 'DashboardController@manage');
+Route::get('/stargazer', 'DashboardController@search');
 
 //PROFILE ROUTES
 Route::get('/profile/{profileOwner}', 'ProfileController@show');
-Route::get('/stargazer', 'ProfileController@search');
+Route::post('/friendSystem','ProfileController@friend')->name('friend');
+Route::post('/blockSystem','ProfileController@block')->name('block');
+Route::post('/projectSystem','ProfileController@project');
 
 //PHP PARSE ROUTES
-Route::post('/friendSystem','ParseController@friend')->name('friend');
-Route::post('/blockSystem','ParseController@block')->name('block');
 Route::post('/searchSystem','ParseController@search')->name('search');
 Route::post('/messageSystem','ParseController@message')->name('message');
 Route::post('/categories','ParseController@cats')->name('category');
-
 Route::get('/categories','ParseController@categories');
-Route::get('/passwordSystem','ParseController@password');
-
-Route::post('/projectSystem','ParseController@project');
+Route::get('/passwordSystem','ParseController@password')->name('password');
 Route::post('/photoSystem/{User}','ParseController@photoHandle');
 
 //IMAGE PULLING
@@ -53,7 +55,8 @@ Route::get('images/{filename}', function ($filename)
 {
     $path = storage_path().'/app/public/images'.'/'.$filename;
 
-    if(!File::exists($path)) abort(404);
+    if(!File::exists($path))
+      abort(404);
 
     $file = File::get($path);
     $type = File::mimeType($path);

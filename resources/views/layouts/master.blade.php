@@ -24,6 +24,7 @@
       </div>
     @endif
     <div class="container">
+      <br/>
       @yield('content')
       <br/>
       <br/>

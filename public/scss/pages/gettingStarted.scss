@@ -1,0 +1,44 @@
+#gettingStartedPanel
+{
+  text-align: center;
+  border:#999 2.5px solid;
+  border-radius: 5px;
+  box-shadow: 5px 5px 5px #888888;
+  //height: 600px;
+  margin-top: 125px;
+  margin-bottom: 150px;
+
+  .pathOption
+  {
+    width:350px;
+    height:175px;
+    color:white;
+    background-color:#4A9CBF;
+    border-radius: 10px;
+    font-size: 40px;
+    border:#fff 1.5px solid;
+
+    &:hover, &:focus
+    {
+      background-color:#63D1FF;
+    }
+    /*&:focus
+    {
+      background-color:#193440;
+    }*/
+  }
+}
+.continue
+{
+  width:300px;
+  height:80px;
+  color:white;
+  background-color:#AAA;
+  border-radius: 10px;
+  font-size: 40px;
+  border:#fff 1.5px solid;
+  &:hover
+  {
+    background-color:#555;
+  }
+}
