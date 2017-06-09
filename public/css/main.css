@@ -34,94 +34,67 @@ div.user_info {
   float: left;
   font-size: 14px; }
 
-#profile_pic_box {
+.profileLeft {
   border-radius: 5px;
   box-shadow: 1px 1px 5px #888888;
-  float: left;
-  border: #999 2px solid;
-  width: 156px;
-  height: 160px; }
-  #profile_pic_box img {
-    border-radius: 5px;
+  height: 390px; }
+  .profileLeft #profile_pic_box {
+    width: 156px;
+    height: 160px; }
+    .profileLeft #profile_pic_box img {
+      border-radius: 5px;
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 159px; }
+    .profileLeft #profile_pic_box a {
+      display: block;
+      position: absolute;
+      z-index: 4000;
+      background: #D8F08E;
+      border: #81A332 1px solid;
+      border-radius: 3px;
+      padding: 5px;
+      font-size: 12px;
+      text-decoration: none;
+      color: #60750B; }
+    .profileLeft #profile_pic_box form {
+      display: none;
+      position: absolute;
+      z-index: 3000;
+      padding: 10px;
+      opacity: .8;
+      background: #F0FEC2;
+      width: 100%;
+      height: 157px;
+      top: 0;
+      left: 0;
+      color: black;
+      overflow-x: hidden; }
+  .profileLeft #quickNav {
     position: absolute;
-    left: 0;
-    width: 187px;
-    height: 159px; }
-  #profile_pic_box a {
-    display: block;
-    position: absolute;
-    z-index: 4000;
-    background: #D8F08E;
-    border: #81A332 1px solid;
-    border-radius: 3px;
-    padding: 5px;
-    font-size: 12px;
-    text-decoration: none;
-    color: #60750B; }
-  #profile_pic_box form {
-    display: none;
-    position: absolute;
-    z-index: 3000;
-    padding: 10px;
-    opacity: .8;
-    background: #F0FEC2;
-    width: 187px;
-    height: 157px;
-    left: 0;
-    color: black;
-    overflow-x: hidden; }
+    left: 0; }
+    .profileLeft #quickNav .navButton {
+      border-radius: 7px;
+      background-color: #BF66BF;
+      box-shadow: 1px 1px 5px #888888;
+      text-align: center;
+      font-size: 18px;
+      height: 65px;
+      width: 100%;
+      color: white;
+      cursor: pointer; }
+      .profileLeft #quickNav .navButton:hover {
+        text-decoration: underline;
+        background-color: #402240; }
 
-.profileHead {
+.profileRight {
   border-radius: 5px;
   box-shadow: 1px 1px 5px #888888;
-  background-color: #eee; }
-  .profileHead button {
-    cursor: pointer;
-    background-color: #bbb; }
-    .profileHead button:hover {
-      text-decoration: underline;
-      background-color: #fff; }
-
-.profilePic {
-  background-color: #bbbbbb; }
-
-.banner {
-  text-align: center;
-  padding: 55px 0px; }
-
-.element {
-  display: none; }
-
-.bannerTabs {
-  text-align: center;
-  bottom: 0px; }
-
-.profileBody {
-  border-radius: 5px;
-  box-shadow: 1px 1px 5px #888888;
-  position: relative;
-  /*height:80%;*/ }
-
-.quickNav {
-  border-radius: 5px;
-  box-shadow: 1px 1px 5px #888888;
-  background-color: #eee;
-  position: absolute fixed; }
-  .quickNav a {
-    text-decoration: none; }
-    .quickNav a:hover {
-      text-decoration: underline; }
-
-.stickyFix {
-  position: fixed;
-  top: 40px; }
-
-.projectContent {
-  height: 500px;
-  overflow-y: scroll; }
-
-.profileFoot {
-  background-color: #123456; }
+  position: relative; }
+  .profileRight #projectContent img {
+    border-radius: 5px; }
 
 .frndConvoList, .convoList, .convoContent {
   box-shadow: 5px 5px 5px #888888;
@@ -525,8 +498,7 @@ svg {
   background-color: #AAA;
   border-radius: 10px;
   font-size: 40px;
-  border: #fff 1.5px solid;
-  outline-style: none; }
+  border: #fff 1.5px solid; }
   .continue:hover {
     background-color: #555; }
 

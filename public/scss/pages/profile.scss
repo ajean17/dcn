@@ -1,123 +1,83 @@
-#profile_pic_box
+.profileLeft
 {
   border-radius: 5px;
   box-shadow: 1px 1px 5px #888888;
-  float:left;
-  border:#999 2px solid;
-  width:156px;
-  height:160px;
-  //margin:20px 30px 0px 0px;
-  //overflow-y:hidden;
-  img
+  height: 390px;
+  #profile_pic_box
   {
-    border-radius: 5px;
+    width:156px;
+    height:160px;
+    img
+    {
+      border-radius: 5px;
+      position: absolute;
+      left:0;
+      top:0;
+      width: 100%;
+      height: 159px;
+    }
+    a
+    {
+      display: block;
+    	position:absolute;
+    	z-index:4000;
+    	background:#D8F08E;
+    	border:#81A332 1px solid;
+    	border-radius:3px;
+    	padding:5px;
+    	font-size:12px;
+    	text-decoration:none;
+    	color:#60750B;
+    }
+    form
+    {
+      display:none;
+    	position:absolute;
+    	z-index:3000;
+    	padding:10px;
+    	opacity:.8;
+    	background:#F0FEC2;
+    	width:100%;
+    	height:157px;
+      top:0;
+      left:0;
+      color: black;
+      overflow-x:hidden;
+    }
+  }
+  #quickNav
+  {
     position: absolute;
     left:0;
-    width: 187px;
-    height: 159px;
-  }
-  a
-  {
-    display: block;
-  	position:absolute;
-  	z-index:4000;
-  	background:#D8F08E;
-  	border:#81A332 1px solid;
-  	border-radius:3px;
-  	padding:5px;
-  	font-size:12px;
-  	text-decoration:none;
-  	color:#60750B;
-  }
-
-  form
-  {
-    display:none;
-  	position:absolute;
-  	z-index:3000;
-  	padding:10px;
-  	opacity:.8;
-  	background:#F0FEC2;
-  	width:187px;
-  	height:157px;
-    left:0;
-    color: black;
-    overflow-x:hidden;
-  }
-}
-
-.profileHead
-{
-  border-radius: 5px;
-  box-shadow: 1px 1px 5px #888888;
-  background-color: #eee;
-  button
-  {
-    cursor: pointer;
-    background-color: #bbb;
-    &:hover
+    .navButton
     {
-      text-decoration: underline;
-      background-color: #fff;
+      border-radius: 7px;
+      background-color: #BF66BF;
+      box-shadow: 1px 1px 5px #888888;
+      text-align: center;
+      font-size: 18px;
+      height: 65px;
+      width: 100%;
+      color: white;
+      cursor: pointer;
+      &:hover
+      {
+        text-decoration: underline;
+        background-color: #402240;
+      }
     }
   }
 }
-.profilePic
-{
-  background-color: #bbbbbb;
-}
-.banner
-{
-  text-align: center;
-  padding: 55px 0px;
-}
-.element
-{
-  display:none;
-}
-.bannerTabs
-{
-  text-align: center;;
-  bottom:0px;
-}
-.profileBody
+.profileRight
 {
   border-radius: 5px;
   box-shadow: 1px 1px 5px #888888;
   position: relative;
-  /*height:80%;*/
-}
-
-.quickNav
-{
-  border-radius: 5px;
-  box-shadow: 1px 1px 5px #888888;
-  background-color: #eee;
-  position: absolute fixed;
-  a
+  #projectContent
   {
-    text-decoration: none;
-    &:hover
+    img
     {
-      text-decoration: underline;
+      border-radius: 5px;
     }
   }
-  //height:20%;
-}
-
-.stickyFix
-{
-  position:fixed;
-  top:40px;
-  //z-index:99999;
-}
-
-.projectContent
-{
-  height: 500px;
-  overflow-y: scroll;
-}
-.profileFoot
-{
-  background-color: #123456;
 }

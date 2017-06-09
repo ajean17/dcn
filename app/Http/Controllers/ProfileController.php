@@ -41,7 +41,7 @@ class ProfileController extends Controller
 
   public function show(User $profileOwner)
   {
-   return view('profile.show',compact('profileOwner'));//'friend_check','block_check','block_check2'));
+    return view('profile.show',compact('profileOwner'));//'friend_check','block_check','block_check2'));
   }
 
   public function friend(Request $request)

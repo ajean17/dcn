@@ -13,8 +13,8 @@
   $ownerBlockViewer = false;
   $hasContent = false;
   $who = "";
-  $friend_button = '<button disabled>Request As Friend</button>';
-  $block_button = '<button disabled>Block User</button>';
+  $friend_button = '<button disabled class="navButton">Request As Friend</button>';
+  $block_button = '<button disabled class="navButton">Block User</button>';
   //Make sure the profile owner has a profile created
   $profile = Profile::where('username','=',$profileOwner->name)->first();
   if($profile == "")
@@ -46,22 +46,22 @@
     if($friend_check != "[]")//If the friend check is not empty
     {
       $isFriend = true;
-      $friend_button = '<button id="unfriend">Unfriend</button>';
+      $friend_button = '<button class="navButton" id="unfriend">Unfriend</button>';
     }
     else
     {
       $isFriend = false;
       if($ownerBlockViewer == false)
       {
-        $friend_button = '<button id="friend">Request As Friend</button>';
-        $block_button = '<button id="block">Block User</button>';
+        $friend_button = '<button class="navButton" id="friend">Request As Friend</button>';
+        $block_button = '<button class="navButton" id="block">Block User</button>';
       }
     }
     if($block_check != "[]")
     {
       $ownerBlockViewer = true;
-      $block_button = '<button id="unblock">Unblock User</button>';
-      $friend_button = '<button disabled>Request As Friend</button>';
+      $block_button = '<button class="navButton" id="unblock">Unblock User</button>';
+      $friend_button = '<button class="navButton" disabled>Request As Friend</button>';
     }
   }
   $parent = "WHERE parent IS NULL";
@@ -89,46 +89,94 @@
 @endsection
 
 @section('content')
-  <h1>{{$who}} Profile</h1>
   <!--div class="progress">
     <div class="progress-bar progress-bar-striped progress-bar-animated bg-danger" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 25%"></div>
   </div-->
   @include ('layouts.errors')
-  @if($isOwner == false)
-    <span id="friendBtn"><?php echo $friend_button; ?></span>
-    <span id="blockBtn"><?php echo $block_button; ?></span>
-  @endif
   <br/>
   <!--THE PROFILE HEADER-->
-  <div class="row profileHead">
+  <div class="row">
     <!--THE PROFILE PICTURE/AVATAR-->
-    <div class=" col-sm-2 profilePic" id="profile_pic_box">
-      @if($isOwner==true)
-        <!--FORM TO CHANGE AVATAR-->
-        <a id="editAvatar" href="#" onclick="return false;" onmousedown="toggleElement('avatar_form')">Edit Avatar</a>
-        <form id="avatar_form" enctype="multipart/form-data" method="post" action="/photoSystem/<?php echo Auth::user()->name?>">
-          {{csrf_field()}}
-          <h4>Change your avatar</h4>
-          <input type="file" name="avatar" required>
-          <p><input type="submit" value="Upload"></p>
-        </form>
-      @endif
-      <?php
-        if($profileOwner->avatar == NULL)
-          echo '<img src="/images/Default.jpg" width="245px" height="245px" alt="Profile Picture"><br/>';
-        else
-          echo '<img src="/uploads/user/'.$profileOwner->name.'/images'.'/'.$profileOwner->avatar.'" width="250px" height="250px" alt="Profile Picture"><br/>';
-      ?>
-    </div>
-    <!--THE PROFILE BANNER/DASHBOARD OPTIONS-->
-    <div class="col-sm-10 banner">
-      <button type="button" class="btn btn-default btn-lg" data-toggle="modal" data-target="#connectionsModal">View Connections</button>
+    <div class=" col-sm-2 profileLeft">
+      <div id="profile_pic_box">
+        @if($isOwner==true)
+          <!--FORM TO CHANGE AVATAR-->
+          <a id="editAvatar" href="#" onclick="return false;" onmousedown="toggleElement('avatar_form')">Edit Avatar</a>
+          <form id="avatar_form" enctype="multipart/form-data" method="post" action="/photoSystem/<?php echo Auth::user()->name?>">
+            {{csrf_field()}}
+            <h4>Change your avatar</h4>
+            <input type="file" name="avatar" required>
+            <p><input type="submit" value="Upload"></p>
+          </form>
+        @endif
+        <?php
+          if($profileOwner->avatar == NULL)
+            echo '<img src="/images/Default.jpg" width="245px" height="245px" alt="Profile Picture"><br/>';
+          else
+            echo '<img src="/uploads/user/'.$profileOwner->name.'/images'.'/'.$profileOwner->avatar.'" width="250px" height="250px" alt="Profile Picture"><br/>';
+        ?>
+      </div>
+      <hr/>
+      <!--THE QUICK NAVIGATION-->
+      <div id="quickNav">
+        <button type="button" class="navButton" data-toggle="modal" data-target="#connectionsModal">View Connections</button>
       @if($isOwner == true)
-        <button type="button" class="btn btn-default btn-lg" data-toggle="modal" data-target="#projectsModal">Manage Projects</button>
-        <button type="button" class="btn btn-default btn-lg" data-toggle="modal" data-target="#settingsModal">Account Settings</button>
+        <button type="button" class="navButton" data-toggle="modal" data-target="#profileModal">Edit Profile</button>
+        <button type="button" class="navButton" data-toggle="modal" data-target="#settingsModal">Account Settings</button>
+      @else
+        <?php echo $friend_button; ?>
+        <?php echo $block_button; ?>
       @endif
+      </div>
+    </div>
+    <!--THE PROJECT CONTENT AREA-->
+    <div class="col-sm-10 profileRight" data-spy="scroll" data-target="#qNav" data-offset="20">
+      <h1>{{$who}} Profile</h1>
+      <h4>{{$profileOwner->userType}}</h4>
+      <hr>
+      <div id="projectContent">
+        <center>
+          <?php
+            if($hasContent == true)
+            {
+              echo "<h1>".$projectOne->name."</h1><br/>";
+              echo "<h5>".$projectOne->category."</h5>";
+              echo "<h6>".$projectOne->subCategory."</h6><hr>";
+              if($projectOne->oneType != "upload")
+                echo "<div id='elementOne'><h3>".$projectOne->oneName."</h3><br/>".$projectOne->elementOne."<br/><br/>";
+              else
+                echo '<div id="elementOne"><h3>'.$projectOne->oneName.'</h3><br/><img src="/uploads/user/'.$profileOwner->name.'/images'.'/'.$projectOne->elementOne.'" width="600px" height="600px" alt="Profile Picture"><br/><br/>';
+
+              if($projectOne->twoType != "upload")
+                echo "<div id='elementTwo'><h3>".$projectOne->twoName."</h3><br/>".$projectOne->elementTwo."<br/><br/>";
+              else
+                echo '<div id="elementTwo"><h3>'.$projectOne->twoName.'</h3><br/><img src="/uploads/user/'.$profileOwner->name.'/images'.'/'.$projectOne->elementTwo.'" width="600px" height="600px" alt="Profile Picture"><br/><br/>';
+
+              if($projectOne->threeType != "upload")
+                echo "<div id='elementThree'><h3>".$projectOne->threeName."</h3><br/>".$projectOne->elementThree."<br/><br/>";
+              else
+                echo '<div id="elementThree"><h3'.$projectOne->threeName.'</h3><br/><img src="/uploads/user/'.$profileOwner->name.'/images'.'/'.$projectOne->elementThree.'" width="600px" height="600px" alt="Profile Picture"><br/><br/>';
+
+              if($projectOne->fourType != "upload")
+                echo "<div id='elementFour'><h3>".$projectOne->fourName."</h3><br/>".$projectOne->elementFour."<br/><br/>";
+              else
+                echo '<div id="elementFour"><h3>'.$projectOne->fourName.'</h3><br/><img src="/uploads/user/'.$profileOwner->name.'/images'.'/'.$projectOne->elementFour.'" width="600px" height="600px" alt="Profile Picture"><br/><br/>';
+
+              if($projectOne->fiveType != "upload")
+                echo "<div id='elementFive'><h3>".$projectOne->fiveName."</h3><br/>".$projectOne->elementFive."<br/><br/>";
+              else
+                echo '<div id="elementFive"><h3>'.$projectOne->fiveName.'</h3><br/><img src="/uploads/user/'.$profileOwner->name.'/images'.'/'.$projectOne->elementFive.'" width="600px" height="600px" alt="Profile Picture"><br/><br/>';
+            }
+            else if($hasContent == false)
+            {
+              echo "<h1>No content to display yet.....</h1>";
+            }
+          ?>
+        </center>
+      </div>
     </div>
   </div>
+  <br/>
   <!--LIST OF CONNECTIONS MODAL-->
   <div id="connectionsModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
@@ -173,13 +221,13 @@
       </div>
     </div>
   </div>
-  <!--PROJECT MANAGEMENT MODAL-->
-  <div id="projectsModal" class="modal fade" role="dialog">
+  <!--PROFILE MANAGEMENT MODAL-->
+  <div id="profileModal" class="modal fade" role="dialog">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Edit Projects</h4>
+          <h4 class="modal-title">Edit Mode</h4>
         </div>
         <div class="modal-body">
           <form id="profileContentForm" enctype="multipart/form-data" method="post" action="/projectSystem"><!--onsubmit="return false;"-->
@@ -253,64 +301,6 @@
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
         </div>
       </div>
-    </div>
-  </div>
-  <br/>
-  <!--THE PROFILE BODY-->
-  <div class="row profileBody">
-    <!--THE QUICK NAVIGATION-->
-    <div class="col-sm-2 quickNav">
-      <h1>Quick Nav</h1>
-      <nav id= "qNav">
-        <ul>
-          <li><a href="#elementOne">Element One</a></li>
-          <li><a href="#elementTwo">Element Two</a></li>
-          <li><a href="#elementThree">Element Three</a></li>
-          <li><a href="#elementFour">Element Four</a></li>
-          <li><a href="#elementFive">Element Five</a></li>
-        </ul>
-    </nav>
-    </div>
-    <!--THE PROJECT CONTENT AREA-->
-    <div class="col-sm-10 projectContent" data-spy="scroll" data-target="#qNav" data-offset="20">
-        <center>
-          <?php
-            if($hasContent == true)
-            {
-              echo "<h1>".$projectOne->name."</h1><br/>";
-              echo "<h5>".$projectOne->category."</h5>";
-              echo "<h6>".$projectOne->subCategory."</h6><hr>";
-              if($projectOne->oneType != "upload")
-                echo "<div id='elementOne'><h3>".$projectOne->oneName."</h3><br/>".$projectOne->elementOne."<br/>";
-              else
-                echo '<div id="elementOne"><h3>'.$projectOne->oneName.'</h3><br/><img src="/uploads/user/'.$profileOwner->name.'/images'.'/'.$projectOne->elementOne.'" width="600px" height="600px" alt="Profile Picture"><br/><br/>';
-
-              if($projectOne->twoType != "upload")
-                echo "<div id='elementTwo'><h3>".$projectOne->twoName."</h3><br/>".$projectOne->elementTwo."<br/>";
-              else
-                echo '<div id="elementTwo"><h3>'.$projectOne->twoName.'</h3><br/><img src="/uploads/user/'.$profileOwner->name.'/images'.'/'.$projectOne->elementTwo.'" width="600px" height="600px" alt="Profile Picture"><br/><br/>';
-
-              if($projectOne->threeType != "upload")
-                echo "<div id='elementThree'><h3>".$projectOne->threeName."</h3><br/>".$projectOne->elementThree."<br/>";
-              else
-                echo '<div id="elementThree"><h3'.$projectOne->threeName.'</h3><br/><img src="/uploads/user/'.$profileOwner->name.'/images'.'/'.$projectOne->elementThree.'" width="600px" height="600px" alt="Profile Picture"><br/><br/>';
-
-              if($projectOne->fourType != "upload")
-                echo "<div id='elementFour'><h3>".$projectOne->fourName."</h3><br/>".$projectOne->elementFour."<br/>";
-              else
-                echo '<div id="elementFour"><h3>'.$projectOne->fourName.'</h3><br/><img src="/uploads/user/'.$profileOwner->name.'/images'.'/'.$projectOne->elementFour.'" width="600px" height="600px" alt="Profile Picture"><br/><br/>';
-
-              if($projectOne->fiveType != "upload")
-                echo "<div id='elementFive'><h3>".$projectOne->fiveName."<br/>".$projectOne->elementFive;
-              else
-                echo '<div id="elementFive"><h3>'.$projectOne->fiveName.'</h3><br/><img src="/uploads/user/'.$profileOwner->name.'/images'.'/'.$projectOne->elementFive.'" width="600px" height="600px" alt="Profile Picture"><br/><br/>';
-            }
-            else if($hasContent == false)
-            {
-              echo "<h1>No content to display yet.....</h1>";
-            }
-          ?>
-        </center>
     </div>
   </div>
   <br/>
