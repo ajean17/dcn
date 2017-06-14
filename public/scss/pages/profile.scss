@@ -2,7 +2,7 @@
 {
   border-radius: 5px;
   box-shadow: 1px 1px 5px #888888;
-  height: 390px;
+  height: 625px;
   #profile_pic_box
   {
     width:156px;
@@ -67,6 +67,11 @@
       }
     }
   }
+  #titles
+  {
+    text-align: left;
+    //font-weight: bold;
+  }
 }
 .profileRight
 {
@@ -75,9 +80,49 @@
   position: relative;
   #projectContent
   {
-    img
+    .modalPic
     {
       border-radius: 5px;
+      cursor: pointer;
+    }
+    .fullPic
+    {
+
+    }
+    .modal-dialog
+    {
+      width: 1000px;
+    }
+  }
+  #tabs
+  {
+    text-align: center;
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+    .tablinks
+    {
+      background-color: inherit;
+      float: left;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      padding: 14px 16px;
+      transition: 0.3s;
+      &:hover
+      {
+        background-color: #ddd;
+      }
+      &:focus
+      {
+        background-color: #ccc;
+      }
+    }
+    .elementContent
+    {
+      padding: 6px 12px;
+      border: 1px solid #ccc;
+      border-top: none;
     }
   }
 }

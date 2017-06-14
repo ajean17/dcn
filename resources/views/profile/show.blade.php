@@ -13,8 +13,15 @@
   $ownerBlockViewer = false;
   $hasContent = false;
   $who = "";
+  $what = "";
   $friend_button = '<button disabled class="navButton">Request As Friend</button>';
   $block_button = '<button disabled class="navButton">Block User</button>';
+  if($profileOwner->userType == 1)
+    $what = "Inventor";
+  else if($profileOwner->userType == 2)
+    $what = "Investor";
+  else
+    return redirect('/gettingStarted');
   //Make sure the profile owner has a profile created
   $profile = Profile::where('username','=',$profileOwner->name)->first();
   if($profile == "")
@@ -89,9 +96,6 @@
 @endsection
 
 @section('content')
-  <!--div class="progress">
-    <div class="progress-bar progress-bar-striped progress-bar-animated bg-danger" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 25%"></div>
-  </div-->
   @include ('layouts.errors')
   <br/>
   <!--THE PROFILE HEADER-->
@@ -117,55 +121,94 @@
         ?>
       </div>
       <hr/>
-      <!--THE QUICK NAVIGATION-->
+      <div id="titles">
+        <center><strong><p>{{$profileOwner->name}}</p></strong></center>
+        <p><strong>Role:</strong> {{$what}}</p>
+        @if($hasContent == true)
+        <p><strong>Company:</strong><br/>{{$projectOne->name}}</p>
+        <p><strong>Industry:</strong><br/> {{$projectOne->category}} {{$projectOne->subCategory}}</p>
+        @endif
+      </div>
+      <hr/>
       <div id="quickNav">
         <button type="button" class="navButton" data-toggle="modal" data-target="#connectionsModal">View Connections</button>
       @if($isOwner == true)
         <button type="button" class="navButton" data-toggle="modal" data-target="#profileModal">Edit Profile</button>
         <button type="button" class="navButton" data-toggle="modal" data-target="#settingsModal">Account Settings</button>
       @else
-        <?php echo $friend_button; ?>
-        <?php echo $block_button; ?>
+        <?php
+          echo $friend_button;
+          echo $block_button;
+          //Mentor and mentee buttons
+        ?>
       @endif
       </div>
     </div>
     <!--THE PROJECT CONTENT AREA-->
     <div class="col-sm-10 profileRight" data-spy="scroll" data-target="#qNav" data-offset="20">
-      <h1>{{$who}} Profile</h1>
-      <h4>{{$profileOwner->userType}}</h4>
-      <hr>
       <div id="projectContent">
+        @if($hasContent == true)
+        <br/>
+        <div id="tabs">
+          @if($projectOne->elementOne != NULL)<button id ="tab1" class="tablinks">{{$projectOne->oneName}}</button>@endif
+          @if($projectOne->elementTwo != NULL)<button id ="tab2" class="tablinks">{{$projectOne->twoName}}</button>@endif
+          @if($projectOne->elementThree != NULL)<button id ="tab3" class="tablinks">{{$projectOne->threeName}}</button>@endif
+          @if($projectOne->elementFour != NULL)<button id ="tab4" class="tablinks">{{$projectOne->fourName}}</button>@endif
+          @if($projectOne->elementFive != NULL)<button id ="tab5" class="tablinks">{{$projectOne->fiveName}}</button>@endif
+        </div>
+        <hr/>
+        @endif
         <center>
           <?php
             if($hasContent == true)
             {
-              echo "<h1>".$projectOne->name."</h1><br/>";
-              echo "<h5>".$projectOne->category."</h5>";
-              echo "<h6>".$projectOne->subCategory."</h6><hr>";
               if($projectOne->oneType != "upload")
-                echo "<div id='elementOne'><h3>".$projectOne->oneName."</h3><br/>".$projectOne->elementOne."<br/><br/>";
+                echo "<div id='elementOne'>
+                        <h3>".$projectOne->oneName."</h3>
+                        <br/>
+                        ".$projectOne->elementOne."
+                      </div>";
               else
-                echo '<div id="elementOne"><h3>'.$projectOne->oneName.'</h3><br/><img src="/uploads/user/'.$profileOwner->name.'/images'.'/'.$projectOne->elementOne.'" width="600px" height="600px" alt="Profile Picture"><br/><br/>';
-
+                echo "<div id='elementOne'>
+                        <h3>".$projectOne->oneName."</h3>
+                        <br/>
+                        <img  class='modalPic' src='/uploads/user/".$profileOwner->name."/images"."/".$projectOne->elementOne."' width='600px' height='600px' alt='Profile Picture' data-toggle='modal' data-target='#elemOneModal'>
+                      </div>
+                      <div id='elemOneModal' class='modal fade' role='dialog'>
+                        <div class='modal-dialog modal-lg bigModal'>
+                          <div class='modal-content'>
+                            <div class='modal-header'>
+                              <button type='button' class='close' data-dismiss='modal'>&times;</button>
+                            </div>
+                            <div class='modal-body'>
+                              <img class='fullPic' src='/uploads/user/".$profileOwner->name."/images"."/".$projectOne->elementOne."' width='600px' height='600px' alt='Profile Picture'>
+                            </div>
+                            <div class='modal-footer'>
+                              <button type='button' class='btn btn-default' data-dismiss='modal'>Close</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>";
+                    //reformat the modal size to provide a full screen effect  
               if($projectOne->twoType != "upload")
-                echo "<div id='elementTwo'><h3>".$projectOne->twoName."</h3><br/>".$projectOne->elementTwo."<br/><br/>";
+                echo "<div id='elementTwo'><h3>".$projectOne->twoName."</h3><br/>".$projectOne->elementTwo."</div><br/><br/>";
               else
-                echo '<div id="elementTwo"><h3>'.$projectOne->twoName.'</h3><br/><img src="/uploads/user/'.$profileOwner->name.'/images'.'/'.$projectOne->elementTwo.'" width="600px" height="600px" alt="Profile Picture"><br/><br/>';
+                echo "<div id='elementTwo'><h3>".$projectOne->twoName."</h3><br/><img src='/uploads/user/".$profileOwner->name."/images"."/".$projectOne->elementTwo."' width='600px' height='600px' alt='Profile Picture'></div>";
 
               if($projectOne->threeType != "upload")
-                echo "<div id='elementThree'><h3>".$projectOne->threeName."</h3><br/>".$projectOne->elementThree."<br/><br/>";
+                echo "<div id='elementThree'><h3>".$projectOne->threeName."</h3><br/>".$projectOne->elementThree."</div>";
               else
-                echo '<div id="elementThree"><h3'.$projectOne->threeName.'</h3><br/><img src="/uploads/user/'.$profileOwner->name.'/images'.'/'.$projectOne->elementThree.'" width="600px" height="600px" alt="Profile Picture"><br/><br/>';
+                echo "<div id='elementThree'><h3>".$projectOne->threeName."</h3><br/><img src='/uploads/user/".$profileOwner->name."/images"."/".$projectOne->elementThree."' width='600px' height='600px' alt='Profile Picture'></div>";
 
               if($projectOne->fourType != "upload")
-                echo "<div id='elementFour'><h3>".$projectOne->fourName."</h3><br/>".$projectOne->elementFour."<br/><br/>";
+                echo "<div id='elementFour'><h3>".$projectOne->fourName."</h3><br/>".$projectOne->elementFour."</div>";
               else
-                echo '<div id="elementFour"><h3>'.$projectOne->fourName.'</h3><br/><img src="/uploads/user/'.$profileOwner->name.'/images'.'/'.$projectOne->elementFour.'" width="600px" height="600px" alt="Profile Picture"><br/><br/>';
+                echo "<div id='elementFour'><h3>".$projectOne->fourName."</h3><br/><img src='/uploads/user/".$profileOwner->name."/images"."/".$projectOne->elementFour."' width='600px' height='600px' alt='Profile Picture'></div>";
 
               if($projectOne->fiveType != "upload")
-                echo "<div id='elementFive'><h3>".$projectOne->fiveName."</h3><br/>".$projectOne->elementFive."<br/><br/>";
+                echo "<div id='elementFive'><h3>".$projectOne->fiveName."</h3><br/>".$projectOne->elementFive."</div>";
               else
-                echo '<div id="elementFive"><h3>'.$projectOne->fiveName.'</h3><br/><img src="/uploads/user/'.$profileOwner->name.'/images'.'/'.$projectOne->elementFive.'" width="600px" height="600px" alt="Profile Picture"><br/><br/>';
+                echo "<div id='elementFive'><h3>".$projectOne->fiveName."</h3><br/><img src='/uploads/user/".$profileOwner->name."/images"."/".$projectOne->elementFive."' width='600px' height='600px' alt='Profile Picture'></div>";
             }
             else if($hasContent == false)
             {
@@ -317,7 +360,7 @@
       var $tog = $('#'+type);
       var user = "<?php echo $profileOwner->name?>";
       var log = "<?php echo Auth::user()->name?>";
-      console.log(type + " " + user + " " + log);
+      //console.log(type + " " + user + " " + log);
       $tog.html("please wait...");
 
       if(type == "friend" || type == "unfriend")
@@ -329,7 +372,7 @@
           data: {type: type, user: user, log: log, _token: token}
         }).done(function (msg)
         {
-          console.log(msg['message']);
+          //console.log(msg['message']);
           if(msg['message'] == "friend_request_sent")
           {
             $tog.html('OK Friend Request Sent');
@@ -355,7 +398,7 @@
           data: {type: type, user: user, log: log, _token: token}
         }).done(function (msg)
         {
-          console.log(msg['message']);
+          //console.log(msg['message']);
           if(msg['message'] == "blocked_ok")
           {
             $tog.html('Blocked');//$tog.html('<button id="unblock">Unblock User</button>');
@@ -372,7 +415,6 @@
         });
       }
     }
-
     $(document).ready(function()
     {
       var $friend = $('#friend');
@@ -382,7 +424,8 @@
       var $edit = $('#editAvatar');
 
       $edit.hide();
-
+      $('#elementOne, #elementTwo, #elementThree, #elementFour, #elementFive').hide();
+      $('#elementOne').show();
       $friend.on('click', function(){toggle('friend');});
       $unfriend.on('click',function(){toggle('unfriend');});
       $block.on('click',function(){toggle('block');});
@@ -398,7 +441,6 @@
         else
           $('#OneName').hide();
       });
-
       $('#TwoNameTog').on('click', function()
       {
         if($('#TwoName').css('display')=="none")
@@ -413,7 +455,6 @@
         else
           $('#ThreeName').hide();
       });
-
       $('#FourNameTog').on('click', function()
       {
         if($('#FourName').css('display')=="none")
@@ -421,7 +462,6 @@
         else
           $('#FourName').hide();
       });
-
       $('#FiveNameTog').on('click', function()
       {
         if($('#FiveName').css('display')=="none")
@@ -429,8 +469,29 @@
         else
           $('#FiveName').hide();
       });
+      $('#tab1, #tab2, #tab3, #tab4, #tab5').on('click', function()
+      {
+        $('#elementOne, #elementTwo, #elementThree, #elementFour, #elementFive').hide();
+        switch (this.id)
+        {
+          case 'tab1':
+            $('#elementOne').show();
+          break;
+          case 'tab2':
+            $('#elementTwo').show();
+          break;
+          case 'tab3':
+            $('#elementThree').show();
+          break;
+          case 'tab4':
+            $('#elementFour').show();
+          break;
+          case 'tab5':
+            $('#elementFive').show();
+          break;
+        }
+      });
     });
-
     //THE FOLLOWING FUNCTIONS ARE FOR THE PROJECT MANAGEMENT FORM
     function showSub()
     {
@@ -447,7 +508,6 @@
           sub.style.display = "none";
       }
     }
-
     function showType(select)
     {
       //console.log('Select = ' + select);
@@ -485,6 +545,5 @@
         break;
       }
     }
-
   </script>
 @endsection

@@ -37,7 +37,7 @@ div.user_info {
 .profileLeft {
   border-radius: 5px;
   box-shadow: 1px 1px 5px #888888;
-  height: 390px; }
+  height: 625px; }
   .profileLeft #profile_pic_box {
     width: 156px;
     height: 160px; }
@@ -88,13 +88,39 @@ div.user_info {
       .profileLeft #quickNav .navButton:hover {
         text-decoration: underline;
         background-color: #402240; }
+  .profileLeft #titles {
+    text-align: left; }
 
 .profileRight {
   border-radius: 5px;
   box-shadow: 1px 1px 5px #888888;
   position: relative; }
-  .profileRight #projectContent img {
-    border-radius: 5px; }
+  .profileRight #projectContent .modalPic {
+    border-radius: 5px;
+    cursor: pointer; }
+  .profileRight #projectContent .modal-dialog {
+    width: 1000px; }
+  .profileRight #tabs {
+    text-align: center;
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1; }
+    .profileRight #tabs .tablinks {
+      background-color: inherit;
+      float: left;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      padding: 14px 16px;
+      transition: 0.3s; }
+      .profileRight #tabs .tablinks:hover {
+        background-color: #ddd; }
+      .profileRight #tabs .tablinks:focus {
+        background-color: #ccc; }
+    .profileRight #tabs .elementContent {
+      padding: 6px 12px;
+      border: 1px solid #ccc;
+      border-top: none; }
 
 .frndConvoList, .convoList, .convoContent {
   box-shadow: 5px 5px 5px #888888;
