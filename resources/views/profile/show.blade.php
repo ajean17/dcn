@@ -145,7 +145,7 @@
       </div>
     </div>
     <!--THE PROJECT CONTENT AREA-->
-    <div class="col-sm-10 profileRight" data-spy="scroll" data-target="#qNav" data-offset="20">
+    <div class="col-sm-10 profileRight" data-offset="20">
       <div id="projectContent">
         @if($hasContent == true)
         <br/>
@@ -189,7 +189,7 @@
                           </div>
                         </div>
                       </div>";
-                    //reformat the modal size to provide a full screen effect  
+                    //reformat the modal size to provide a full screen effect
               if($projectOne->twoType != "upload")
                 echo "<div id='elementTwo'><h3>".$projectOne->twoName."</h3><br/>".$projectOne->elementTwo."</div><br/><br/>";
               else

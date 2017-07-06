@@ -8,19 +8,28 @@
   <!--div class="col-sm-8"-->
   <legend class="m-b-1 text-xs-center">Registration</legend>
 
-  <form method="GET" id="signupform" onsubmit="return false;"><!--action="/register"-->
+  <form method="POST" id="signupform" action="/register"><!--onsubmit="return false;"-->
     {{csrf_field()}}
 
     <div class="form-group">
     <label for="name">User Name:</label>
     <input type="text" class="form-control" id="username" name="name" maxlength="16">
-    <!--onblur="checkusername()" onkeyup="restrict('username')"-->
     <span id="unamestatus"></span>
     </div>
 
     <div class="form-group">
     <label for="email">Email:</label>
     <input type="email" class="form-control" id="email" name="email" maxlength="88">
+    </div>
+
+    <div class="form-group">
+    <label for="first">First Name:</label>
+    <input type="text" class="form-control" id="first" name="first" maxlength="16">
+    </div>
+
+    <div class="form-group">
+    <label for="last">Last Name:</label>
+    <input type="text" class="form-control" id="last" name="last" maxlength="16">
     </div>
 
     <div class="form-group">
@@ -31,6 +40,63 @@
     <div class="form-group">
     <label for="password_confirmation">Confirm Password:</label>
     <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" maxlength="100">
+    </div>
+
+    <div class="form-group">
+      <label for="location">Your Location:</label>
+      <select name="location" id="location">
+      	<option value="AL">Alabama</option>
+      	<option value="AK">Alaska</option>
+      	<option value="AZ">Arizona</option>
+      	<option value="AR">Arkansas</option>
+      	<option value="CA">California</option>
+      	<option value="CO">Colorado</option>
+      	<option value="CT">Connecticut</option>
+      	<option value="DE">Delaware</option>
+      	<option value="DC">District Of Columbia</option>
+      	<option value="FL">Florida</option>
+      	<option value="GA">Georgia</option>
+      	<option value="HI">Hawaii</option>
+      	<option value="ID">Idaho</option>
+      	<option value="IL">Illinois</option>
+      	<option value="IN">Indiana</option>
+      	<option value="IA">Iowa</option>
+      	<option value="KS">Kansas</option>
+      	<option value="KY">Kentucky</option>
+      	<option value="LA">Louisiana</option>
+      	<option value="ME">Maine</option>
+      	<option value="MD">Maryland</option>
+      	<option value="MA">Massachusetts</option>
+      	<option value="MI">Michigan</option>
+      	<option value="MN">Minnesota</option>
+      	<option value="MS">Mississippi</option>
+      	<option value="MO">Missouri</option>
+      	<option value="MT">Montana</option>
+      	<option value="NE">Nebraska</option>
+      	<option value="NV">Nevada</option>
+      	<option value="NH">New Hampshire</option>
+      	<option value="NJ">New Jersey</option>
+      	<option value="NM">New Mexico</option>
+      	<option value="NY">New York</option>
+      	<option value="NC">North Carolina</option>
+      	<option value="ND">North Dakota</option>
+      	<option value="OH">Ohio</option>
+      	<option value="OK">Oklahoma</option>
+      	<option value="OR">Oregon</option>
+      	<option value="PA">Pennsylvania</option>
+      	<option value="RI">Rhode Island</option>
+      	<option value="SC">South Carolina</option>
+      	<option value="SD">South Dakota</option>
+      	<option value="TN">Tennessee</option>
+      	<option value="TX">Texas</option>
+      	<option value="UT">Utah</option>
+      	<option value="VT">Vermont</option>
+      	<option value="VA">Virginia</option>
+      	<option value="WA">Washington</option>
+      	<option value="WV">West Virginia</option>
+      	<option value="WI">Wisconsin</option>
+      	<option value="WY">Wyoming</option>
+      </select>
     </div>
 
     <div class="form-group">
@@ -58,7 +124,7 @@
 @section('javascript')
   <script>
     var token = '{{Session::token()}}';
-    var url = '{{route('register')}}';
+    var url = '{{route('check')}}';
     $(document).ready(function()
     {
       var $user = $('#username');
@@ -66,14 +132,13 @@
       var $pass = $('#password');
       var $passConf = $('#password_confirmation');
       var $status = $('#status');
+      var $first = $('#first');
+      var $last = $('#last');
+      var $location = $('#location');
 
-      $user.on('click', function(){$status.html("");});
-      $email.on('click', function(){$status.html("");});
-      $pass.on('click', function(){$status.html("");});
-      $passConf.on('click', function(){$status.html("");});
+      $('#username, #email, #password, #password_confirmation, #first, #last, #location').on('click', function(){$status.html("");});
       $('#termsLink').on('click', function()
       {
-        //console.log("show terms");
         $('#terms').css('display','block');
         $status.html("");
       })
@@ -83,7 +148,6 @@
         if($user.val() != "")
         {
           $('#unamestatus').html('checking...');
-          //console.log($user.val());
           $.ajax(
           {
             method: 'POST',
@@ -91,59 +155,54 @@
             data: {username: $user.val(), _token: token}
           }).done(function (msg)
           {
-            //console.log(msg['message']);
             $('#unamestatus').html(msg['message']);
           });
         }
       });
 
-      $('#signupbtn').on('click', function()
+      /*$('#signupbtn').on('click', function()
       {
-        //console.log("sign up");
         var u = $user.val();
         var e = $email.val();
         var p1 = $pass.val();
         var p2 = $passConf.val();
-
-        if(u == "" || e == "" || p1 == "" || p2 == "")//if any of the above elements are empty
-        {
+        var f = $first.val();
+        var l = $last.val();
+        var loc = $location.val();
+        //if any of the above elements are empty
+        if(u == "" || e == "" || p1 == "" || p2 == "" || f == "" || l == "" || loc == "")
           $status.html('Fill out all of the form data');
-        }
         else if(p1 != p2)//if the passwords do not match
-        {
           $status.html('Your password fields do not match');
-        }
-        else if( $('#terms').css('display') == "none")//if the terms have not been views yet, display is still none
-        {
+        else if( $('#terms').css('display') == "none")//if the terms have not been viewed yet, display is still none
           $status.html('Please view the terms of use');
-        }
         else
         {
           $('#signupbtn').css('display','none');
           $status.html("please wait...");
 
           $.ajax(
+          {
+            method: 'POST',
+            url: url,
+            data: {user: u, email: e, password: p1, first: f, last: l, location: loc, _token: token}
+          }).done(function (msg)
+          {
+            //console.log(msg['message']);
+            if(msg['message'] != "signup_success")
             {
-              method: 'POST',
-              url: url,
-              data: {user: u,email: e, password: p1, _token: token}
-            }).done(function (msg)
+              $('#signupbtn').css('display','block');
+              $status.html(msg['message']);
+            }
+            else if(msg['message'] == "signup_success")
             {
-              //console.log(msg['message']);
-              if(msg['message'] != "signup_success")
-              {
-                $('#signupbtn').css('display','block');
-                $status.html(msg['message']);
-              }
-              else if(msg['message'] == "signup_success")
-              {
-                $('#signupform').html("OK "+u+", check your email inbox and junk mail box at <u>"+e+"</u> in a moment to complete the sign up process by activating your account. You will not be able to do anything on the site until you successfully activate your account.")
-                $('#terms').css('display','none');
-                $('#termsLink').css('display','none');
-              }
-            });
+              $('#signupform').html("OK "+u+", check your email inbox and junk mail box at <u>"+e+"</u> in a moment to complete the sign up process by activating your account. You will not be able to do anything on the site until you successfully activate your account.")
+              $('#terms').css('display','none');
+              $('#termsLink').css('display','none');
+            }
+          });
         }
-      });
+      });*/
     });
   </script>
 @endsection

@@ -6,24 +6,21 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateUsersTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
         Schema::create('users', function (Blueprint $table)
         {
             $table->increments('id');
-            $table->string('name')->unique();
+            $table->string('name')->unique();//Company name
             $table->string('email')->unique();
             $table->string('password');
+            $table->string('first');
+            $table->string('last');
+            $table->string('city')->nullable();
+            $table->string('state');
             $table->string('avatar')->nullable();
-            $table->enum('userType', array('0', '1', '2'))->default('0');
+            $table->enum('role', array('none','Creator','Investor'))->default('none');
             $table->enum('activated', array('0', '1'))->default('0');
-            //$table->enum('firstTime',array('0','1'))->default('0');
-            //$table->string('ip');
             $table->dateTime('lastlogin')->nullable();
             $table->dateTime('notescheck')->nullable();
             $table->rememberToken();

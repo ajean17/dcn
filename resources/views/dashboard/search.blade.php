@@ -12,11 +12,11 @@
   //$categories = Category::whereNull('parent')->orderBy('name','asc')->get();
   $parent = "WHERE parent IS NULL";
   $categories = DB::select(DB::raw('SELECT * FROM categories '.$parent.' ORDER BY name ASC'));
-  $profiles = Profile::all();
+  $users = User::all();
 
 ?>
 @section('content')
-  <h1>Search Page</h1>
+  <!--h1>Search Page</h1-->
   <div class="row">
     <div id="searchCriteria" class="col-sm-3">
       <h4>Search Bar</h4>
@@ -61,19 +61,23 @@
       <div id="starMap">
         <h4>Animated Star Map</h4>
         <hr/>
-        <div id="map"><img src="/images/galaxy.jpg" width="245px" height="245px" alt="Profile Picture"></div>
+        <div id="map"><img src="/images/galaxy.jpg" width="245px" height="245px" alt="Map Picture"></div>
       </div>
       <div id="results">
         <hr/>
         <h4>Search Results</h4>
         <hr/>
         <ul id = "resultList">
-          <?php
-            foreach($profiles as $profile)
-            {
-              echo "<li>Click to view <a href='\\profile\\".$profile->username."'>".$profile->username."'s</a> Profile</li><br/>";
-            }
-          ?>
+          @foreach($users as $user)
+            <?php
+              $userPic = "";
+              if($user->avatar != NULL)
+                $userPic = '<img src="/uploads/user/'.$user->name.'/images'.'/'.$user->avatar.'" alt="'.$user->name.'" class="searchPic">';
+              else
+                $userPic = '<img src="/images/Default.jpg" alt="'.$user->name.'" class="searchPic">';
+            ?>
+            <li><?php echo $userPic;?><p><a href='\profile\{{$user->name}}'>{{$user->name}}</a> | {{$user->userType}} | {{$user->profile->project->name}}</p></li><br/>
+          @endforeach
         </ul>
       </div>
     </div>
@@ -98,7 +102,6 @@
     else
     $('#catChoose').html("Chosen: "+ category);
   }
-
   function searchNow()
   {
     var video = $('#video').prop('checked');//document.getElementById("video").checked;
@@ -142,8 +145,6 @@
         $('#resultList').html(output);
       });
   }
-
-
   function toggleList()
   {
     var acc = document.getElementsByClassName("accordion");
@@ -171,7 +172,13 @@
         }
     }
   }
-
+  $(document).ready(function()
+  {
+    $("#starMap").click(function()
+    {
+        $("#map").slideToggle("slow");
+    });
+  });
 //ajax rq
 /*
 given category c1, find the most similar category

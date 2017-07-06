@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Profile;
-use App\Project;
+use App\Summary;
 use App\User;
 use App\Friend;
 use App\Block;
@@ -25,23 +25,22 @@ class ProfileController extends Controller
     $option = $request['option'];//0 = No selection 1 = Invent  2 = Invest
 
     if($option == 1)
-    {
-      User::where('name','=',$request['username'])->update(Array('userType' => $option));
-    }
+      User::where('name','=',$request['username'])->update(Array('role' => 'Creator'));
     else if($option == 2)
-    {
-      User::where('name','=',$request['username'])->update(Array('userType' => $option));
-    }
+      User::where('name','=',$request['username'])->update(Array('role' => 'Investor'));
     else
-    {
       return back()->withErrors(['message' => 'Please select a profile path.']);
-    }
     return redirect('/profile'.'/'.$request['username']);
   }
 
   public function show(User $profileOwner)
   {
     return view('profile.show',compact('profileOwner'));//'friend_check','block_check','block_check2'));
+  }
+
+  public function profile(User $profileOwner)
+  {
+    return view('profile.profile',compact('profileOwner'));
   }
 
   public function friend(Request $request)
@@ -172,59 +171,27 @@ class ProfileController extends Controller
     return response()->json(['message' => $message]);
   }
 
-  public function block(Request $request)
+  public function summary(Request $request)
   {
-    $message = "Something went wrong";
+    $user = User::where('name','=',$request['user']);
+    $productName = $request['title'];
+    $market = $request['market'];
+    $submarket = $request['submarket'];
+    $age = $request['age'];
+    $region = $request['region'];
+    $markOther = $request['markother'];
+    $compete1 = $request['compete1'];
+    $compete2 = $request['compete2'];
+    $compete3 = $request['compete3'];
+    $risks = $request['risks'];
+    $exit = $request['exit'];
+    $roi = $request['roi'];
+    $liquid = $request['liquid'];
 
-    if($request->has('type') && $request->has('user'))
-    {
-      //The profile owner being blocked
-      $blockee = $request['user'];//preg_replace('#[^a-z0-9]#i', '', $_GET['user']);
-      $log_username = $request['log'];//The one logged in
-      //Check to see if the user to befriend or block exists
-      $exists= User::where('name','=',$blockee)->first();/*->where('activated','=','1')*->get();*/
+    dd($markOther);
 
-      if($exists == "")
-        $message = $blockee." does not exist";
-
-      if($request['type'] == "block")
-      {
-        $block_check = Block::where('blocker','=',$log_username) //check if block exists between users
-        ->where('blockee','=', $blockee)
-        ->orWhere('blocker','=', $blockee)
-        ->where('blockee','=',$log_username)->get();
-
-        if($block_check != "[]") //if user is already blocked
-          $message = "You have already blocked this user.";
-
-        else
-        {
-          $block = Block::create([
-          'blocker' => $log_username,
-          'blockee' => $blockee
-        ]);
-          $message = "blocked_ok";
-        }
-      }
-      else if ($request['type'] == "unblock")//If the request is to unblock
-      {
-        //Checks to see if they owner has been blocked yet
-        $block_check = Block::where('blocker','=', $log_username)->where('blockee','=', $blockee)->get();
-        if($block_check == "[]")//If they have not been, they can't unblock
-          $message = "User is not blocked, unable to unblock them.";
-
-        else
-        {
-          //same query as block_check2, individual variable
-          $block_check3 = Block::where('blocker','=', $log_username)->where('blockee','=', $blockee)->delete();
-          $message = "unblocked_ok";
-        }
-      }
-    }
-
-    return response()->json(['message' => $message]);
+    return redirect()->to('/profile'.'/'.$user->name);
   }
-
   public function project(Request $request)
   {
     $name = "";
@@ -446,6 +413,6 @@ class ProfileController extends Controller
     else
       Profile::where('username','=',$user)->update(Array('hasVideo' => '1'));
     $message = "Your profile has been updated";
-    return redirect()->to('/profile'.'/'.$user);;
+    return redirect()->to('/profile'.'/'.$user);
   }
 }

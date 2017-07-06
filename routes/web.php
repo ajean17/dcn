@@ -22,7 +22,8 @@ Route::post('/gettingStarted', 'ProfileController@setup');
 //Auth::routes();//everything related to login/regisration/passreset/logout
 Route::get('/register','RegistrationController@create');
 Route::get('/activation','RegistrationController@activation');
-Route::post('/register', 'RegistrationController@register')->name('register');
+Route::post('/regcheck','RegistrationController@regcheck')->name('check');
+Route::post('/register','RegistrationController@store');
 
 Route::get('/login','SessionsController@create');
 Route::post('/login','SessionsController@store');
@@ -37,10 +38,11 @@ Route::get('/inbox/{inboxOwner}','DashboardController@inbox');
 Route::get('/stargazer', 'DashboardController@search');
 
 //PROFILE ROUTES
-Route::get('/profile/{profileOwner}', 'ProfileController@show');
+Route::get('/profile/{profileOwner}', 'ProfileController@profile');
 Route::post('/friendSystem','ProfileController@friend')->name('friend');
 Route::post('/blockSystem','ProfileController@block')->name('block');
 Route::post('/projectSystem','ProfileController@project');
+Route::post('/summarySystem','ProfileController@summary');
 
 //PHP PARSE ROUTES
 Route::post('/searchSystem','ParseController@search')->name('search');

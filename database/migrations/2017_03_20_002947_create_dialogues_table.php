@@ -16,8 +16,8 @@ class CreateDialoguesTable extends Migration
         Schema::create('dialogues', function (Blueprint $table)
         {
             $table->increments('id');
-            $table->string('user1');
-            $table->string('user2');
+            $table->integer('user1');
+            $table->integer('user2');
             $table->dateTime('lastMessage');
             $table->timestamps();
         });

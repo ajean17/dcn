@@ -16,14 +16,14 @@ class CreateProfileTable extends Migration
       Schema::create('profiles', function (Blueprint $table)
       {
           $table->increments('id');
-          $table->string('username')->unique();
+          $table->integer('user_id')->unique();
           $table->enum('hasVideo',array('0','1'))->default('0');
           $table->enum('hasMentor',array('0','1'))->default('0');
           $table->enum('hasInvestments',array('0','1'))->default('0');
           $table->enum('hasROI',array('0','1'))->default('0');
-          $table->integer('projectOneID')->nullable()->unique();
-          $table->integer('projectTwo')->nullable()->unique();
-          //$table->enum('type', array('inventor', 'investor', 'naive'))->default('naive');
+          $table->integer('summary_id')->nullable()->unique();
+          $table->integer('proof_Concept_id')->nullable()->unique();
+          $table->integer('backer_list_id')->nullable()->unique();
           $table->timestamps();
       });
     }

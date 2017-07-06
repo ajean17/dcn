@@ -19,39 +19,42 @@ class RegistrationController extends Controller
         return view('registration.register');
     }
 
-    public function activation(Request $request)
+    public function store()
     {
-      $message = "";
-      if($request->has('u') && $request->has('e') && $request->has('p'))
-      {
-        //Connect to database and sanitize incoming $_GET variables
-        $u = $request['u'];//preg_replace('#[^a-z0-9]#i', '', $_GET['u']);
-        $e = $request['e'];
-        $p = $request['p'];
-        //Evaluate the lengths of the incoming $_GET variables
-        if(strlen($u) < 3 || strlen($e) < 5 || strlen($p) == "")
-          //Log this issue into a text file and email details to yourself
-          $message = "activation_string_length_issues";
+      //dd(request('first'));
+      //validates the registration form input
+      $this->validate(request(),[
+        'name' => 'required',
+        'email' => 'required|email',
+        'password' => 'required|confirmed',
+        'first' => 'required',
+        'last' => 'required',
+        'location' => 'required'
+      ]);
+      //creates a user based on the requested information
+      $user = User::create([
+        'name' => request('name'),
+        'email' => request('email'),
+        'password' => bcrypt(request('password')),//passwords must be encrypted for the attempt method to work!
+        'last' => request('last'),
+        'first' => request('first'),
+        'state' => request('location'),
+        'activated' => '1'
+      ]);
 
-        //Check their credentials against the database
-        $numrows = User::where('name','=',$u)->where('email','=',$e)->where('password','=',$p)->where('activated','=','0')->first();
-
-        // Evaluate for a match in the system (0 = no match, 1 = match)
-        if($numrows == "")
-          //Log this potential hack attempt to text file and email details to yourself
-          $message = "Either your credentials are not matching anything in our system, or you have already been activated.";
-
-        else // Match was found, you can activate them
-          User::where('name','=',$u)->update(Array('activated'=> '1'));
-      }
-      else
-        // Log this issue of missing initial $_GET variables
-        $message = "missing_GET_variables";
-
-      return view('message', compact('message'));
+      //log in user upon creation
+      auth()->login($user);
+      //create a profile and attach it to the user
+      $profile = Profile::create(['user_id' => auth()->id()]);
+      //send a welcome email to the user
+      //\Mail::to($user)->send(new WelcomeTwo($user));
+      //create a welcome message upon the first LogicException
+      session()->flash('message','Welcome to the Dream Catcher Network!');//flashes only exist for a single request, never more
+      //send the user to the home page
+      return redirect('/gettingStarted');
     }
 
-    public function register(Request $request)
+    public function regcheck(Request $request)
     {
       if($request->has('username'))
       {
@@ -88,6 +91,9 @@ class RegistrationController extends Controller
         $u = $request['user'];
         $e = $request['email'];
         $p = $request['password'];
+        $f = $request['first'];
+        $l = $request['last'];
+        $loc = $request['location'];
 
         // DUPLICATE DATA CHECKS FOR USERNAME AND EMAIL
         $u_check = User::where('name','=',$u)->first();
@@ -95,11 +101,11 @@ class RegistrationController extends Controller
 
         // FORM DATA ERROR HANDLING
         if($u == "" || $e == "" || $p == "")
-          $message = "The form submission is missing values.";
+          $message = "Please fill out all fields.";
         else if ($u_check != "")
           $message = "The username you entered is already taken";
         else if ($e_check != "")
-          $message = "That email address is already in use in the system";
+          $message = "That email address is already in use in our system";
         else if (strlen($u) < 3 || strlen($u) > 16)
           $message = "Username must be between 3 and 16 characters";
         else if (is_numeric($u[0]))
@@ -111,13 +117,15 @@ class RegistrationController extends Controller
             'name' => $u,
             'email' => $e,
             'password' => bcrypt($p),
-            'activated' => '1'
+            'activated' => '1',
+            'firstName' => $f,
+            'lastName' => $l,
+            'state' => $loc
           ]);
 
           $profile = Profile::create([
-            'username' => $u
+            'user_id' => $user->id
           ]);
-
           // Create directory(folder) to hold each user's files(pics, MP3s, etc.)
           /*if (!file_exists("user/$u"))
           {
@@ -132,37 +140,42 @@ class RegistrationController extends Controller
           // Email the user their activation link || YOU NEED TO ESTABLISH WHO IT IS FROM HELLO@EXAMPLE IS UNACCEPTABLE
           //\Mail::to($user)->send(new Welcome($user));
           //Be sure to set the env mail driver appropriately and restart the serve for it to take effect
+
           $message = "signup_success";
         }
         return response()->json(['message' => $message]);
       }
     }
 
-    public function store()
+    public function activation(Request $request)
     {
-      //validates the registration form input
-      $this->validate(request(),[
-        'name' => 'required',
-        'email' => 'required|email',
-        'password' => 'required|confirmed'
-      ]);
-      //creates a user based on the requested information
-      $user = User::create([
-        'name' => request('name'),
-        'email' => request('email'),
-        'password' => bcrypt(request('password')),//passwords must be encrypted for the attempt method to work!
-        'notescheck' => time()
-      ]);
+      $message = "";
+      if($request->has('u') && $request->has('e') && $request->has('p'))
+      {
+        //Connect to database and sanitize incoming $_GET variables
+        $u = $request['u'];//preg_replace('#[^a-z0-9]#i', '', $_GET['u']);
+        $e = $request['e'];
+        $p = $request['p'];
+        //Evaluate the lengths of the incoming $_GET variables
+        if(strlen($u) < 3 || strlen($e) < 5 || strlen($p) == "")
+          //Log this issue into a text file and email details to yourself
+          $message = "activation_string_length_issues";
 
-      //log in user upon creation
-      auth()->login($user);
-      //create a profile and attach it to the user
-      $profile = Profile::create(['user_id' => auth()->id()]);
-      //send a welcome email to the user
-      \Mail::to($user)->send(new WelcomeTwo($user));
-      //create a welcome message upon the first LogicException
-      session()->flash('message','Welcome to the Dream Catcher Network!');//flashes only exist for a single request, never more
-      //send the user to the home page
-      return redirect('/');
+        //Check their credentials against the database
+        $numrows = User::where('name','=',$u)->where('email','=',$e)->where('password','=',$p)->where('activated','=','0')->first();
+
+        // Evaluate for a match in the system (0 = no match, 1 = match)
+        if($numrows == "")
+          //Log this potential hack attempt to text file and email details to yourself
+          $message = "Either your credentials are not matching anything in our system, or you have already been activated.";
+
+        else // Match was found, you can activate them
+          User::where('name','=',$u)->update(Array('activated'=> '1'));
+      }
+      else
+        // Log this issue of missing initial $_GET variables
+        $message = "missing_GET_variables";
+
+      return view('message', compact('message'));
     }
 }

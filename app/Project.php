@@ -11,4 +11,9 @@ class Project extends Model
       'oneType','twoType','threeType','fourType','fiveType','category','subCategory',
       'oneName','twoName','threeName','fourName','fiveName',
   ];
+
+  public function profile()
+  {
+    return $this->belongsTo(Profile::class);
+  }
 }

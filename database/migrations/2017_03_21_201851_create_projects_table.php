@@ -16,7 +16,7 @@ class CreateProjectsTable extends Migration
         Schema::create('projects', function (Blueprint $table)
         {
             $table->increments('id');
-            $table->integer('profileId');
+            $table->integer('profile_id');
             $table->string('name')->default('Show Me Off');
             $table->string('category')->default('Other');
             $table->string('subCategory')->nullable();
