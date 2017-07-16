@@ -1,7 +1,9 @@
 @extends('layouts.master')
 <?php
-  if(Auth::user()->role != 'none')
-    return redirect('/profile'.'/'.Auth::user()->name);
+  if(Auth::user()->role != 'none')//If the user has not selected a role yet (Creator/Investor)
+  {
+    return redirect('/profile'.'/'.Auth::user()->name)->send();
+  }
   else
     echo Auth::user()->role;
 ?>

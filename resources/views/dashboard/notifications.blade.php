@@ -10,8 +10,8 @@
   use App\Notification;
 
   $notification_list = "";
-  $log_username = Auth::user()->name;
-  $notes = Notification::where('username','=',$User->name)->orderBy('created_at','desc')->get();
+  $log_userid = Auth::user()->id;
+  $notes = Notification::where('user_id','=',$User->id)->orderBy('created_at','desc')->get();
   $picURL = "";
   //echo $notes;
   if($notes == "[]")
@@ -42,12 +42,12 @@
     }
   }
   //Update the user's notescheck property, to signal that the notifications have been checked
-  User::where('name','=',$log_username)->update(array('notescheck'=> Carbon\Carbon::now()));
+  User::where('name','=',$log_userid)->update(array('notescheck'=> Carbon\Carbon::now()));
   ?>
   <?php
   /*FRIEND REQUESTS**/
   $friend_requests = "";
-  $requests = Friend::where('user2','=',$User->name)->where('accepted','=','0')->orderBy('created_at','asc')->get();
+  $requests = Friend::where('user2','=',$User->id)->where('accepted','=','0')->orderBy('created_at','asc')->get();
   if($requests == "[]")
   {
   	$friend_requests = 'No friend requests';
@@ -57,22 +57,22 @@
     foreach ($requests as $request)
     {
       $reqID = $request->id;
-  		$user1 = $request->user1;
+  		$user_1 = $request->user1;
   		$datemade = $request->created_at;
   		$datemade = strftime("%B %d", strtotime($datemade));
-  		$user1avatar = User::where('name','=',$user1)->first();//First gives you an object instead of an array
-      $user1avatar = $user1avatar ->avatar;
-      $user1pic = '<img src="/uploads/user/'.$user1.'/images'.'/'.$user1avatar.'" alt="'.$user1.'" class="user_pic">';
+  		$user1 = User::where('id','=',$user_1)->first();//First gives you an object instead of an array
+      $user1avatar = $user1->avatar;
+      $user1pic = '<img src="/uploads/user/'.$user1->id.'/images'.'/'.$user1avatar.'" alt="'.$user1->name.'" class="user_pic">';
   		if($user1avatar == NULL)
       {
         $picURL = "/images/Default.jpg";
-  			$user1pic = '<img src="'.$picURL.'" alt="'.$user1.'" class="user_pic">';
+  			$user1pic = '<img src="'.$picURL.'" alt="'.$user1->name.'" class="user_pic">';
   		}
   		$friend_requests .= '<div id="friendreq_'.$reqID.'" class="friendrequests">';
-  		$friend_requests .= '<a href="/profile/'.$user1.'">'.$user1pic.'</a>';
-  		$friend_requests .= '<div class="user_info" id="user_info_'.$reqID.'">'.$datemade.' <a href="/profile/'.$user1.'">'.$user1.'</a> requests friendship<br /><br />';
-  		$friend_requests .= '<button onclick="friendReqHandler(\'accept\',\''.$reqID.'\',\''.$user1.'\',\'user_info_'.$reqID.'\')">accept</button> or ';
-  		$friend_requests .= '<button onclick="friendReqHandler(\'reject\',\''.$reqID.'\',\''.$user1.'\',\'user_info_'.$reqID.'\')">reject</button>';
+  		$friend_requests .= '<a href="/profile/'.$user1->id.'">'.$user1pic.'</a>';
+  		$friend_requests .= '<div class="user_info" id="user_info_'.$reqID.'">'.$datemade.' <a href="/profile/'.$user1->id.'">'.$user1->id.'</a> requests friendship<br /><br />';
+  		$friend_requests .= '<button onclick="friendReqHandler(\'accept\',\''.$reqID.'\',\''.$user1->id.'\',\'user_info_'.$reqID.'\')">accept</button> or ';
+  		$friend_requests .= '<button onclick="friendReqHandler(\'reject\',\''.$reqID.'\',\''.$user1->id.'\',\'user_info_'.$reqID.'\')">reject</button>';
   		$friend_requests .= '</div>';
   		$friend_requests .= '</div>';
     }
@@ -94,7 +94,7 @@
   {
     //document.getElementById(elem).innerHTML = "processing ...";
     var $elem = $('#'+elem);
-    var log = "<?php echo Auth::user()->name?>";
+    var log = "<?php echo Auth::user()->id;?>";
 
     $elem.html("processing...");
     //console.log("Action "+action+" ReqID "+reqid+" User1 "+user1+" elem "+elem);
@@ -105,19 +105,16 @@
       data: {action: action, reqid: reqid, user1: user1, log: log, _token: token}
     }).done(function (msg)
     {
-      console.log(msg['message']);
+      //console.log(msg['message']);
       if(msg['message'] == "accepted")
-      {
         $elem.html("<b>Request Accepted!</b><br />Your are now friends");//$tog.html('<button id="unblock">Unblock User</button>');
-      }
+
       else if(msg['message'] == "rejected")
-      {
         $elem.html("<b>Request Rejected</b><br />You chose to reject friendship with this user");//$tog.html('<button id="block">Block User</button>');
-      }
+
       else
-      {
         $elem.html(msg['message'])
-      }
+
     });
 
     /*var ajax = ajaxObj("GET", "/friendSystem?action="+action+"&reqid="+reqid+"&user1="+user1);//+"&logged="+loggedin);

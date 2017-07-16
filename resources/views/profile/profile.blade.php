@@ -5,6 +5,8 @@ use App\Profile;
 use App\Summary;
 use App\User;
 use App\Category;
+use App\Proof;
+use App\Backer;
 
 $loggedUser = Auth::user()->id;
 $isOwner = false;
@@ -12,13 +14,14 @@ $isFriend = false;
 $who = "";
 $friend_button = '<button disabled class="navButton">Request Connection</button>';
 
-//Make sure the profile owner has a profile created
+//Retrieve the Profile object attributed to this profile owner
 $profile = Profile::where('user_id','=',$profileOwner->id)->first();
-//if($profile == "")
-  //$profile = Profile::create(['user_id' => $profileOwner->id]);
-//Retrieve the projects of this profile owner
+//Retrieve the Executive Summary of this profile owner
 $summary = Summary::where('user_id','=',$profileOwner->id)->first();
-
+//Retrieve the Proof of Concept for this profile owner
+$proof = Proof::where('user_id','=',$profileOwner->id)->first();
+//Retrieve the List of Backers for this profile owner
+$backers = Backer::where('backing_id','=',$profileOwner->id)->get();
 //Pull up the list of the profile owner's friends
 $friends = Friend::where('user2','=',$profileOwner->id)->where('accepted','=','1')
 ->orWhere('user1','=',$profileOwner->id)->where('accepted','=','1')->get();
@@ -81,12 +84,13 @@ $categories = DB::select(DB::raw('SELECT * FROM categories '.$parent.' ORDER BY 
         ?>
       </div>
       <hr/>
-      <div id="titles">
+      <div id="titles"><!--The display of basic user information-->
         <center><strong><p>{{$profileOwner->name}}</p></strong></center>
         <p><strong>Role:</strong> {{$profileOwner->role}}</p>
+        <p><strong>Name:</strong> {{$profileOwner->first}} {{$profileOwner->last}}</p>
         @if($summary != "")
-        <p><strong>Company:</strong><br/>{{$profileOwner->name}}</p>
-        <p><strong>Industry:</strong><br/> {{$summary->category}} {{$summary->subCategory}}</p>
+        <p><strong>Business Name:</strong><br/>{{$summary->product_name}}</p>
+        <p><strong>Target Market:</strong><br/> {{$summary->market}} {{$summary->subMarket}}</p>
         @endif
       </div>
       <hr/>
@@ -96,7 +100,7 @@ $categories = DB::select(DB::raw('SELECT * FROM categories '.$parent.' ORDER BY 
           <button type="button" class="navButton" data-toggle="modal" data-target="#summaryModal">Edit Summary</button>
           <button type="button" class="navButton" data-toggle="modal" data-target="#settingsModal">Account Settings</button>
         @else
-          <?php echo $friend_button;//Mentor and mentee buttons ?>
+          <?php echo $friend_button;//Possible loaction for mentor and mentee buttons?>
         @endif
       </div>
     </div>
@@ -108,17 +112,97 @@ $categories = DB::select(DB::raw('SELECT * FROM categories '.$parent.' ORDER BY 
           <button id ="tab2" class="tablinks">Proof of Concept</button>
           <button id ="tab3" class="tablinks">List of Backers</button>
         </div>
-        <center>
-          <div id="summary">
+        <center><!--The following divs contain the user business model information-->
+          <div id="exSummary">
             <br/>
             @if($summary == "")
               <h5>{{$profileOwner->name}} has yet to post their executive summary.</h5>
             @else
+              <h2>Executive Summary</h2>
+              <hr>
+              <h5>-Market Information-</h5>
+              <div class="summaryShow"><p><strong>Business Name:</strong> {{$summary->product_name}}</p></div>
+              <div class="summaryShow"><p><strong>Target Market:</strong> {{$summary->market}}</p></div>
+              <div class="summaryShow"><p><strong>Target Age Range:</strong> {{$summary->age_range}}</p></div>
+              <div class="summaryShow"><p><strong>Target Region:</strong> {{$summary->region}}</p></div>
+              <div class="summaryShow"><p><strong>Other:</strong> {{$summary->market_other}}</p></div>
+              <hr>
+              <h5>-Market Activity Information-</h5>
+              <div class="summaryShow"><p><strong>Top Competitor:</strong> {{$summary->competitor1}}</p></div>
+              <div class="summaryShow"><p><strong>Other Competitor:</strong> {{$summary->competitor2}}</p></div>
+              <div class="summaryShow"><p><strong>Other Competitor:</strong> {{$summary->competitor3}}</p></div>
+              <hr>
+              <h5>-Risks & Exit Strategy Information-</h5>
+              <div class="summaryShow"><p><strong>Risk Analysis:</strong> {{$summary->risks}}</p></div>
+              <div class="summaryShow"><p><strong>Exit Strategy:</strong> {{$summary->exit_strategy}}</p></div>
+              <div class="summaryShow"><p><strong>Return on Investment:</strong> {{$summary->ROI}}</p></div>
+              <div class="summaryShow"><p><strong>Business Model Liquidity:</strong> {{$summary->liquidity}}</p></div>
             @endif
           </div>
-          <div id="proof of concept">
+          <div id="proofConcept">
+            <br/>
+            <h3>Proof of Concept
+              @if($isOwner == true)
+              <a href="#" data-toggle="popover" data-trigger="hover"
+              data-content="Use this section to display a Proof of Concept for your business model.
+              Be it an elevator pitch or a full on presentation, utilize this embedding section to paste
+              in a video representation of your business model.">(?)</a>
+              @endif
+            </h3>
+            <hr>
+            @if($proof == "")
+              <h5>{{$profileOwner->name}} has yet to add a form of Proof of Concept...</h5>
+            @else
+              <div class="proof"><?php echo $proof->embed;?></div>
+            @endif
+            @if($isOwner==true)
+              <div>
+                <form id="proofForm" enctype="multipart/form-data" method="post" action="/proofSystem">
+                  {{csrf_field()}}
+                  <input type="hidden" name="user" value="{{Auth::user()->name}}">
+                  <div class="form-group">
+                    <input type="text" id="newProof" name="newProof" size="60" placeholder="Click here to add an embed link">
+                  </div>
+                  <div class="form-group">
+                    <button type="submit" id="contentButton"  class="btn btn-default">
+                      Update
+                    </button>
+                  </div>
+                </form>
+              </div>
+            @endif
           </div>
           <div id="backers">
+            <br/>
+            <h3>List of Backers</h3><hr>
+            @if($isOwner==true)
+              <form onsubmit="return false;">
+                <div class="form-group">
+                  <input type="text" id="enterBacker" size="60" placeholder="Click here to add a backer to your list"><br/>
+                </div>
+                <div class="form-group">
+                  <button type="submit" id="addBacker" class="btn btn-default">Add Backer</button>
+                </div>
+              </form>
+              <span id="backStatus"></span>
+              <hr/>
+            @endif
+            @if($backers == "[]")
+              <h5>{{$profileOwner->name}} has yet to provide a List of Backers...</h5>
+            @else
+              <div>
+                <ul id="backersList">
+                  @foreach($backers as $backer)
+                    <li id="{{$backer->id}}" class="backer">
+                      {{$backer->backer_name}} since (Time period)&nbsp;
+                      @if($isOwner == true)
+                        <button class="btn btn-default" onclick="remove('{{$backer->id}}','{{$backer->backer_name}}')">Delete</button>
+                      @endif
+                    </li>
+                  @endforeach
+                </ul>
+              </div>
+            @endif
           </div>
         </center>
       </div>
@@ -135,20 +219,17 @@ $categories = DB::select(DB::raw('SELECT * FROM categories '.$parent.' ORDER BY 
         </div>
         <div class="modal-body">
           <?php
-            /*foreach($friends as $friend)
+            foreach($friends as $friend)
             {
               $buddy = "";
-              if($friend->user1 == $profileOwner->name)
-              {
+              if($friend->user1 == $profileOwner->id)
                 $buddy = $friend->user2;
-              }
-              else if($friend->user2 == $profileOwner->name)
-              {
+              else if($friend->user2 == $profileOwner->id)
                 $buddy = $friend->user1;
-              }
-              $guy =  User::where('name','=',$buddy)->first();
+
+              $guy =  User::where('id','=',$buddy)->first();
               $user1avatar = $guy ->avatar;
-              $user1pic = '<img src="/uploads/user/'.$guy->name.'/images'.'/'.$user1avatar.'" alt="'.$guy->name.'" class="user_pic">';
+              $user1pic = '<img src="/uploads/user/'.$guy->id.'/images'.'/'.$user1avatar.'" alt="'.$guy->name.'" class="user_pic">';
           		if($user1avatar == NULL)
               {
                 $picURL = "/images/Default.jpg";
@@ -156,11 +237,11 @@ $categories = DB::select(DB::raw('SELECT * FROM categories '.$parent.' ORDER BY 
           		}
               //echo '<div><a href="/profile/'.$guy->name.'">'.$user1pic.'</a><b><p>'.$guy->name.'</p></b></div>';
               echo '<div class="friendrequests">
-                      <a href="/profile/'.$guy->name.'">'.$user1pic.'</a>
+                      <a href="/profile/'.$guy->id.'">'.$user1pic.'</a>
                       <div class="user_info"><b><p>'.$guy->name.'</p></b>
                       </div>
                     </div><hr/>';
-            }*/
+            }
           ?>
         </div>
         <div class="modal-footer">
@@ -169,7 +250,7 @@ $categories = DB::select(DB::raw('SELECT * FROM categories '.$parent.' ORDER BY 
       </div>
     </div>
   </div>
-  <!--Summary MANAGEMENT MODAL-->
+  <!--EXECUTIVE SUMMARY MANAGEMENT MODAL-->
   <div id="summaryModal" class="modal fade" role="dialog">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
@@ -312,13 +393,14 @@ $categories = DB::select(DB::raw('SELECT * FROM categories '.$parent.' ORDER BY 
 @section('javascript')
   <script type="text/javascript">
     var token = '{{Session::token()}}';
-    var urlf= '{{route('friend')}}';
+    var urlf = '{{route('friend')}}';
+    var urlb = '{{route('backer')}}';
 
     function toggle(type)
-    {
+    { //Functionality for the friend button
       var $tog = $('#'+type);
-      var user = "<?php echo $profileOwner->name?>";
-      var log = "<?php echo Auth::user()->name?>";
+      var user = "<?php echo $profileOwner->id?>";
+      var log = "<?php echo Auth::user()->id?>";
 
       $tog.html("please wait...");
 
@@ -344,8 +426,8 @@ $categories = DB::select(DB::raw('SELECT * FROM categories '.$parent.' ORDER BY 
         });
       }
 
-      if(type == "block" || type == "unblock")
-      {
+      if(type == "block" || type == "unblock")//This block is no longer necessary since blocking won't be a function
+      {//It remains strictly for the purpose of reference for the future
         $.ajax(
         {
           method: 'POST',
@@ -370,6 +452,27 @@ $categories = DB::select(DB::raw('SELECT * FROM categories '.$parent.' ORDER BY 
         });
       }
     }
+    function remove(backer, name)//This function is for the instant removal of backers from the user's list(AJAX)
+    {
+      $('#backStatus').html("");
+      var back = $('#'+backer);
+      $.ajax(
+      {
+        method: 'POST',
+        url: urlb,
+        data: {backer: backer, delete: 'yes', _token: token}
+      }).done(function (msg)
+      {
+        //console.log(msg['message']);
+        if(msg['message'] == "del_success")
+        {
+          back.hide();
+          $('#backStatus').html(name+" has been removed from your Backer's List");
+        }
+        else
+          $('#backStatus').html(msg['message']);
+      });
+    }
     $(document).ready(function()
     {
       var $friend = $('#friend');
@@ -383,12 +486,12 @@ $categories = DB::select(DB::raw('SELECT * FROM categories '.$parent.' ORDER BY 
       $('#exSummary').show();
       $friend.on('click', function(){toggle('friend');});
       $unfriend.on('click',function(){toggle('unfriend');});
-      $('[data-toggle="popover"]').popover();
+      $('[data-toggle="popover"]').popover();//This allows the text boxes to appear upon hovering the "?"
       $('#profile_pic_box').mouseover(function(){$edit.show();});
       $('#profile_pic_box').mouseout(function(){$edit.hide();});
 
       $('#tab1, #tab2, #tab3').on('click', function()
-      {
+      {//Tab functionality for the business information content
         $('#exSummary, #proofConcept, #backers').hide();
         switch (this.id)
         {
@@ -403,8 +506,31 @@ $categories = DB::select(DB::raw('SELECT * FROM categories '.$parent.' ORDER BY 
           break;
         }
       });
+      $('#addBacker').on('click', function()//Inatsnt addition to the backers list (AJAX)
+      {
+        $('#backStatus').html("");
+        var list = $('#backersList');
+        var backing = "<?php echo Auth::user()->id;?>";
+        var backer = $('#enterBacker');
+        if(backer.val() != "")
+        {
+          $.ajax(
+          {
+            method: 'POST',
+            url: urlb,
+            data: {backing: backing, backer: backer.val(), _token: token}
+          }).done(function (msg)
+          {
+            //console.log(msg['message']);
+            if(msg['message'] == "back_success")
+              list.append("<li class='backer'>"+backer.val()+"since (Time Period)</li>");
+            else
+              $('#backStatus').html(msg['message'])
+          });
+        }
+      });
     });
-    function showSub()
+    function showSub()//Categories still needs work, this is old code that needs to be worked on
     {
       var categories = document.getElementById('categories');
       var list = categories.value;
@@ -419,7 +545,6 @@ $categories = DB::select(DB::raw('SELECT * FROM categories '.$parent.' ORDER BY 
           sub.style.display = "none";
       }
     }
-
   </script>
 @endsection
 

@@ -38,11 +38,13 @@ Route::get('/inbox/{inboxOwner}','DashboardController@inbox');
 Route::get('/stargazer', 'DashboardController@search');
 
 //PROFILE ROUTES
-Route::get('/profile/{profileOwner}', 'ProfileController@profile');
+Route::get('/profile/{profileOwner}', 'ProfileController@profile')->name('profile');
 Route::post('/friendSystem','ProfileController@friend')->name('friend');
 Route::post('/blockSystem','ProfileController@block')->name('block');
 Route::post('/projectSystem','ProfileController@project');
 Route::post('/summarySystem','ProfileController@summary');
+Route::post('/proofSystem','ProfileController@proof');
+Route::post('/backerSystem','ProfileController@backer')->name('backer');
 
 //PHP PARSE ROUTES
 Route::post('/searchSystem','ParseController@search')->name('search');

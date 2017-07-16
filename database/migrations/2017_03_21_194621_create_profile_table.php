@@ -16,7 +16,7 @@ class CreateProfileTable extends Migration
       Schema::create('profiles', function (Blueprint $table)
       {
           $table->increments('id');
-          $table->integer('user_id')->unique();
+          $table->integer('user_id')->default('0')->unique();
           $table->enum('hasVideo',array('0','1'))->default('0');
           $table->enum('hasMentor',array('0','1'))->default('0');
           $table->enum('hasInvestments',array('0','1'))->default('0');

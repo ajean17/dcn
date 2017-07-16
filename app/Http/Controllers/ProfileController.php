@@ -8,6 +8,8 @@ use App\Summary;
 use App\User;
 use App\Friend;
 use App\Block;
+use App\Proof;
+use App\Backer;
 use \Storage;
 use Carbon\Carbon;
 use DB;
@@ -33,54 +35,45 @@ class ProfileController extends Controller
     return redirect('/profile'.'/'.$request['username']);
   }
 
-  public function show(User $profileOwner)
+  public function show(User $profileOwner)//This function is no longer needed/NEITHER is profile.show, it exists as a reference now
   {
-    return view('profile.show',compact('profileOwner'));//'friend_check','block_check','block_check2'));
+    return view('profile.show',compact('profileOwner'));
   }
 
-  public function profile(User $profileOwner)
+  public function profile(User $profileOwner)//THIS is the profile page that is currently in use, borrows heavily from profile.show
   {
     return view('profile.profile',compact('profileOwner'));
   }
 
-  public function friend(Request $request)
+  public function friend(Request $request)//Friend system parsing is done here, everything goes by user ID as opposed to username
   {
     $message = "Something went wrong";
     if($request->has('type') && $request->has('user'))
   	{
-      //The profile owner being added
-  		$user = $request['user'];//preg_replace('#[^a-z0-9]#i', '', $_GET['user']);
-  		$log_username = $request['log'];//The one logged in
+  		$user = $request['user'];//The profile owner being added
+  		$log_userid = $request['log'];//The one logged in
   		//Check to see if the user to befriend or block exists
-  		$exists= User::where('name','=',$user)->first();/*->where('activated','=','1')*->get();*/
+  		$exists= User::where('id','=',$user)->first();/*->where('activated','=','1')*->get();*/
 
       if($exists == "")//If nothing matches in the DB stop everything and tell the user
-  			$message = "$user does not exist.";
+  			$message = "This user does not exist.";
 
-  		if($request['type'] == "friend")
-  		//If friend request
+  		if($request['type'] == "friend")//If friend request
   		{
   			//Check to see if the logged in user sent a request to the profile owner already that has been accepted
-  			$row_count1 = Friend::where('user1','=',$log_username)
+  			$row_count1 = Friend::where('user1','=',$log_userid)
   			->where('user2','=',$user)
   			->where('accepted','=','1')
         ->orWhere('user1','=',$user)
-  			->where('user2','=',$log_username)
+  			->where('user2','=',$log_userid)
   			->where('accepted','=','1')->get();
-
-  			/*Check to see if the profile owner has sent a request to the logged in user already that has been accepted
-  			$row_count2 = Friend::where('user1','=',$user)
-  			->where('user2','=',$log_username)
-  			->where('accepted','=','1')->get();*/
-
   			//Check to see if the logged in user sent a request to the profile owner already that has not been accepted
-  			$row_count3 = Friend::where('user1','=',$log_username)
+  			$row_count3 = Friend::where('user1','=',$log_userid)
   			->where('user2','=',$user)
   			->where('accepted','=','0')->get();
-
   			//Check to see if the profile owner has sent a request to the logged in user already that has not been accepted
   			$row_count4 = Friend::where('user1','=',$user)
-  			->where('user2','=',$log_username)
+  			->where('user2','=',$log_userid)
   			->where('accepted','=','0')->get();
 
   			if ($row_count1 != "[]")//If the profile owner and logged in user are already friends
@@ -95,7 +88,7 @@ class ProfileController extends Controller
   			else//Create a new friendship request between the logged in user and the profile owner
   			{
   				$newFriendship = Friend::create([
-  					'user1' => $log_username,
+  					'user1' => $log_userid,
   					'user2' => $user
   				]);
   	      $message = "friend_request_sent";
@@ -105,9 +98,9 @@ class ProfileController extends Controller
   		{
   			//Check to see if the logged in user and profile owner are currently friends
   			$row_count = Friend::where('user1','=',$user)
-  			->where('user2','=',$log_username)
+  			->where('user2','=',$log_userid)
   			->where('accepted','=','1')
-  			->orWhere('user1','=',$log_username)
+  			->orWhere('user1','=',$log_userid)
   			->where('user2','=',$user)
   			->where('accepted','=','1')->get();
 
@@ -115,26 +108,26 @@ class ProfileController extends Controller
   			{
   				//DB::table('friends')
   				Friend::where('user1','=',$user)
-  				->where('user2','=',$log_username)
+  				->where('user2','=',$log_userid)
   				->where('accepted','=','1')
-  				->orWhere('user1','=',$log_username)
+  				->orWhere('user1','=',$log_userid)
   				->where('user2','=',$user)
   				->where('accepted','=','1')->delete();
 
   		    $message = "unfriend_ok";
   		  }
   			else//Otherwide notify the user that they are not even friends
-          $message = "No friendship could be found between your account and $user, therefore we cannot unfriend you.";
+          $message = "You are not friends with this person yet.";
   		}
   	}
 
     /*PARSING FOR ACCEPTING OR REJECTING FRIENDSHIPS*/
   	if($request->has('action') && $request->has('reqid') && $request->has('user1'))
   	{
-  		$reqid = $request['reqid'];//preg_replace('#[^0-9]#', '', $_GET['reqid']);
-  		$user = $request['user1'];//preg_replace('#[^a-z0-9]#i', '', $_GET['user1']);
-  		$log_username = $request['log'];//The one logged in
-  		$exists = User::where('name','=',$user)->first();//->where('activated','=','1')*->get();
+  		$reqid = $request['reqid'];
+  		$user = $request['user1'];
+  		$log_userid = $request['log'];//The one logged in
+  		$exists = User::where('id','=',$user)->first();//->where('activated','=','1')*->get();
 
   		if($exists == "")//If nothing matches in the DB stop everything and tell the user
   			$message = $user." does not exist.";
@@ -142,9 +135,9 @@ class ProfileController extends Controller
   		if($request['action'] == "accept")
   		{
   			$row_count = Friend::where('user1','=',$user)
-  			->where('user2','=',$log_username)
+  			->where('user2','=',$log_userid)
   			->where('accepted','=','1')
-  			->orWhere('user1','=',$log_username)
+  			->orWhere('user1','=',$log_userid)
   			->where('user2','=',$user)
   			->where('accepted','=','1')->get();
 
@@ -170,11 +163,10 @@ class ProfileController extends Controller
 
     return response()->json(['message' => $message]);
   }
-
-  public function summary(Request $request)
+  public function summary(Request $request)//Executive summary ssytem parsing is done here
   {
-    $user = User::where('name','=',$request['user']);
-    $productName = $request['title'];
+    $user = User::where('name','=',$request['user'])->first();
+    $title = $request['title'];
     $market = $request['market'];
     $submarket = $request['submarket'];
     $age = $request['age'];
@@ -188,11 +180,96 @@ class ProfileController extends Controller
     $roi = $request['roi'];
     $liquid = $request['liquid'];
 
-    dd($markOther);
+    $summary = Summary::where('user_id','=',$user->id)->first();
+    if($summary == "")
+    {
+      $summary = Summary::create([
+        'user_id' => $user->id,
+        'product_name' => 'incomplete',
+        'market' => 'incomplete',
+        'age_range' => 'incomplete',
+        'exit_strategy' => 'incomplete',
+        'ROI' => 'incomplete'
+      ]);
+    }
+    if($request->has('title'))
+      Summary::where('user_id','=',$user->id)->update(Array('product_name' => $title));
+    if($request->has('market'))
+      Summary::where('user_id','=',$user->id)->update(Array('market' => $market));
+    //if($request->has('submarket'))
+      //Summary::where('user_id','=',$user->id)->update(Array('market' => $submarket));
+    if($request->has('age'))
+      Summary::where('user_id','=',$user->id)->update(Array('age_range' => $age));
+    if($request->has('region'))
+      Summary::where('user_id','=',$user->id)->update(Array('region' => $region));
+    if($request->has('markother'))
+      Summary::where('user_id','=',$user->id)->update(Array('market_other' => $markOther));
+    if($request->has('compete1'))
+      Summary::where('user_id','=',$user->id)->update(Array('competitor1' => $compete1));
+    if($request->has('compete2'))
+      Summary::where('user_id','=',$user->id)->update(Array('competitor2' => $compete2));
+    if($request->has('compete3'))
+      Summary::where('user_id','=',$user->id)->update(Array('competitor3' => $compete3));
+    if($request->has('risks'))
+      Summary::where('user_id','=',$user->id)->update(Array('risks' => $risks));
+    if($request->has('exit'))
+      Summary::where('user_id','=',$user->id)->update(Array('exit_strategy' => $exit));
+    if($request->has('roi'))
+      Summary::where('user_id','=',$user->id)->update(Array('ROI' => $roi));
+    if($request->has('liquid'))
+      Summary::where('user_id','=',$user->id)->update(Array('liquid' => $liquid));
 
     return redirect()->to('/profile'.'/'.$user->name);
   }
-  public function project(Request $request)
+  public function proof(Request $request)//Proof of Concept parsing
+  {
+    $user = User::where('name','=',$request['user'])->first();
+    $proof = Proof::where('user_id','=',$user->id)->first();
+    //dd($user->name);
+    if($proof == "")
+      $proof = Proof::create(['user_id' => $user->id]);
+
+    if($request->has('newProof'))
+      Proof::where('user_id','=',$user->id)->update(Array('embed' => $request['newProof']));
+    if($request->has('newProofTitle'))
+      Proof::where('user_id','=',$user->id)->update(Array('title' => $request['newProofTitle']));
+
+    return redirect()->to('/profile'.'/'.$user->name);
+  }
+  public function backer(Request $request)//List of Backers parsing
+  {
+    $message = "Something went wrong, please try again later.";
+    if($request->has('backing') && $request->has('backer'))
+    {
+      $backing = $request['backing'];
+      $backer = $request['backer'];
+      $backed = Backer::where('backing_id','=',$backing)->where('backer_name','=',$backer)->first();
+      if($backed == "")
+      {
+        $backed = Backer::create([
+          'backing_id' => $request['backing'],
+          'backer_name' => $request['backer']
+        ]);
+        $message = "back_success";
+      }
+      else
+        $message = "This person is already on your list.";
+    }
+    if($request->has('backer') && $request->has('delete'))
+    {
+      $backer = $request['backer'];
+      $backed = Backer::where('id','=',$backer)->first();
+      if($backed == "")
+        $message = "This list operation could not be fulfilled. Please refresh the page.";
+      else if($backed != "")
+      {
+        Backer::where('id','=',$backer)->delete();
+        $message = "del_success";
+      }
+    }
+    return response()->json(['message' => $message]);
+  }
+  public function project(Request $request)//OLD CODE for the project system but that is no longer in use/REFERENCE Material
   {
     $name = "";
     $category = $request['category'];
